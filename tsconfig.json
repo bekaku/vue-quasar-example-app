@@ -1,0 +1,32 @@
+{
+  "extends": "@quasar/app-vite/tsconfig-preset",
+  "compilerOptions": {
+    "useUnknownInCatchVariables": false,
+    "baseUrl": ".",
+    "resolveJsonModule": true,
+    "paths": {
+      "@/*": ["src/*"],
+      "src/*": ["src/*"],
+      "app/*": ["*"],
+      "components/*": ["src/components/*"],
+      "layouts/*": ["src/layouts/*"],
+      "pages/*": ["src/pages/*"],
+      "assets/*": ["src/assets/*"],
+      "boot/*": ["src/boot/*"],
+      "stores/*": ["src/stores/*"],
+      "types/*": ["src/types/*"],
+      "composables/*": ["src/composables/*"],
+      "utils/*": ["src/utils/*"],
+      "api/*": ["src/api/*"],
+      "middleware/*": ["src/middleware/*"]
+    }
+  },
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.d.ts",
+    "src/**/*.tsx",
+    "src/**/*.vue",
+    "src-ssr/*.d.ts",
+    "src/**/*.json"
+  ]
+}

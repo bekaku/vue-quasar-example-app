@@ -1,0 +1,59 @@
+{
+  "name": "give-dee-five",
+  "version": "0.0.1",
+  "description": "A Vue Quasar Frontend Project",
+  "productName": "Vue Quasar",
+  "author": "bekaku <33171470+bekaku@users.noreply.github.com>",
+  "private": true,
+  "scripts": {
+    "dev": "quasar dev",
+    "dev:ssr": "quasar dev -m ssr",
+    "build": "quasar build",
+    "build:ssr": "quasar build -m ssr",
+    "build:pwa": "quasar build -m pwa",
+    "lint": "eslint --ext .js,.ts,.vue ./",
+    "format": "prettier --write \"**/*.{js,ts,vue,scss,html,md,json}\" --ignore-path .gitignore",
+    "test": "echo \"No test specified\" && exit 0"
+  },
+  "dependencies": {
+    "@capacitor/clipboard": "^5.0.6",
+    "@capacitor/geolocation": "^5.0.6",
+    "@emoji-mart/data": "^1.1.2",
+    "@quasar/extras": "^1.16.8",
+    "@vueuse/core": "^10.6.0",
+    "apexcharts": "^3.44.0",
+    "axios": "^1.6.1",
+    "cropperjs": "^1.6.1",
+    "d3-org-chart": "^3.1.1",
+    "date-fns": "^2.30.0",
+    "emoji-mart": "^5.5.2",
+    "libphonenumber-js": "^1.10.49",
+    "pinia": "^2.1.7",
+    "quasar": "^2.13.1",
+    "sanitize-html": "^2.11.0",
+    "vue": "^3.3.8",
+    "vue-i18n": "^9.6.5",
+    "vue-router": "^4.2.5",
+    "vue-slicksort": "^2.0.5",
+    "vue-zoomer": "^0.4.0-beta.2",
+    "vue3-apexcharts": "^1.4.4"
+  },
+  "devDependencies": {
+    "@quasar/app-vite": "^1.6.2",
+    "@types/node": "^20.9.0",
+    "@types/sanitize-html": "^2.9.4",
+    "@typescript-eslint/eslint-plugin": "^6.10.0",
+    "@typescript-eslint/parser": "^6.10.0",
+    "autoprefixer": "^10.4.16",
+    "eslint": "^8.53.0",
+    "eslint-config-prettier": "^9.0.0",
+    "eslint-plugin-vue": "^9.18.1",
+    "prettier": "^3.0.3",
+    "typescript": "^5.2.2"
+  },
+  "engines": {
+    "node": "^18 || ^16 || ^14.19",
+    "npm": ">= 6.13.4",
+    "yarn": ">= 1.21.1"
+  }
+}
