@@ -49,7 +49,11 @@ quasar build
 ```bash
 quasar build -m ssr
 ```
-
+Docker run 
+```batch
+docker-compose build
+docker-compose up -d
+```
 ### Customize the configuration
 
 See [Configuring quasar.config.js](https://v2.quasar.dev/quasar-cli-vite/quasar-config-js).
