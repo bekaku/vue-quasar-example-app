@@ -40,7 +40,7 @@
           />
           <a
             href="javascript:void(0)"
-            class="wee-link wee-text-muted text-caption"
+            class="app-text-link text-muted text-caption"
             >10.9k</a
           >
         </div>
@@ -48,12 +48,12 @@
       <div class="q-gutter-x-md">
         <a
           href="javascript:void(0)"
-          class="wee-link wee-text-muted text-caption"
+          class="app-text-link text-muted text-caption"
           >9k {{ t('comments') }}</a
         >
         <a
           href="javascript:void(0)"
-          class="wee-link wee-text-muted text-caption"
+          class="app-text-link text-muted text-caption"
           >1.9k {{ t('shares') }}</a
         >
       </div>

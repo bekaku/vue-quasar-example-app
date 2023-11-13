@@ -21,7 +21,7 @@
               to="/user/bekaku"
             />
 
-            <span class="text-caption q-ml-sm wee-text-muted">{{
+            <span class="text-caption q-ml-sm text-muted">{{
               post.reference.activity
             }}</span></q-item-label
           >

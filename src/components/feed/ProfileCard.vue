@@ -71,7 +71,7 @@
           <div class="text-weight-bold text-h6">
             <q-icon :name="biArrowDown" color="negative" />20
           </div>
-          <div class="wee-text-muted text-caption">
+          <div class="text-muted text-caption">
             E-Own<span class="text-negative q-ml-xs text-caption">(-2)</span>
           </div>
           <q-tooltip>{{ t('ssCode.eOwn') }}</q-tooltip>
@@ -80,7 +80,7 @@
           <div class="text-weight-bold text-h6">
             <q-icon :name="biArrowUp" color="positive" />35
           </div>
-          <div class="wee-text-muted text-caption">
+          <div class="text-muted text-caption">
             D-Get<span class="text-positive text-caption q-ml-xs">(+7)</span>
           </div>
           <q-tooltip>{{ t('ssCode.dGet') }}</q-tooltip>
@@ -89,7 +89,7 @@
           <div class="text-weight-bold text-h6">
             <q-icon :name="laArrowsAltVSolid" color="grey" />20
           </div>
-          <div class="wee-text-muted text-caption">
+          <div class="text-muted text-caption">
             D-Give<span class="text-grey text-caption q-ml-xs">(+0)</span>
           </div>
           <q-tooltip>{{ t('ssCode.dGive') }}</q-tooltip>
@@ -100,19 +100,19 @@
       <div class="row justify-around text-center q-pa-sm">
         <div>
           <div class="text-weight-bold">78</div>
-          <div class="text-caption wee-text-muted">
+          <div class="text-caption text-muted">
             <q-icon :name="biGift" class="q-mr-xs" />{{ t('prizes') }}
           </div>
         </div>
         <div>
           <div class="text-weight-bold">1.2k</div>
-          <span class="text-caption wee-text-muted"
+          <span class="text-caption text-muted"
             ><q-icon :name="biPencil" class="q-mr-xs" />{{ t('posts') }}</span
           >
         </div>
         <div>
           <div class="text-weight-bold">7.5k</div>
-          <span class="text-caption wee-text-muted"
+          <span class="text-caption text-muted"
             ><q-icon :name="biChatSquare" class="q-mr-xs" />{{
               t('comments')
             }}</span

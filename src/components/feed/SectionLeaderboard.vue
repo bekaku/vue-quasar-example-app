@@ -18,11 +18,11 @@
         </div>
         <div>
           <div class="text-weight-bold text-subtitle1">75</div>
-          <span class="wee-text-muted">Your rank</span>
+          <span class="text-muted">Your rank</span>
         </div>
         <div>
           <div class="text-weight-bold text-subtitle1 text-positive">+7</div>
-          <span class="wee-text-muted">Change</span>
+          <span class="text-muted">Change</span>
         </div>
       </div>
       <q-separator />

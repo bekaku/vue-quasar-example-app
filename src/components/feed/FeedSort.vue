@@ -1,9 +1,7 @@
 <template>
   <q-card flat class="bg-transparent">
     <q-card-section>
-      <span class="text-caption wee-text-muted q-mr-sm"
-        >{{ t('sort.by') }}:</span
-      >
+      <span class="text-caption text-muted q-mr-sm">{{ t('sort.by') }}:</span>
       <q-btn
         class="text-capitalize"
         flat

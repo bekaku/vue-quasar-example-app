@@ -42,7 +42,7 @@
         <div class="text-h6 text-weight-bold q-mt-md">
           {{ authenStore.loginedDisplay }}
         </div>
-        <div class="wee-text-muted">{{ t('app.name') }}</div>
+        <div class="text-muted">{{ t('app.name') }}</div>
       </q-card-section>
     </q-card>
     <SettingPersonal />
