@@ -14,7 +14,9 @@ yarn
 # or
 npm install
 ```
-Config your Project at `my-app`/quasar.config.js
+Config your Project at `my-app`/quasar.config.js\
+
+API endpoint
 
 ```js
   env: {
