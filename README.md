@@ -1,4 +1,4 @@
-# Quasar App (quasar-starter-template)
+# Vue JS 3 + Typescript + Quasar 2 SSR mode + Docker
 
 A Quasar Project
 
