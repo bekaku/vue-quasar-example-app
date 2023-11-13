@@ -7,7 +7,14 @@ A Quasar Project\
 
 1 Java Springboot [java-spring-boot-starter](https://github.com/bekaku/java-spring-boot-starter)
 
-\Config your Project at `my-app`/quasar.config.js
+## Install the dependencies
+
+```bash
+yarn
+# or
+npm install
+```
+Config your Project at `my-app`/quasar.config.js
 
 ```js
   env: {
@@ -16,14 +23,6 @@ A Quasar Project\
           ? 'http://localhost:8080'
           : 'https://api.yourdomain.com',
   }
-```
-
-## Install the dependencies
-
-```bash
-yarn
-# or
-npm install
 ```
 
 ### Start the app in development mode (hot-code reloading, error reporting, etc.)
