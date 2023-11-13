@@ -26,19 +26,31 @@ API endpoint
           : 'https://api.yourdomain.com',
   }
 ```
+devServer
+```js
+   devServer: {
+      // https: true
+      open: false, // opens browser window automatically
+      port: ctx.mode.spa ? 8000 : ctx.mode.pwa ? 9000 : 9100,
+    },
+```
 
 ### Start the app in development mode (hot-code reloading, error reporting, etc.)
 
 ```bash
+npm run dev or
+yarn dev or
 quasar dev
 ```
-
+Starting webserver at port 8000
 ### Start the app in development SSR mode (hot-code reloading, error reporting, etc.)
 
 ```bash
+npm run dev:ssr or
+yarn dev:ssr or
 quasar dev -m ssr
 ```
-
+Starting webserver at port 9100
 ### Lint the files
 
 ```bash
@@ -58,12 +70,16 @@ npm run format
 ### Build the app for production
 
 ```bash
+npm run build or
+yarn build or
 quasar build
 ```
 
 ### Build the SSR app for production
 
 ```bash
+npm run build:ssr or
+yarn build:ssr or
 quasar build -m ssr
 ```
 
