@@ -99,19 +99,10 @@ module.exports = configure(function (ctx) {
         // ],
       ],
       env: {
-        // API: 'http://192.168.7.230:8080',
-        // cdnBaseUrl: 'http://192.168.7.230:8080',
-
-        API: 'http://localhost:8080',
-        cdnBaseUrl: 'http://localhost:8080',
-
-        // API: 'https://api.supersynapse.net',
-        // cdnBaseUrl: 'https://cdn.supersynapse.net',
-
-        // API: ctx.dev ? 'http://localhost:8080' : 'https://api.supersynapse.net',
-        // cdnBaseUrl: ctx.dev
-        //   ? 'http://localhost:8080'
-        //   : 'https://cdn.supersynapse.net',
+        API: ctx.dev ? 'http://localhost:8080' : 'https://api.yourdomain.com',
+        cdnBaseUrl: ctx.dev
+          ? 'http://localhost:8080'
+          : 'https://api.yourdomain.com',
 
         TIME_OUT: 5 * 60000, // 60000 = 1 minute, 0 = no timeout
         API_CLIENT: 'default',
@@ -119,11 +110,7 @@ module.exports = configure(function (ctx) {
         codeVersion: 21,
         feedPostPerPage: 5,
         commentsPerPage: 3,
-        webAppUrl: 'https://app.supersynapse.net',
-        androidStoreLink:
-          'https://play.google.com/store/apps/details?id=com.grandats.supersynapse&pli=1',
-        iOSStoreLink:
-          'https://apps.apple.com/us/app/supersynapse/id6443715498?ls=1',
+        webAppUrl: 'https://app.yourdomain.com',
       },
     },
     // https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#framework

@@ -3,8 +3,20 @@
 A Quasar Project\
 [Demo VDO](https://www.linkedin.com/posts/bekaku_full-stack-application-example-starter-github-activity-7129650875781808128-mYg6/?utm_source=share&utm_medium=member_desktop)
 
-# Backend Rest Api 
+# Backend Rest Api
+
 1 Java Springboot [java-spring-boot-starter](https://github.com/bekaku/java-spring-boot-starter)
+
+\Config your Project at `my-app`/quasar.config.js
+
+```js
+  env: {
+        API: ctx.dev ? 'http://localhost:8080' : 'https://api.yourdomain.com',
+        cdnBaseUrl: ctx.dev
+          ? 'http://localhost:8080'
+          : 'https://api.yourdomain.com',
+  }
+```
 
 ## Install the dependencies
 
@@ -53,11 +65,14 @@ quasar build
 ```bash
 quasar build -m ssr
 ```
-Docker run 
+
+Docker run
+
 ```batch
 docker-compose build
 docker-compose up -d
 ```
+
 ### Customize the configuration
 
 See [Configuring quasar.config.js](https://v2.quasar.dev/quasar-cli-vite/quasar-config-js).
