@@ -19,7 +19,7 @@
         </q-item>
       </q-list>
     </q-menu>
-    <q-tooltip>{{ t('sort.sort') }}</q-tooltip>
+    <q-tooltip>{{ t('base.filterField') }}</q-tooltip>
   </q-btn>
 </template>
 
