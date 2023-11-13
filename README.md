@@ -2,6 +2,8 @@
 
 A Quasar Project
 
+(https://www.linkedin.com/posts/bekaku_full-stack-application-example-starter-github-activity-7129650875781808128-mYg6/?utm_source=share&utm_medium=member_desktop "Demo VDO") 
+
 # Backend Rest Api 
 1 Java Springboot [java-spring-boot-starter](https://github.com/bekaku/java-spring-boot-starter)
 
