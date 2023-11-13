@@ -276,7 +276,8 @@
     "openToUse": "เปิดการใช้งาน",
     "deletePhotoConfirm": "ยืนยันการลบรูปภาพนี้",
     "selectYear": "เลือกปี",
-    "checkOut": "เช็คเอาท์"
+    "checkOut": "เช็คเอาท์",
+    "filterField": "กรองฟิลด์"
   },
   "theme": {
     "light": "กลางวัน",

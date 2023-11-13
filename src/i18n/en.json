@@ -276,7 +276,8 @@
     "openToUse": "Enable",
     "deletePhotoConfirm": "Confirm deletion of this photo.",
     "selectYear": "Select year",
-    "checkOut": "Check out"
+    "checkOut": "Check out",
+    "filterField": "Filter fields"
   },
   "theme": {
     "light": "Light",

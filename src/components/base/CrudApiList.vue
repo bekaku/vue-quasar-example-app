@@ -56,7 +56,7 @@
                 @on-sort-column="$emit('on-sort', $event)"
                 @on-sort-mode="$emit('on-sort-mode', $event)"
               />
-
+              <crud-api-list-header-filter :headers="headers" />
               <q-btn flat round dense :icon="biThreeDotsVertical">
                 <q-menu>
                   <q-list style="min-width: 200px" dense>
@@ -598,12 +598,14 @@ import { formatDate, FORMAT_DATE1 } from '@/utils/dateUtil';
 const AppResult = defineAsyncComponent(
   () => import('@/components/base/AppResult.vue'),
 );
-
 const DatePicker = defineAsyncComponent(
   () => import('@/components/form/DatePicker.vue'),
 );
 const FormTogle = defineAsyncComponent(
   () => import('@/components/form/FormTogle.vue'),
+);
+const CrudApiListHeaderFilter = defineAsyncComponent(
+  () => import('@/components/base/CrudApiListHeaderFilter.vue'),
 );
 const props = defineProps({
   crudName: {
