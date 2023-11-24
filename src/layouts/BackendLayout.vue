@@ -11,14 +11,14 @@
 
 <script lang="ts">
 import { usePermissionStore } from '@/stores/permissionStore';
-import { backend_login } from '@/utils/appPermissionList';
+import { BACKEND_LOGIN } from '@/utils/appPermissionList';
 export default {
   async preFetch({
     /*ssrContext, redirect*/
     redirect,
   }) {
     const permissionStore = usePermissionStore();
-    if (!permissionStore.isHavePermission(backend_login)) {
+    if (!permissionStore.isHavePermission(BACKEND_LOGIN)) {
       redirect({ path: '/auth/login' });
     }
   },

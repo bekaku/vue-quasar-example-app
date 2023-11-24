@@ -14,8 +14,8 @@ export default boot(({ router, ssrContext, store, redirect }) => {
         if (to.meta.permission && !process.env.SERVER) {
           if (to.meta.frontEnd) {
             if (
-              permissionStore.isHaveFrontendPermission(
-                to.meta.permission as string
+              permissionStore.isHaveFrontendMultiPermission(
+                to.meta.permission as string[]
               )
             ) {
               next();
@@ -24,7 +24,7 @@ export default boot(({ router, ssrContext, store, redirect }) => {
             }
           } else {
             if (
-              permissionStore.isHavePermission(to.meta.permission as string)
+              permissionStore.isHaveMultiPermission(to.meta.permission as string[])
             ) {
               next();
             } else {

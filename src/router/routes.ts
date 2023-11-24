@@ -1,15 +1,15 @@
 import { RouteRecordRaw } from 'vue-router';
 import {
-  permission,
-  user,
-  role,
-  backend_login,
+  PERMISSION,
+  USER,
+  ROLE,
+  BACKEND_LOGIN,
 } from '@/utils/appPermissionList';
 const routes: RouteRecordRaw[] = [
   {
     path: '/',
     component: () => import('@/layouts/BackendLayout.vue'),
-    meta: { requireAuth: true, permission: backend_login },
+    meta: { requireAuth: true, permission: [BACKEND_LOGIN] },
     children: [
       {
         path: '',
@@ -17,32 +17,32 @@ const routes: RouteRecordRaw[] = [
       },
       {
         path: 'permission',
-        meta: { pageName: 'model_permission', permission: permission.list },
+        meta: { pageName: 'model_permission', permission: [PERMISSION.list] },
         component: () => import('@/pages/backend/permission/List.vue'),
       },
       {
         path: 'permission/:crud/:id/',
-        meta: { pageName: 'model_permission', permission: permission.view },
+        meta: { pageName: 'model_permission', permission: [PERMISSION.view] },
         component: () => import('@/pages/backend/permission/Form.vue'),
       },
       {
         path: 'role',
-        meta: { pageName: 'model_role', permission: role.list },
+        meta: { pageName: 'model_role', permission: [ROLE.list] },
         component: () => import('@/pages/backend/role/List.vue'),
       },
       {
         path: 'role/:crud/:id/',
-        meta: { pageName: 'model_role', permission: role.view },
+        meta: { pageName: 'model_role', permission: [ROLE.view] },
         component: () => import('@/pages/backend/role/Form.vue'),
       },
       {
         path: 'user',
-        meta: { pageName: 'model_user', permission: user.list },
+        meta: { pageName: 'model_user', permission: [USER.list] },
         component: () => import('@/pages/backend/user/List.vue'),
       },
       {
         path: 'user/:crud/:id/',
-        meta: { pageName: 'model_user', permission: user.view },
+        meta: { pageName: 'model_user', permission: [USER.view] },
         component: () => import('@/pages/backend/user/Form.vue'),
       },
       {
