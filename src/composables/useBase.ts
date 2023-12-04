@@ -19,7 +19,6 @@ import {
 } from '@quasar/extras/bootstrap-icons';
 import sanitizeHtml from 'sanitize-html';
 import { Clipboard } from '@capacitor/clipboard';
-
 export const useBase = () => {
   const { t, locale } = useLang();
   const $q = useQuasar();

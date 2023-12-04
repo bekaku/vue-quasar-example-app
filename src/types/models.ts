@@ -28,6 +28,18 @@ export type PostActionType =
   | 'ACTION_IT'
   | 'SHARE_IT'
   | 'COMMENT_IT';
+export type FeedType =
+  | 'POST'
+  | 'SHARE'
+  | 'LIKE'
+  | 'PRIZE'
+  | 'ADOPT'
+  | 'ACTION'
+  | 'COMMENT'
+  | 'HASHTAG'
+  | 'LEARN'
+  ;
+export type EmojiType = 'LIKE' | 'FIGHTING' | 'LAUGH' | 'WOW' | 'CARE' | 'SAD';
 export interface Id {
   id: number | null;
 }

@@ -282,7 +282,7 @@ export const useCrudList = <T>(
 
   const onNewForm = () => {
     if (options.apiEndpoint && options.crudName) {
-      WeeGoTo(`${options.crudName.replace('_', '-')}/${CrudAction.NEW}/0`);
+      WeeGoTo(`${options.crudName.replaceAll('_', '-')}/${CrudAction.NEW}/0`);
     }
   };
   const onItemClick = async (index: number) => {
