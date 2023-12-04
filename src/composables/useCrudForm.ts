@@ -23,10 +23,10 @@ import {
 
 import { convertStringToNumber } from '@/utils/appUtil';
 export const useCrudForm = <T>(options: CrudFormApiOptions, initialEntity: T) => {
-  const { WeeGoTo, WeeGetParam, WeeToast, WeeConfirm, isDevMode } = useBase();
+  const { WeeGoTo, WeeGetParam, WeeToast, WeeConfirm, isDevMode, getPreviousPath } = useBase();
   const { callAxios } = useAxios();
   const { t } = useLang();
-
+  const previousPath = ref(getPreviousPath() as string);
   const loading = ref(false);
   const crudId = ref<number>(
     WeeGetParam(PageIdParamiter) != undefined
@@ -113,9 +113,10 @@ export const useCrudForm = <T>(options: CrudFormApiOptions, initialEntity: T) =>
   const onBack = () => {
     const backLink = options.backLink
       ? options.backLink
-      : options.crudName
-        ? `${BackendRootPath ? '/' + BackendRootPath : ''}/${options.crudName.replace('_', '-')}`
-        : '';
+      : previousPath.value ? previousPath.value
+        : options.crudName
+          ? `/${BackendRootPath}/${options.crudName.replaceAll('_', '-')}`
+          : '';
     WeeGoTo(backLink);
   };
   const apiEnpoint = computed(() => {
