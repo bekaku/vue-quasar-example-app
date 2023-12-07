@@ -56,7 +56,9 @@
                 @on-sort-column="$emit('on-sort', $event)"
                 @on-sort-mode="$emit('on-sort-mode', $event)"
               />
+
               <crud-api-list-header-filter :headers="headers" />
+
               <q-btn flat round dense :icon="biThreeDotsVertical">
                 <q-menu>
                   <q-list style="min-width: 200px" dense>
@@ -227,6 +229,7 @@
               </q-form>
             </q-card>
           </q-card-section>
+          <!-- <q-markup-table v-if="list.length > 0" separator="cell" flat bordered> -->
           <q-markup-table v-if="list.length > 0" separator="cell" flat bordered>
             <thead>
               <slot name="theader">
@@ -295,7 +298,7 @@
               </slot>
             </thead>
             <tbody>
-              <slot name="tbody">
+              <slot name="tbody" v-bind="{ list, fillableHeaders }">
                 <tr v-for="(item, index) in list" :key="`item-tr-${index}`">
                   <td
                     v-if="isHaveManagePermission && showCheckbox"
@@ -403,20 +406,54 @@
                       </template>
                       <td
                         v-else
-                        :class="
-                          fillable.options && fillable.options.align
-                            ? 'text-' + fillable.options.align
-                            : ''
-                        "
+                        :class="{
+                          'text-center':
+                            fillable.options &&
+                            fillable.options.align == 'center',
+                          'text-left':
+                            fillable.options &&
+                            fillable.options.align == 'left',
+                          'text-right':
+                            fillable.options &&
+                            fillable.options.align == 'right',
+                          'long-text-break':
+                            fillable.options && fillable.options.maxWidth,
+                        }"
+                        :style="{
+                          maxWidth:
+                            fillable.options && fillable.options.maxWidth
+                              ? fillable.options.maxWidth
+                              : '',
+                        }"
                       >
                         <template
                           v-if="fillable.type === CrudListDataType.TEXT"
                         >
-                          {{
-                            fillable.column
-                              ? getValueByColunm(fillable.column, index)
-                              : ''
-                          }}
+                          <template
+                            v-if="fillable.options && fillable.options.toolTip"
+                          >
+                            <span>
+                              {{
+                                fillable.column
+                                  ? getValueByColunm(fillable.column, index)
+                                  : ''
+                              }}
+                              <q-tooltip>
+                                {{
+                                  fillable.column
+                                    ? getValueByColunm(fillable.column, index)
+                                    : ''
+                                }}
+                              </q-tooltip>
+                            </span>
+                          </template>
+                          <template v-else>
+                            {{
+                              fillable.column
+                                ? getValueByColunm(fillable.column, index)
+                                : ''
+                            }}
+                          </template>
                         </template>
                         <template
                           v-if="
@@ -589,7 +626,7 @@ import {
 import { DEFULT_ITEM_PER_PAGET } from '@/utils/constant';
 import { isEmpty } from '@/utils/appUtil';
 import { getValFromObjectByPath } from '@/utils/appUtilJs';
-import SkeletonTable from '@/components/base/SkeletonTable.vue';
+import SkeletonTable from '@/components/skeleton/SkeletonTable.vue';
 import AppSort from '@/components/base/AppSort.vue';
 import { useBase } from '@/composables/useBase';
 import { usePermissionStore } from '@/stores/permissionStore';
@@ -598,6 +635,7 @@ import { formatDate, FORMAT_DATE1 } from '@/utils/dateUtil';
 const AppResult = defineAsyncComponent(
   () => import('@/components/base/AppResult.vue'),
 );
+
 const DatePicker = defineAsyncComponent(
   () => import('@/components/form/DatePicker.vue'),
 );
@@ -820,28 +858,28 @@ const isHaveViewPermission = computed(() => {
     return props.viewPermission
       ? permissionStore.isHavePermission(props.viewPermission)
       : props.crudName
-      ? permissionStore.isHavePermission(`${props.crudName}_view`)
-      : true;
+        ? permissionStore.isHavePermission(`${props.crudName}_view`)
+        : true;
   }
   return props.viewPermission
     ? permissionStore.isHaveFrontendPermission(props.viewPermission)
     : props.crudName
-    ? permissionStore.isHaveFrontendPermission(`${props.crudName}_view`)
-    : true;
+      ? permissionStore.isHaveFrontendPermission(`${props.crudName}_view`)
+      : true;
 });
 const isHaveManagePermission = computed(() => {
   if (!props.isFrontend) {
     return props.managePermission
       ? permissionStore.isHavePermission(props.managePermission)
       : props.crudName
-      ? permissionStore.isHavePermission(`${props.crudName}_manage`)
-      : true;
+        ? permissionStore.isHavePermission(`${props.crudName}_manage`)
+        : true;
   }
   return props.managePermission
     ? permissionStore.isHaveFrontendPermission(props.managePermission)
     : props.crudName
-    ? permissionStore.isHaveFrontendPermission(`${props.crudName}_manage`)
-    : true;
+      ? permissionStore.isHaveFrontendPermission(`${props.crudName}_manage`)
+      : true;
 });
 const dateForMat = (d: string) => {
   return formatDate(d, FORMAT_DATE1, locale.value);

@@ -9,6 +9,7 @@ import {
   IMenuPageItem,
   FeedType,
   EmojiType,
+  IListResponse,
 } from '@/types/models';
 import { addDateByDays, getCurrentTimestamp } from '@/utils/dateUtil';
 import {
@@ -81,6 +82,14 @@ export const isServerException = (obj: any): obj is ServerException => {
 };
 export const isServerResponseMessage = (obj: any): obj is ResponseMessage => {
   return obj.status !== undefined && obj.message !== undefined;
+};
+export const isListResponse = (obj: any): obj is IListResponse => {
+  return (
+    obj.dataList !== undefined &&
+    obj.last !== undefined &&
+    obj.totalElements !== undefined &&
+    obj.totalPages !== undefined
+  );
 };
 export const openUrlInNewTab = (
   href: string,
@@ -426,3 +435,6 @@ export const getImgUrlFromFile = (f: any): Promise<string | undefined> => {
 export const numberFormat = (no: number) => {
   return no.toLocaleString();
 }
+export const isArray = (value: any): boolean => {
+  return Array.isArray(value);
+};

@@ -469,6 +469,9 @@ export interface CrudListApiOptions {
   defaultSort?: ISort;
   itemsPerPage?: number;
   fetchListOnload?: boolean;
+  pageAble?: boolean;
+  pageStartZero?: boolean;
+  sortAble?: boolean;
 }
 export interface CrudFormApiOptions {
   apiEndpoint?: string;
@@ -511,6 +514,8 @@ export interface ICrudListHeaderOption {
   sortColunm?: string;
   searchOperation?: SearchOperation;
   searchOperationReadonly?: boolean;
+  maxWidth?: string;//250px
+  toolTip?: boolean;
 }
 export interface ICrudListHeader {
   column?: string;

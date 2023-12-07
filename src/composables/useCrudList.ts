@@ -17,6 +17,9 @@ import { useLang } from './useLang';
 import { ref, computed, onMounted, Ref, onBeforeUnmount } from 'vue';
 import {
   isAppException,
+  isArray,
+  isEmpty,
+  isListResponse,
   isServerResponseMessage,
   snakeToCamel,
 } from '@/utils/appUtil';
@@ -38,6 +41,8 @@ export const useCrudList = <T>(
   const manualActionList = ref<string>();
   const advanceSearchUri = ref('');
   const filterText = ref('');
+  const additionalUri = ref(options.additionalUri);
+  const actionList = ref(options.actionList);
 
   const searchableHeaders = computed(() => {
     const headers: ICrudListHeader[] = [];
@@ -74,7 +79,8 @@ export const useCrudList = <T>(
     if (qSplit.length == 2) {
       if (validateColunmExist(qSplit[0])) {
         if (!advanceSearchUri.value) {
-          advanceSearchUri.value = `&${SearchParamiter}=${q.trim()}`;
+          // advanceSearchUri.value = `&${SearchParamiter}=${q.trim()}`;
+          advanceSearchUri.value = `${SearchParamiter}=${q.trim()}`;
         } else {
           advanceSearchUri.value += ',' + q.trim();
         }
@@ -90,8 +96,8 @@ export const useCrudList = <T>(
   });
 
   const listApiEndpoint = computed(() => {
-    return options.actionList
-      ? options.actionList
+    return actionList.value
+      ? actionList.value
       : options.apiEndpoint && options.crudName
         ? options.apiEndpoint + '/' + snakeToCamel(options.crudName)
         : '';
@@ -103,22 +109,49 @@ export const useCrudList = <T>(
         ? options.apiEndpoint + '/' + snakeToCamel(options.crudName)
         : '';
   });
-
+  const queryParam = computed((): string | undefined => {
+    let haveParam = false;
+    let q = '';
+    if (options.pageAble == undefined || options.pageAble == true) {
+      q += `page=${(options.pageStartZero == undefined || options.pageStartZero == true) ? (pages.value.current > 0 ? pages.value.current - 1 : 0) : pages.value.current}`;
+      q += `&size=${pages.value.itemsPerPage}`;
+      haveParam = true;
+    }
+    if (options.sortAble == undefined || options.sortAble == true) {
+      if (haveParam) {
+        q += '&';
+      }
+      q += `${sort.value.column && sort.value.mode ? 'sort=' + sort.value.column + ',' + sort.value.mode : ''}`;
+      haveParam = true;
+    }
+    if (advanceSearchUri.value) {
+      if (haveParam) {
+        q += '&';
+      }
+      q += `${advanceSearchUri.value}`;
+      haveParam = true;
+    }
+    if (additionalUri.value) {
+      if (haveParam) {
+        q += '&';
+      }
+      q += `${additionalUri.value}`;
+      haveParam = true;
+    }
+    return !isEmpty(q) ? q : undefined;
+  })
   const pageParam = computed(() => {
-    return `${listApiEndpoint.value}?page=${pages.value.current > 0 ? pages.value.current - 1 : 0
-      }&size=${pages.value.itemsPerPage}${sort.value.column && sort.value.mode ? '&sort=' + sort.value.column + ',' + sort.value.mode : ''}${advanceSearchUri.value ? advanceSearchUri.value : ''}${options.additionalUri ? '&' + options.additionalUri : ''}`;
+    return `${listApiEndpoint.value}${queryParam.value ? '?' + queryParam.value : ''}`;
   });
   // const pageParam = computed(() => {
   //   return `${listApiEndpoint.value}?page=${pages.value.current > 0 ? pages.value.current - 1 : 0
-  //     }&size=${pages.value.itemsPerPage}${sort.value.column && sort.value.mode ? '&sort='+sort.value.column+','+sort.value.mode : ''}&sort=${sort.value.column},${sort.value.mode}${advanceSearchUri.value ? advanceSearchUri.value : ''}${options.additionalUri ? '&' + options.additionalUri : ''}`;
+  //     }&size=${pages.value.itemsPerPage}${sort.value.column && sort.value.mode ? '&sort=' + sort.value.column + ',' + sort.value.mode : ''}${advanceSearchUri.value ? advanceSearchUri.value : ''}${additionalUri.value ? '&' + additionalUri.value : ''}`;
   // });
   const pathParam = computed(() => {
     if (!options) {
       return;
     }
-    return `${getCurrentPath(false)}?page=${pages.value.current}&size=${pages.value.itemsPerPage
-      }${sort.value.column && sort.value.mode ? '&sort=' + sort.value.column + ',' + sort.value.mode : ''}${advanceSearchUri.value ? advanceSearchUri.value : ''
-      }${options.additionalUri ? '&' + options.additionalUri : ''}`;
+    return `${getCurrentPath(false)}${queryParam.value ? '?' + queryParam.value : ''}`;
   });
 
   const fetchList = async (): Promise<boolean> => {
@@ -127,6 +160,13 @@ export const useCrudList = <T>(
         resolve(false);
       });
     }
+    // loading.value = false;
+    // fristLoad.value = true;
+    // console.log('useCrudList > fetchList : ' + pageParam.value);
+    // return new Promise((resolve) => {
+    //   resolve(true);
+    // });
+
     loading.value = true;
     const response = await callAxios<IApiListResponse>({
       API: pageParam.value,
@@ -138,14 +178,23 @@ export const useCrudList = <T>(
 
 
     return new Promise((resolve) => {
+
       if (!isAppException(response) && !isServerResponseMessage(response)) {
-        dataList.value = response.dataList;
+        if (isListResponse(response)) {
+          dataList.value = response.dataList;
+          if (response.totalPages != undefined) {
+            pages.value.totalPages = response.totalPages;
+          }
+          if (response.totalElements != undefined) {
+            pages.value.totalElements = response.totalElements;
+          }
+          if (response.last != undefined) {
+            pages.value.last = response.last;
+          }
+        } else if (isArray(response)) {
+          dataList.value = response;
+        }
       }
-
-      pages.value.totalPages = response.totalPages;
-      pages.value.totalElements = response.totalElements;
-      pages.value.last = response.last;
-
       if (!fristLoad.value) {
         fristLoad.value = true;
       }
@@ -213,6 +262,7 @@ export const useCrudList = <T>(
       return;
     }
     WeeGoTo(pathParam.value);
+    // onReplaceUrl(pathParam.value);
     await fetchList();
   };
   const onAdvanceSearch = (q: string) => {
@@ -313,6 +363,8 @@ export const useCrudList = <T>(
     advanceSearchUri.value = '';
     filterText.value = '';
     manualActionList.value = undefined;
+    additionalUri.value = undefined;
+    actionList.value = undefined;
   });
 
   const methods = {
@@ -340,6 +392,8 @@ export const useCrudList = <T>(
     filterText,
     crudName: options.crudName,
     manualActionList,
+    additionalUri,
+    actionList,
     ...methods,
   };
 };

@@ -43,11 +43,17 @@ export type EmojiType = 'LIKE' | 'FIGHTING' | 'LAUGH' | 'WOW' | 'CARE' | 'SAD';
 export interface Id {
   id: number | null;
 }
-export interface IApiListResponse<Type> {
+export interface ApiListResponse {
   totalPages: number;
   totalElements: number;
   last: boolean;
+}
+export interface IApiListResponse<Type> extends ApiListResponse {
   dataList: Type[];
+}
+
+export interface IListResponse extends ApiListResponse {
+  dataList: any[];
 }
 // export interface PermissionResponse extends IApiListResponse {
 //   dataList: Permission[];
