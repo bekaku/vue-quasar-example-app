@@ -116,7 +116,11 @@
           </q-toolbar>
           <q-card-section class="text-center">
             <q-img
-              src="/logo/logo-black.png"
+              :src="
+                $q.dark.isActive
+                  ? '/logo/logo-white.png'
+                  : '/logo/logo-black.png'
+              "
               spinner-color="white"
               style="height: auto; max-width: 120px"
             />

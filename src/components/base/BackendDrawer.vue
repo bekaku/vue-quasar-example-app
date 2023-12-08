@@ -7,6 +7,30 @@
     :bordered="bordered"
   >
     <q-scroll-area class="fit">
+      <div
+        class="text-left q-pa-xs"
+        :class="{ 'drawer-card-header': !$q.dark.isActive }"
+      >
+        <q-btn
+          flat
+          no-caps
+          no-wrap
+          class="q-mr-xs full-width"
+          :ripple="false"
+          to="/"
+        >
+          <q-avatar style="height: 45px; width: auto" square>
+            <img
+              :src="
+                !$q.dark.isActive
+                  ? '/logo/logo-black.png'
+                  : '/logo/logo-white.png'
+              "
+            />
+          </q-avatar>
+          <q-badge class="q-ml-xs" align="top">{{ t('base.admin') }}</q-badge>
+        </q-btn>
+      </div>
       <q-list padding>
         <template v-if="drawerStore.drawers.length > 0">
           <template
@@ -168,7 +192,7 @@ export default defineComponent({
     },
     bordered: {
       type: Boolean,
-      default: true,
+      default: false,
     },
   },
   setup() {

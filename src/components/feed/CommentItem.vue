@@ -12,11 +12,10 @@
       </q-item-label>
       <q-item-label>
         <div
-          :class="
-            $q.dark.isActive
-              ? 'text-grey-1 bg-grey-10'
-              : 'text-grey-9 bg-grey-2'
-          "
+          :class="{
+            'text-grey-1 wee-main-bg-color-theme-dark': $q.dark.isActive,
+            'text-grey-9 bg-grey-2': !$q.dark.isActive,
+          }"
           class="q-pa-md"
           style="border-radius: 15px"
         >

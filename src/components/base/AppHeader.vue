@@ -1,15 +1,20 @@
 <template>
+  <!-- :class="
+      $q.dark.isActive
+        ? 'wee-second-bg-color-theme-dark text-white'
+        : 'bg-white text-black'
+    " -->
   <q-header
     :reveal="reveal"
     height-hint="58"
     :bordered="bordered"
-    :elevated="false"
-    :class="
-      $q.dark.isActive
-        ? 'wee-second-bg-color-theme-dark text-white'
-        : 'bg-white text-black'
-    "
+    :elevated="showGotTopBtn"
+    :class="{
+      'bg-white text-black': !$q.dark.isActive,
+      'wee-second-bg-color-theme-dark text-white': $q.dark.isActive,
+    }"
   >
+    <q-scroll-observer @scroll="onScroll" />
     <q-toolbar class="q-py-xs">
       <q-btn
         v-if="showTogleDrawer"
@@ -23,7 +28,15 @@
           )
         "
       />
-      <q-btn flat no-caps no-wrap class="q-mr-xs" :ripple="false" to="/">
+      <q-btn
+        v-if="showLogo"
+        flat
+        no-caps
+        no-wrap
+        class="q-mr-xs"
+        :ripple="false"
+        to="/"
+      >
         <q-avatar style="height: auto; width: 42px" square>
           <img
             :src="
@@ -258,6 +271,10 @@ defineProps({
     type: Boolean,
     default: true,
   },
+  showLogo: {
+    type: Boolean,
+    default: true,
+  },
   frontend: {
     type: Boolean,
     default: true,
@@ -272,9 +289,10 @@ defineProps({
   },
   bordered: {
     type: Boolean,
-    default: true,
+    default: false,
   },
 });
+const showGotTopBtn = ref(false);
 // const { WeeGoTo } = useBase();
 const { notify, resetBadgeCount } = useNotification();
 const { t } = useLang();
@@ -288,6 +306,13 @@ const currenLocale = computed(() =>
 );
 const onOpenSearch = () => {
   showSearch.value = true;
+};
+const onScroll = (info: any) => {
+  if (info && info.position && info.position.top > 100) {
+    showGotTopBtn.value = true;
+  } else {
+    showGotTopBtn.value = false;
+  }
 };
 </script>
 <style lang="sass">

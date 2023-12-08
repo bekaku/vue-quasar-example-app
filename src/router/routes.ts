@@ -5,11 +5,22 @@ import {
   ROLE,
   BACKEND_LOGIN,
 } from '@/utils/appPermissionList';
+import {
+  BC_PERMISSION_FROM,
+  BC_ROLE_FROM,
+  BC_USER_FROM
+} from '@/breadcrumbs/AppBreadcrumbs';
+import {
+  TAB_COMPANY_CONFIG
+} from '@/breadcrumbs/AppTabs';
 const routes: RouteRecordRaw[] = [
   {
     path: '/',
     component: () => import('@/layouts/BackendLayout.vue'),
-    meta: { requireAuth: true, permission: [BACKEND_LOGIN] },
+    meta: {
+      requireAuth: true,
+      permission: [BACKEND_LOGIN]
+    },
     children: [
       {
         path: '',
@@ -17,34 +28,72 @@ const routes: RouteRecordRaw[] = [
       },
       {
         path: 'permission',
-        meta: { pageName: 'model_permission', permission: [PERMISSION.list] },
-        component: () => import('@/pages/backend/permission/List.vue'),
-      },
-      {
-        path: 'permission/:crud/:id/',
-        meta: { pageName: 'model_permission', permission: [PERMISSION.view] },
-        component: () => import('@/pages/backend/permission/Form.vue'),
+        children: [
+          {
+            path: '',
+            meta: {
+              pageName: 'model_permission',
+              permission: [PERMISSION.list]
+            },
+            component: () => import('@/pages/backend/permission/List.vue'),
+          },
+          {
+            path: ':crud/:id/',
+            meta: {
+              pageName: 'model_permission',
+              permission: [PERMISSION.view],
+              breadcrumbs: BC_PERMISSION_FROM,
+              tabs: TAB_COMPANY_CONFIG
+            },
+            component: () => import('@/pages/backend/permission/Form.vue'),
+          },
+        ]
       },
       {
         path: 'role',
-        meta: { pageName: 'model_role', permission: [ROLE.list] },
-        component: () => import('@/pages/backend/role/List.vue'),
-      },
-      {
-        path: 'role/:crud/:id/',
-        meta: { pageName: 'model_role', permission: [ROLE.view] },
-        component: () => import('@/pages/backend/role/Form.vue'),
+        children: [
+          {
+            path: '',
+            meta: {
+              pageName: 'model_role',
+              permission: [ROLE.list]
+            },
+            component: () => import('@/pages/backend/role/List.vue'),
+          },
+          {
+            path: ':crud/:id/',
+            meta: {
+              pageName: 'model_role',
+              permission: [ROLE.view],
+              breadcrumbs: BC_ROLE_FROM,
+            },
+            component: () => import('@/pages/backend/role/Form.vue'),
+          },
+        ]
       },
       {
         path: 'user',
-        meta: { pageName: 'model_user', permission: [USER.list] },
-        component: () => import('@/pages/backend/user/List.vue'),
+        children: [
+          {
+            path: '',
+            meta: {
+              pageName: 'model_user',
+              permission: [USER.list],
+            },
+            component: () => import('@/pages/backend/user/List.vue'),
+          },
+          {
+            path: ':crud/:id/',
+            meta: {
+              pageName: 'model_user',
+              permission: [USER.view],
+              breadcrumbs: BC_USER_FROM,
+            },
+            component: () => import('@/pages/backend/user/Form.vue'),
+          },
+        ]
       },
-      {
-        path: 'user/:crud/:id/',
-        meta: { pageName: 'model_user', permission: [USER.view] },
-        component: () => import('@/pages/backend/user/Form.vue'),
-      },
+
       {
         path: '/search',
         name: 'Search',

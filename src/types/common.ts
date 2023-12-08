@@ -609,6 +609,9 @@ export interface Country {
 }
 export interface Breadcrumb {
   label: string;
+  translateLabel?: boolean;
   icon?: string;
   to?: string;
+  params?: string[];
+  queries?: string[];
 }

@@ -1,9 +1,16 @@
 <template>
-  <q-layout view="hHh LpR fFf">
-    <app-header :frontend="false" :show-togle-drawer="true" />
+  <!-- <q-layout view="hHh LpR fFf"> -->
+
+  <q-layout view="lHh Lpr lff">
+    <app-header
+      :frontend="false"
+      :show-togle-drawer="true"
+      :show-logo="false"
+    />
     <backend-drawer />
 
     <q-page-container>
+      <layout-breadcrumb-tab />
       <router-view />
     </q-page-container>
   </q-layout>
@@ -27,4 +34,5 @@ export default {
 <script setup lang="ts">
 import BackendDrawer from '@/components/base/BackendDrawer.vue';
 import AppHeader from '@/components/base/AppHeader.vue';
+import LayoutBreadcrumbTab from '@/components/base/LayoutBreadcrumbTab.vue';
 </script>
