@@ -17,6 +17,7 @@
   },
   "dependencies": {
     "@capacitor/clipboard": "^5.0.6",
+    "@capacitor/device": "^5.0.6",
     "@capacitor/geolocation": "^5.0.6",
     "@emoji-mart/data": "^1.1.2",
     "@quasar/extras": "^1.16.9",

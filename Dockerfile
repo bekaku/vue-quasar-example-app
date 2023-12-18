@@ -1,6 +1,7 @@
 # develop stage
 # FROM node:18 AS build
-FROM node:latest AS build
+# FROM node:latest AS build
+FROM node:20 AS build
 # FROM node:18-alpine as build
 RUN apt-get update && apt-get install -y --no-install-recommends dumb-init
 
@@ -16,7 +17,7 @@ COPY . /app
 RUN quasar build -m ssr
 
 # FROM node:18-bullseye-slim
-FROM node:18-alpine
+FROM node:20-alpine
 ENV TZ=Asia/Bangkok
 RUN apk add --no-cache tzdata
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezon

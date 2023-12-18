@@ -85,6 +85,7 @@ export interface LoginRequest {
     emailOrUsername: string | null;
     password: string | null;
     loginFrom: LoginLogType;
+    deviceId?: string | null;
   };
 }
 export interface RefreshTokenRequest {

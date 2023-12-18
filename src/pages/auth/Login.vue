@@ -235,6 +235,9 @@ import { availableLocales } from '@/utils/lang';
 import { useLangugeAndThemeStore } from 'stores/langugeAndThemeStore';
 import AuthenService from '@/api/AuthenService';
 import { useAuth } from '@/composables/useAuth';
+import { useDevice } from '@/composables/useDevice';
+
+const { getDeviceId } = useDevice();
 const { singin } = AuthenService();
 const { setAuthenticationCookies, destroyAuthDataAndRedirect } = useAuth();
 const { t } = useLang();
@@ -245,6 +248,7 @@ const password = ref<string | null>('P@ssw0rd');
 const showPassword = ref<boolean>(false);
 const loading = ref<boolean>(false);
 const loginForm = ref(null);
+const deviceId = ref();
 // useMeta({
 //   title: `${t('page.login')} | ${t('app.monogram')}`,
 // });
@@ -288,8 +292,9 @@ const metaData = {
   },
 };
 useMeta(metaData);
-onMounted(() => {
+onMounted(async() => {
   destroyAuthDataAndRedirect(false);
+  deviceId.value = await getDeviceId();
 });
 
 const onSubmit = async () => {
@@ -299,6 +304,7 @@ const onSubmit = async () => {
       emailOrUsername: email.value,
       password: password.value,
       loginFrom: 'WEB',
+      deviceId: deviceId.value ? deviceId.value : null,
     },
   });
   loading.value = false;
