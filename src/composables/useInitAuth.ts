@@ -15,7 +15,7 @@ export const useInitAuth = (ssrContext: any, redirect: any) => {
   const init = async (): Promise<UserDto | null> => {
     if (cookies && cookies.get(AppAuthTokenKey)) {
       const userData = await getAndSetCurrentUserData();
-      await checkRefreshToken(userData);
+      // await checkRefreshToken(userData);
       return new Promise((resolve) => {
         resolve(userData);
       });

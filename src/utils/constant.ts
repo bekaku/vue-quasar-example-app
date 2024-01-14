@@ -22,6 +22,7 @@ export const FcmTokenKey = '_ss_mb_fcm';
 export const FcmSettingKey = '_ss_mb_fcm_setting';
 export const NotifyKey = '_ss_mb_notify';
 export const SearchHistoryKey = '_ss_searchs';
+export const SucureDeviceIdAtt = '_device_jid';
 export const CacheKey = {
   YEAR_AVAILABLE: '_ss_year_available',
   REPORT_CURRENT_STATS: '_ss_cache_1',

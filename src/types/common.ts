@@ -19,6 +19,8 @@ export enum CrudListDataType {
   LINKABLE,
   BASE_TOOL,
   NUMBER_FORMAT,
+  ICON,
+  FUNCTION,
 }
 // type
 export type CountryCode =
@@ -516,6 +518,7 @@ export interface ICrudListHeaderOption {
   searchOperationReadonly?: boolean;
   maxWidth?: string;//250px
   toolTip?: boolean;
+  func?: any;
 }
 export interface ICrudListHeader {
   column?: string;

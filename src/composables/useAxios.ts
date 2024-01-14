@@ -1,17 +1,20 @@
 import { api } from 'boot/axios';
 import { RequestType, AppException, ResponseMessage } from '@/types/common';
+import { RefreshTokenResponse } from '@/types/models';
 import { biX } from '@quasar/extras/bootstrap-icons';
 import { Cookies } from 'quasar';
 import { useBase } from '@/composables/useBase';
 import { useLang } from '@/composables/useLang';
+import { AxiosResponse } from 'axios';
 import {
   isAppException,
   isServerResponseMessage,
   isServerException,
 } from '@/utils/appUtil';
 import { useSSRContext } from 'vue';
-import { AppAuthTokenKey } from '@/utils/constant';
-import { formatRelativeFromNow } from '@/utils/dateUtil';
+import { AppAuthTokenKey, SucureDeviceIdAtt, AppAuthRefeshTokenKey, ExpireCookieDays } from '@/utils/constant';
+import { formatRelativeFromNow, addDateByDays } from '@/utils/dateUtil';
+import { canRefreshToken } from '@/utils/jwtUtil';
 export const useAxios = () => {
   const { WeeToast, WeeLoader, isDevMode } = useBase();
   const { locale } = useLang();
@@ -88,8 +91,60 @@ export const useAxios = () => {
     const res = await callAxios<T>(req);
     return await validateServerResponse<T>(res);
   };
-  const callAxios = <T>(req: RequestType): Promise<T> => {
-    return new Promise((resolve, reject) => {
+  const refeshTokenCheckProcess = async () => {
+    return new Promise(async (resolve, /*reject*/) => {
+      const token = cookies.get(AppAuthTokenKey);
+      if (token) {
+        const refreshIt = await canRefreshToken(token);
+        if (refreshIt) {
+          await refeshTokenToServerProcess();
+        }
+      }
+      resolve(true);
+    });
+  };
+  const refeshTokenToServerProcess = async () => {
+
+    const response = await callAxiosProcess<RefreshTokenResponse>({
+      API: '/api/auth/refreshToken',
+      method: 'POST',
+    });
+    if (response && response.status == 200 && response.data && response.data.refreshToken && response.data.authenticationToken) {
+      const isDevMode = process.env.NODE_ENV == 'development';
+      cookies.set(AppAuthRefeshTokenKey, response.data.refreshToken, {
+        expires: addDateByDays(ExpireCookieDays),
+        path: '/',
+        domain: isDevMode ? undefined : 'givedeefive.com',
+        secure: !isDevMode
+      });
+
+      cookies.set(AppAuthTokenKey, response.data.authenticationToken, {
+        expires: addDateByDays(ExpireCookieDays),
+        path: '/',
+        domain: isDevMode ? undefined : 'givedeefive.com',
+        secure: !isDevMode
+      });
+    }
+    return new Promise(async (resolve, /*reject*/) => {
+      resolve(true);
+    });
+  };
+  const callAxios = async <T>(req: RequestType): Promise<T> => {
+    await refeshTokenCheckProcess();
+    return new Promise(async (resolve, /*reject*/) => {
+      const response = await callAxiosProcess<T>(req);
+      if (response.data) {
+        if (isAppException(response.data)) {
+          notifyMessage(response.data);
+        } else if (isServerResponseMessage(response.data)) {
+          notifyServerMessage(response.data);
+        }
+      }
+      resolve(response.data as T);
+    });
+  };
+  const callAxiosProcess = <T>(req: RequestType): Promise<AxiosResponse<T>> => {
+    return new Promise((resolve, /*reject*/) => {
       // api.defaults.headers = reqHeader();
       // api.defaults.headers['Accept-Language'] = locale.value;
       // api.defaults.headers.Authorization = `Bearer ${token}`;
@@ -115,26 +170,23 @@ export const useAxios = () => {
       } else {
         api.defaults.headers['Content-Type'] = 'application/json';
       }
-      if (isDevMode()) {
-        console.log(`api ${api.defaults.baseURL}${req.API}`);
-      }
+
       api({
         method: req.method,
         url: req.API,
         data: req.body ? req.body : undefined,
       })
         .then((response) => {
-          if (response.data) {
-            if (isAppException(response.data)) {
-              notifyMessage(response.data);
-            } else if (isServerResponseMessage(response.data)) {
-              notifyServerMessage(response.data);
-            }
+          if (isDevMode()) {
+            console.log(`api ${api.defaults.baseURL}${req.API}`, response);
           }
-          resolve(response.data);
+          resolve(response as AxiosResponse<T>);
         })
         .catch((error) => {
-          reject(error.message);
+          if (isDevMode()) {
+            console.log(`api ${api.defaults.baseURL}${req.API}`, error);
+          }
+          resolve(error.message);
           WeeLoader(false);
           WeeToast(`<strong>${error.code}</strong><br> ${error.message}`, {
             multiLine: true,

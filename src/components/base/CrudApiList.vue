@@ -456,7 +456,28 @@
                           </template>
                         </template>
                         <template
-                          v-if="
+                          v-else-if="
+                            fillable.type === CrudListDataType.FUNCTION &&
+                            fillable.options &&
+                            fillable.options.func
+                          "
+                        >
+                          <template
+                            v-if="
+                              fillable.column &&
+                              getValueByColunm(fillable.column, index) !=
+                                undefined
+                            "
+                          >
+                            {{
+                              fillable.options.func(
+                                getValueByColunm(fillable.column, index),
+                              )
+                            }}
+                          </template>
+                        </template>
+                        <template
+                          v-else-if="
                             fillable.type === CrudListDataType.NUMBER_FORMAT
                           "
                         >
@@ -470,11 +491,24 @@
                           }}
                         </template>
                         <template
-                          v-if="fillable.type === CrudListDataType.DATE"
+                          v-else-if="fillable.type === CrudListDataType.DATE"
                         >
                           {{
                             fillable.column
                               ? dateForMat(
+                                  getValueByColunm(fillable.column, index),
+                                )
+                              : ''
+                          }}
+                        </template>
+                        <template
+                          v-else-if="
+                            fillable.type === CrudListDataType.DATE_TIME
+                          "
+                        >
+                          {{
+                            fillable.column
+                              ? datetimeForMat(
                                   getValueByColunm(fillable.column, index),
                                 )
                               : ''
@@ -557,6 +591,14 @@
                             "
                           />
                         </template>
+                        <template
+                          v-else-if="fillable.type === CrudListDataType.ICON"
+                        >
+                          <q-icon
+                            v-if="fillable.column"
+                            :name="getValueByColunm(fillable.column, index)"
+                          ></q-icon>
+                        </template>
                       </td>
                     </template>
                   </template>
@@ -568,32 +610,15 @@
             <app-result status="empty" :description="t('error.dataNotfound')" />
           </q-card-section>
         </template>
+
+        <app-paging
+          v-if="showPaging"
+          :model-value="pages"
+          :boundary-numbers="false"
+          @update:current="onPageChange"
+          @update:per-page="onPerPageChange"
+        ></app-paging>
       </q-card>
-    </div>
-  </div>
-  <div v-if="showPaging" class="row">
-    <div class="col">
-      <div class="q-pa-lg flex flex-center">
-        <q-select
-          :label="t('paging.rowsPerPage')"
-          class="q-mx-lg"
-          v-model="itemPerPage"
-          :options="pages?.perPageList"
-          option-value="value"
-          option-label="text"
-          emit-value
-          map-options
-          style="min-width: 170px; max-width: 200px"
-        />
-        <q-pagination
-          v-if="pages"
-          v-model="currentPage"
-          direction-links
-          boundary-links
-          :max="pages.totalPages"
-          :max-pages="7"
-        />
-      </div>
     </div>
   </div>
 </template>
@@ -628,14 +653,14 @@ import { isEmpty } from '@/utils/appUtil';
 import { getValFromObjectByPath } from '@/utils/appUtilJs';
 import SkeletonTable from '@/components/skeleton/SkeletonTable.vue';
 import AppSort from '@/components/base/AppSort.vue';
+import AppPaging from '@/components/base/Paging.vue';
 import { useBase } from '@/composables/useBase';
 import { usePermissionStore } from '@/stores/permissionStore';
-import { formatDate, FORMAT_DATE1 } from '@/utils/dateUtil';
+import { formatDate, FORMAT_DATE1, FORMAT_DATETIME } from '@/utils/dateUtil';
 
 const AppResult = defineAsyncComponent(
   () => import('@/components/base/AppResult.vue'),
 );
-
 const DatePicker = defineAsyncComponent(
   () => import('@/components/form/DatePicker.vue'),
 );
@@ -881,8 +906,25 @@ const isHaveManagePermission = computed(() => {
       ? permissionStore.isHaveFrontendPermission(`${props.crudName}_manage`)
       : true;
 });
-const dateForMat = (d: string) => {
-  return formatDate(d, FORMAT_DATE1, locale.value);
+const dateForMat = (d: string, format: string | undefined = undefined) => {
+  return d
+    ? formatDate(d, format ? format : FORMAT_DATE1, locale.value)
+    : undefined;
+};
+const datetimeForMat = (d: string, format: string | undefined = undefined) => {
+  return d
+    ? formatDate(d, format ? format : FORMAT_DATETIME, locale.value)
+    : undefined;
+};
+const onPageChange = async (v: number | undefined) => {
+  if (v) {
+    currentPage.value = v;
+  }
+};
+const onPerPageChange = async (v: number | undefined) => {
+  if (v) {
+    itemPerPage.value = v;
+  }
 };
 //wathcer
 watch(

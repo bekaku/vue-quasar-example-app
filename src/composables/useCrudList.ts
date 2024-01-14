@@ -138,6 +138,9 @@ export const useCrudList = <T>(
       q += `${additionalUri.value}`;
       haveParam = true;
     }
+
+
+
     return !isEmpty(q) ? q : undefined;
   })
   const pageParam = computed(() => {
@@ -342,7 +345,7 @@ export const useCrudList = <T>(
     }
     if (options.apiEndpoint && options.crudName) {
       WeeGoTo(
-        `${options.crudName.replace('_', '-')}/${CrudAction.VIEW}/${item.id}`
+        `${options.crudName.replaceAll('_', '-')}/${CrudAction.VIEW}/${item.id}`
       );
     }
   };
@@ -353,7 +356,7 @@ export const useCrudList = <T>(
     }
     if (options.apiEndpoint && options.crudName) {
       WeeGoTo(
-        `${options.crudName.replace('_', '-')}/${CrudAction.COPY}/${item.id}`
+        `${options.crudName.replaceAll('_', '-')}/${CrudAction.COPY}/${item.id}`
       );
     }
   };
