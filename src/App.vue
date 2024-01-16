@@ -3,7 +3,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, watch, onMounted } from 'vue';
+import { defineComponent, watch, onMounted, onBeforeUnmount } from 'vue';
 import { AppSetup } from './utils/app';
 import { useQuasar } from 'quasar';
 import { useLangugeAndThemeStore } from 'stores/langugeAndThemeStore';
@@ -15,10 +15,22 @@ import { usePermissionStore } from '@/stores/permissionStore';
 import { usePreFetch } from '@/composables/usePreFetch';
 import { IAcl } from '@/types/models';
 import { useInitAuth } from '@/composables/useInitAuth';
+import { useBase } from './composables/useBase';
 export default defineComponent({
   name: 'App',
   async preFetch({ ssrContext, redirect }) {
     const authenStore = useAuthenStore();
+
+    const refreshTokenReponse = await authenStore.refreshToken(ssrContext);
+    console.log('refreshTokenReponse', refreshTokenReponse);
+    if (
+      refreshTokenReponse &&
+      !refreshTokenReponse.status &&
+      refreshTokenReponse.fourceLogout
+    ) {
+      redirect({ path: '/auth/login' });
+    }
+
     const drawerStore = useDrawerStore();
     const permissionStore = usePermissionStore();
     const { callAxios } = usePreFetch(ssrContext, redirect);
@@ -45,6 +57,7 @@ export default defineComponent({
     }
   },
   setup() {
+    const { WeeGoTo } = useBase();
     const router = useRouter();
     const authenStore = useAuthenStore();
     const $q = useQuasar();
@@ -84,6 +97,16 @@ export default defineComponent({
     setDark(langugeAndThemeStore.theme as ITheme);
     watch(langugeAndThemeStore, (state) => {
       setDark(state.theme as ITheme);
+    });
+    watch(authenStore, (state) => {
+      if (state && state.sessionExpired) {
+        WeeGoTo('/auth/login', true);
+      }
+    });
+    onBeforeUnmount(() => {
+      if (authenStore && authenStore.refreshTokenTimeout) {
+        authenStore.stopRefreshTokenTimer();
+      }
     });
     return {};
   },

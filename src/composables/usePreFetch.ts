@@ -5,9 +5,6 @@ import { RequestType } from '@/types/common';
 import { isAppException } from '@/utils/appUtil';
 import { useExceptionStore } from '@/stores/exceptionStore';
 import { AxiosResponse } from 'axios';
-import { RefreshTokenResponse } from '@/types/models';
-import { addDateByDays } from '@/utils/dateUtil';
-import { canRefreshToken } from '@/utils/jwtUtil';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const usePreFetch = (ssrContext: any, redirect: any) => {
   const ck: any = process.env.SERVER ? Cookies.parseSSR(ssrContext) : Cookies;
@@ -15,7 +12,6 @@ export const usePreFetch = (ssrContext: any, redirect: any) => {
 
   const callAxios = async <T>(req: RequestType): Promise<T> => {
     //TODO implement refresh token hear 
-    await refeshTokenCheckProcess();
     return new Promise(async (resolve, /*reject*/) => {
       const response = await callAxiosProcess<T>(req);
       if (isAppException(response.data)) {
@@ -33,52 +29,6 @@ export const usePreFetch = (ssrContext: any, redirect: any) => {
         // redirect({ path: '/error' })
       }
       resolve(response.data as T);
-    });
-  };
-  const refeshTokenCheckProcess = async () => {
-    return new Promise(async (resolve, /*reject*/) => {
-      const token = ck.get(AppAuthTokenKey);
-      if (token) {
-        const refreshIt = await canRefreshToken(token);
-        if (refreshIt) {
-          await refeshTokenToServerProcess();
-        }
-      }
-      resolve(true);
-    });
-  };
-  const refeshTokenToServerProcess = async () => {
-    const response = await callAxiosProcess<RefreshTokenResponse>({
-      API: '/api/auth/refreshToken',
-      method: 'POST',
-    });
-    if (response && response.status == 200 && response.data && response.data.refreshToken && response.data.authenticationToken) {
-      const isDevMode = process.env.NODE_ENV == 'development';
-      ck.set(SucureDeviceIdAtt, response.data.refreshToken, {
-        expires: addDateByDays(ExpireCookieDays),
-        path: '/',
-        domain: isDevMode ? undefined : 'givedeefive.com',
-        secure: true,
-        httpOnly: true,
-        sameSite: 'None'
-      });
-
-      ck.set(AppAuthRefeshTokenKey, response.data.refreshToken, {
-        expires: addDateByDays(ExpireCookieDays),
-        path: '/',
-        domain: isDevMode ? undefined : 'givedeefive.com',
-        secure: !isDevMode
-      });
-
-      ck.set(AppAuthTokenKey, response.data.authenticationToken, {
-        expires: addDateByDays(ExpireCookieDays),
-        path: '/',
-        domain: isDevMode ? undefined : 'givedeefive.com',
-        secure: !isDevMode
-      });
-    }
-    return new Promise(async (resolve, /*reject*/) => {
-      resolve(true);
     });
   };
 

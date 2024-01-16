@@ -26,6 +26,7 @@ export const useCrudForm = <T>(options: CrudFormApiOptions, initialEntity: T) =>
   const { WeeGoTo, WeeGetParam, WeeToast, WeeConfirm, isDevMode, getPreviousPath } = useBase();
   const { callAxios } = useAxios();
   const { t } = useLang();
+
   const previousPath = ref(getPreviousPath() as string);
   const loading = ref(false);
   const crudId = ref<number>(
@@ -35,11 +36,13 @@ export const useCrudForm = <T>(options: CrudFormApiOptions, initialEntity: T) =>
   );
 
   const crudEntity = ref<any>(Object.assign({}, initialEntity) as T);
-
+  const requestEntityName = ref<string | undefined>(
+    options.requestEntityName ? options.requestEntityName : undefined,
+  );
   const crudAction = ref<ICrudAction>(
     WeeGetParam(PageActionParamiter) as ICrudAction
   );
-
+  const fetchDataLink = ref(options.fetchDataLink);
   onMounted(async () => {
     if (options.fectchDataOnLoad) {
       preFectData();
@@ -64,8 +67,8 @@ export const useCrudForm = <T>(options: CrudFormApiOptions, initialEntity: T) =>
     }
   };
   const getFetchDataLink = computed(() => {
-    if (options.fetchDataLink) {
-      return options.fetchDataLink;
+    if (fetchDataLink.value) {
+      return fetchDataLink.value;
     }
     return `${options.apiEndpoint}/${snakeToCamel(
       options.crudName ? options.crudName : ''
@@ -126,7 +129,7 @@ export const useCrudForm = <T>(options: CrudFormApiOptions, initialEntity: T) =>
     if (crudAction.value === CrudAction.VIEW) {
       return options.actionPut
         ? options.actionPut
-        : options.apiEndpoint + '/' + snakeToCamel(options.crudName);
+        : options.apiEndpoint + '/' + snakeToCamel(options.crudName) + (options.methodPutIncludeId ? '/' + crudEntity.value.id : '');
     }
     return options.actionPost
       ? options.actionPost
@@ -138,7 +141,8 @@ export const useCrudForm = <T>(options: CrudFormApiOptions, initialEntity: T) =>
     }
     // const requestItem: { [k: string]: T } = {};
     const requestItem: RequestDto = {};
-    requestItem[`${snakeToCamel(options.crudName)}`] = crudEntity.value;
+    requestItem[requestEntityName.value
+      ? requestEntityName.value : `${snakeToCamel(options.crudName)}`] = crudEntity.value;
 
     const api = apiEnpoint.value;
     if (!api) {
@@ -235,5 +239,7 @@ export const useCrudForm = <T>(options: CrudFormApiOptions, initialEntity: T) =>
     crudAction,
     crudEntity,
     crudName: options.crudName,
+    requestEntityName,
+    fetchDataLink
   };
 };

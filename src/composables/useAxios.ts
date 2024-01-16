@@ -14,7 +14,6 @@ import {
 import { useSSRContext } from 'vue';
 import { AppAuthTokenKey, SucureDeviceIdAtt, AppAuthRefeshTokenKey, ExpireCookieDays } from '@/utils/constant';
 import { formatRelativeFromNow, addDateByDays } from '@/utils/dateUtil';
-import { canRefreshToken } from '@/utils/jwtUtil';
 export const useAxios = () => {
   const { WeeToast, WeeLoader, isDevMode } = useBase();
   const { locale } = useLang();
@@ -91,46 +90,7 @@ export const useAxios = () => {
     const res = await callAxios<T>(req);
     return await validateServerResponse<T>(res);
   };
-  const refeshTokenCheckProcess = async () => {
-    return new Promise(async (resolve, /*reject*/) => {
-      const token = cookies.get(AppAuthTokenKey);
-      if (token) {
-        const refreshIt = await canRefreshToken(token);
-        if (refreshIt) {
-          await refeshTokenToServerProcess();
-        }
-      }
-      resolve(true);
-    });
-  };
-  const refeshTokenToServerProcess = async () => {
-
-    const response = await callAxiosProcess<RefreshTokenResponse>({
-      API: '/api/auth/refreshToken',
-      method: 'POST',
-    });
-    if (response && response.status == 200 && response.data && response.data.refreshToken && response.data.authenticationToken) {
-      const isDevMode = process.env.NODE_ENV == 'development';
-      cookies.set(AppAuthRefeshTokenKey, response.data.refreshToken, {
-        expires: addDateByDays(ExpireCookieDays),
-        path: '/',
-        domain: isDevMode ? undefined : 'givedeefive.com',
-        secure: !isDevMode
-      });
-
-      cookies.set(AppAuthTokenKey, response.data.authenticationToken, {
-        expires: addDateByDays(ExpireCookieDays),
-        path: '/',
-        domain: isDevMode ? undefined : 'givedeefive.com',
-        secure: !isDevMode
-      });
-    }
-    return new Promise(async (resolve, /*reject*/) => {
-      resolve(true);
-    });
-  };
   const callAxios = async <T>(req: RequestType): Promise<T> => {
-    await refeshTokenCheckProcess();
     return new Promise(async (resolve, /*reject*/) => {
       const response = await callAxiosProcess<T>(req);
       if (response.data) {

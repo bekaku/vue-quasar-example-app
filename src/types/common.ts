@@ -487,6 +487,7 @@ export interface CrudFormApiOptions {
   fectchDataOnLoad?: boolean;
   autoPageTitle?: boolean;
   preventRedirectToList?: boolean;
+  requestEntityName?: string;
 }
 
 export type IAlign = 'center' | 'left' | 'right';
@@ -617,4 +618,8 @@ export interface Breadcrumb {
   to?: string;
   params?: string[];
   queries?: string[];
+}
+export interface RefeshTokenStatus {
+  status: boolean;
+  fourceLogout: boolean;
 }
