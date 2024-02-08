@@ -39,11 +39,6 @@
           <q-item-section top>
             <template v-if="item.userRefDto">
               <q-item-label class="text-weight-bold cursor-pointer">
-                <profile-name :user="item.userRefDto" color="text-black">
-                </profile-name>
-              </q-item-label>
-              <q-item-label v-if="item.userRefDto.positionName" caption>
-                {{ item.userRefDto.positionName }}
               </q-item-label>
             </template>
             <q-item-label v-else>
@@ -72,9 +67,6 @@ import {
   biHash,
   biFileEarmarkText,
 } from '@quasar/extras/bootstrap-icons';
-const ProfileName = defineAsyncComponent(
-  () => import('@/components/profile/ProfileName.vue'),
-);
 const ProfileItem = defineAsyncComponent(
   () => import('@/components/user/ProfileItem.vue'),
 );

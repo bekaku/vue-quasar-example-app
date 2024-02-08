@@ -4,6 +4,7 @@ import {
   AppAuthTokenCreatedKey,
   AppAuthRefeshTokenKey,
   AppAuthTokenExpireKey,
+  ExpireCookieDays,
 } from '@/utils/constant';
 import { UserDto, RefreshTokenResponse } from '@/types/models';
 import { useAuthenStore } from 'stores/authenStore';
@@ -11,13 +12,13 @@ import { useSSRContext } from 'vue';
 import { useBase } from './useBase';
 import { useLang } from './useLang';
 import AuthenService from '@/api/AuthenService';
-import { setAuthCookies } from '@/utils/appUtil';
 import { useCache } from './useCache';
+import { addDateByDays } from '@/utils/dateUtil';
 export const useAuth = () => {
   const ssrContext = process.env.SERVER ? useSSRContext() : null;
   const cookies = process.env.SERVER ? Cookies.parseSSR(ssrContext) : Cookies; // otherwise we're on client
   const authenStore = useAuthenStore();
-  const { WeeConfirm, WeeLoader } = useBase();
+  const { WeeConfirm, WeeLoader, isDevMode } = useBase();
   const { t } = useLang();
   const { singoutToServer } = AuthenService();
   const { logoutClear } = useCache();
@@ -54,7 +55,46 @@ export const useAuth = () => {
     return;
   };
   const setAuthenticationCookies = (authResponse: RefreshTokenResponse) => {
-    setAuthCookies(cookies, authResponse);
+    setAuthCookies(cookies, authResponse, !isDevMode());
+  };
+  const setAuthCookies = (
+    cookies: any,
+    authResponse: RefreshTokenResponse,
+    secure: boolean = false
+  ) => {
+    if (cookies) {
+      cookies.set(AppAuthTokenKey, authResponse.authenticationToken, {
+        expires: addDateByDays(ExpireCookieDays),
+        path: '/',
+        // domain: secure ? AppDomain : null,
+        secure: secure,
+        sameSite: 'Strict'
+      });
+
+      cookies.set(AppAuthRefeshTokenKey, authResponse.refreshToken, {
+        expires: addDateByDays(ExpireCookieDays),
+        path: '/',
+        // domain: secure ? AppDomain : null,
+        secure: secure,
+        sameSite: 'Strict'
+      });
+
+      cookies.set(AppAuthTokenExpireKey, authResponse.expiresAt, {
+        expires: addDateByDays(ExpireCookieDays),
+        path: '/',
+        // domain: secure ? AppDomain : null,
+        secure: secure,
+        sameSite: 'Strict'
+      });
+
+      cookies.set(AppAuthTokenCreatedKey, Date.now().toString(), {
+        expires: addDateByDays(ExpireCookieDays),
+        path: '/',
+        // domain: secure ? AppDomain : null,
+        secure: secure,
+        sameSite: 'Strict'
+      });
+    }
   };
   const logoutToServer = async (
     token: string | null,

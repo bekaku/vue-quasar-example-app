@@ -393,6 +393,7 @@ export interface RequestType {
   method: IMethod;
   body?: any;
   contentType?: string;
+  responseType?: 'arraybuffer' | 'document' | 'json' | 'text' | 'stream';
 }
 export interface ApiResponse {
   response?: any;

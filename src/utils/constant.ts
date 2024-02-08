@@ -1,12 +1,14 @@
+export const TestMode = true;
+export const PrefixKey = TestMode ? '_test_mykey_' : '_mykey_';
 export const DefaultLocale = 'th';
-export const LocaleKey = '_locale';
-export const ThemeKey = '_theme';
+export const LocaleKey = PrefixKey + 'locale';
+export const ThemeKey = PrefixKey + 'theme';
 export const DefaultApiCLient = 'default';
-export const AppAuthTokenKey = '_ss01';
-export const AppAuthRefeshTokenKey = '_ss02';
-export const AppAuthDataKey = '_ss03';
-export const AppAuthTokenExpireKey = '_ss04';
-export const AppAuthTokenCreatedKey = '_ss05';
+export const AppAuthTokenKey = PrefixKey + '01';
+export const AppAuthRefeshTokenKey = PrefixKey + '02';
+export const AppAuthDataKey = PrefixKey + '03';
+export const AppAuthTokenExpireKey = PrefixKey + '04';
+export const AppAuthTokenCreatedKey = PrefixKey + '05';
 export const ExpireCookieDays = 365;
 export const autoRefeshTokenDays = 30;
 export const SearchParamiter = '_q';
@@ -17,42 +19,42 @@ export const AdminRootPath = 'admin';
 export const CompanyIdAtt = 'companyId';
 export const UserIdAtt = 'userId';
 export const ProfileNameAtt = 'userProfileId';
-export const CacheDateCheckKey = '_ss_cache_date_check';
-export const FcmTokenKey = '_ss_mb_fcm';
-export const FcmSettingKey = '_ss_mb_fcm_setting';
-export const NotifyKey = '_ss_mb_notify';
-export const SearchHistoryKey = '_ss_searchs';
+export const CacheDateCheckKey = PrefixKey + '_cache_date_check';
+export const FcmTokenKey = PrefixKey + '_mb_fcm';
+export const FcmSettingKey = PrefixKey + '_mb_fcm_setting';
+export const NotifyKey = PrefixKey + '_mb_notify';
+export const SearchHistoryKey = PrefixKey + '_searchs';
 export const SucureDeviceIdAtt = '_device_jid';
 export const AppDomain = 'your-domain.com';
 export const CacheKey = {
-  YEAR_AVAILABLE: '_ss_year_available',
-  REPORT_CURRENT_STATS: '_ss_cache_1',
-  REPORT_INDIVIDUAL: '_ss_cache_2',
-  REPORT_CURRENT_DIALOGUE: '_ss_cache_3',
-  REPORT_CURRENT_COUNTING: '_ss_cache_4',
-  REPORT_CURRENT_LEVEL_STATS: '_ss_cache_5',
-  REPORT_TEAM_MEMBER_CURRENT_STATS: '_ss_cache_6',
-  REPORT_TEAM_LEADER_CURRENT_STATS: '_ss_cache_7',
-  REPORT_TEAM_MEMBER: '_ss_cache_8',
-  REPORT_TEAM_LEADER: '_ss_cache_9',
-  REPORT_TEAM_MEMBER_DIALOUGE: '_ss_cache_10',
-  REPORT_TEAM_LEADER_DIALOUGE: '_ss_cache_11',
-  REPORT_TEAM_MEMBER_COUNTING: '_ss_cache_12',
-  REPORT_TEAM_LEADER_COUNTING: '_ss_cache_13',
-  REPORT_TEAM_MEMBER_LEVEL_STATS: '_ss_cache_14',
-  REPORT_TEAM_LEADER_LEVEL_STATS: '_ss_cache_15',
-  REPORT_TEAM_MEMBER_DE_RATIOS: '_ss_cache_16',
-  REPORT_TEAM_LEADER_DE_RATIOS: '_ss_cache_17',
-  REPORT_COMPANY_CURRENT_STATS: '_ss_cache_18',
-  REPORT_COMPANY: '_ss_cache_19',
-  REPORT_COMPANY_DIALOGUE: '_ss_cache_20',
-  REPORT_COMPANY_COUNTING: '_ss_cache_21',
-  REPORT_COMPANY_LEVEL_STATS: '_ss_cache_22',
-  REPORT_COMPANY_DE_RATIOS: '_ss_cache_23',
-  REPORT_USER_LEVEL_CHART: '_ss_cache_24',
-  REPORT_USER_SCORE_HISTORY: '_ss_cache_25',
-  REPORT_USER_LEVEL_CHART_IN_YEAR: '_ss_cache_26',
-  LOGIN_LOG: '_ss_login_log',
+  YEAR_AVAILABLE: PrefixKey + 'year_available',
+  REPORT_CURRENT_STATS: PrefixKey + 'cache_1',
+  REPORT_INDIVIDUAL: PrefixKey + 'cache_2',
+  REPORT_CURRENT_DIALOGUE: PrefixKey + 'cache_3',
+  REPORT_CURRENT_COUNTING: PrefixKey + 'cache_4',
+  REPORT_CURRENT_LEVEL_STATS: PrefixKey + 'cache_5',
+  REPORT_TEAM_MEMBER_CURRENT_STATS: PrefixKey + 'cache_6',
+  REPORT_TEAM_LEADER_CURRENT_STATS: PrefixKey + 'cache_7',
+  REPORT_TEAM_MEMBER: PrefixKey + 'cache_8',
+  REPORT_TEAM_LEADER: PrefixKey + 'cache_9',
+  REPORT_TEAM_MEMBER_DIALOUGE: PrefixKey + 'cache_10',
+  REPORT_TEAM_LEADER_DIALOUGE: PrefixKey + 'cache_11',
+  REPORT_TEAM_MEMBER_COUNTING: PrefixKey + 'cache_12',
+  REPORT_TEAM_LEADER_COUNTING: PrefixKey + 'cache_13',
+  REPORT_TEAM_MEMBER_LEVEL_STATS: PrefixKey + 'cache_14',
+  REPORT_TEAM_LEADER_LEVEL_STATS: PrefixKey + 'cache_15',
+  REPORT_TEAM_MEMBER_DE_RATIOS: PrefixKey + 'cache_16',
+  REPORT_TEAM_LEADER_DE_RATIOS: PrefixKey + 'cache_17',
+  REPORT_COMPANY_CURRENT_STATS: PrefixKey + 'cache_18',
+  REPORT_COMPANY: PrefixKey + 'cache_19',
+  REPORT_COMPANY_DIALOGUE: PrefixKey + 'cache_20',
+  REPORT_COMPANY_COUNTING: PrefixKey + 'cache_21',
+  REPORT_COMPANY_LEVEL_STATS: PrefixKey + 'cache_22',
+  REPORT_COMPANY_DE_RATIOS: PrefixKey + 'cache_23',
+  REPORT_USER_LEVEL_CHART: PrefixKey + 'cache_24',
+  REPORT_USER_SCORE_HISTORY: PrefixKey + 'cache_25',
+  REPORT_USER_LEVEL_CHART_IN_YEAR: PrefixKey + 'cache_26',
+  LOGIN_LOG: PrefixKey + 'login_log',
 };
 export const FileExtensionAccept =
   '.png,.jpg,.jpeg,.gif,.doc,.docx,.pdf,.xls,.xlsx,.ppt,.pptx,.pps';

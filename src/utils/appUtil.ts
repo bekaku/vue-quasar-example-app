@@ -104,32 +104,6 @@ export const openUrlInNewTab = (
     ev.stopImmediatePropagation();
   }
 };
-export const setAuthCookies = (
-  cookies: any,
-  authResponse: RefreshTokenResponse
-) => {
-  if (cookies) {
-    cookies.set(AppAuthTokenKey, authResponse.authenticationToken, {
-      expires: addDateByDays(ExpireCookieDays),
-      path: '/',
-    });
-
-    cookies.set(AppAuthRefeshTokenKey, authResponse.refreshToken, {
-      expires: addDateByDays(ExpireCookieDays),
-      path: '/',
-    });
-
-    cookies.set(AppAuthTokenExpireKey, authResponse.expiresAt, {
-      expires: addDateByDays(ExpireCookieDays),
-      path: '/',
-    });
-
-    cookies.set(AppAuthTokenCreatedKey, Date.now().toString(), {
-      expires: addDateByDays(ExpireCookieDays),
-      path: '/',
-    });
-  }
-};
 export const checkExpansionChildActive = (
   currentUrlPath: string,
   items: IMenuPageItem[]

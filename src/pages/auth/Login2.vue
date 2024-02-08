@@ -118,7 +118,7 @@ import {
   biEyeSlash,
 } from '@quasar/extras/bootstrap-icons';
 import { useLang } from '@/composables/useLang';
-import { validateEmail } from '@/ils/appUtil';
+import { validateEmail } from '@/utils/appUtil';
 export default defineComponent({
   components: {},
   setup() {

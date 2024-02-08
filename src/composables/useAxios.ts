@@ -90,6 +90,17 @@ export const useAxios = () => {
     const res = await callAxios<T>(req);
     return await validateServerResponse<T>(res);
   };
+  const callAxiosFile = async <T>(req: RequestType): Promise<any> => {
+    return new Promise(async (resolve, /*reject*/) => {
+      const response = await callAxiosProcess<T>(req, false);
+      if (response.data) {
+        const blob = new Blob([response.data as BlobPart], { type: response.headers['content-type'] });
+        const imageUrlObject = URL.createObjectURL(blob);
+        resolve(imageUrlObject);
+      }
+      resolve(null);
+    });
+  };
   const callAxios = async <T>(req: RequestType): Promise<T> => {
     return new Promise(async (resolve, /*reject*/) => {
       const response = await callAxiosProcess<T>(req);
@@ -103,7 +114,7 @@ export const useAxios = () => {
       resolve(response.data as T);
     });
   };
-  const callAxiosProcess = <T>(req: RequestType): Promise<AxiosResponse<T>> => {
+  const callAxiosProcess = <T>(req: RequestType, devLog: boolean = true): Promise<AxiosResponse<T>> => {
     return new Promise((resolve, /*reject*/) => {
       // api.defaults.headers = reqHeader();
       // api.defaults.headers['Accept-Language'] = locale.value;
@@ -119,7 +130,7 @@ export const useAxios = () => {
       )}`;
 
       // console.log('useAxios > callAxios :', req);
-      if (req.baseURL) {
+      if (req.baseURL != undefined) {
         api.defaults.baseURL = req.baseURL;
       } else {
         api.defaults.baseURL = process.env.API;
@@ -130,7 +141,11 @@ export const useAxios = () => {
       } else {
         api.defaults.headers['Content-Type'] = 'application/json';
       }
-
+      if (req.responseType) {
+        api.defaults.responseType = req.responseType;
+      } else {
+        api.defaults.responseType = 'json';
+      }
       api({
         method: req.method,
         url: req.API,
@@ -143,7 +158,7 @@ export const useAxios = () => {
           resolve(response as AxiosResponse<T>);
         })
         .catch((error) => {
-          if (isDevMode()) {
+          if (isDevMode() && devLog) {
             console.log(`api ${api.defaults.baseURL}${req.API}`, error);
           }
           resolve(error.message);
@@ -176,5 +191,5 @@ export const useAxios = () => {
       //   });
     });
   };
-  return { callAxios, validateServerResponse, callAxiosV2 };
+  return { callAxios, validateServerResponse, callAxiosV2, callAxiosFile };
 };

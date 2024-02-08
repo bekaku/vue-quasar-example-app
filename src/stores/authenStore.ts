@@ -48,27 +48,31 @@ export const useAuthenStore = defineStore('authenStore', {
             }
             if (response && response.status == 200 && response.data && response.data.refreshToken && response.data.authenticationToken) {
               const isDevMode = process.env.NODE_ENV == 'development';
-              ck.set(SucureDeviceIdAtt, response.data.refreshToken, {
-                expires: addDateByDays(ExpireCookieDays),
-                path: '/',
-                domain: isDevMode ? undefined : AppDomain,
-                secure: true,
-                httpOnly: true,
-                sameSite: 'None'
-              });
+              if (isServerMode) {
+                ck.set(SucureDeviceIdAtt, response.data.refreshToken, {
+                  expires: addDateByDays(ExpireCookieDays),
+                  path: '/',
+                  domain: isDevMode ? undefined : AppDomain,
+                  secure: true,
+                  httpOnly: true,
+                  sameSite: 'None'
+                });
+              }
 
               ck.set(AppAuthRefeshTokenKey, response.data.refreshToken, {
                 expires: addDateByDays(ExpireCookieDays),
                 path: '/',
-                domain: isDevMode ? undefined : AppDomain,
-                secure: !isDevMode
+                // domain: isDevMode ? undefined : AppDomain,
+                secure: !isDevMode,
+                sameSite: 'Strict'
               });
 
               ck.set(AppAuthTokenKey, response.data.authenticationToken, {
                 expires: addDateByDays(ExpireCookieDays),
                 path: '/',
-                domain: isDevMode ? undefined : AppDomain,
-                secure: !isDevMode
+                // domain: isDevMode ? undefined : AppDomain,
+                secure: !isDevMode,
+                sameSite: 'Strict'
               });
               this.sessionExpired = false;
             } else if (response && response.status == 401) {

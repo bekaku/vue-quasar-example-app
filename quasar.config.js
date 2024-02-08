@@ -31,9 +31,9 @@ module.exports = configure(function (ctx) {
       'requireAuth',
       // { path: 'swiper', server: false },
       // { path: 'emojiMart', server: false },
-      { path: 'apexcharts', server: false },
       { path: 'vueSlicksort', server: false },
       { path: 'vueZoomer', server: false },
+      { path: ctx.dev ? 'VueApexcharts' : 'VueApexchartsTs', server: false },
     ],
 
     // https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#css

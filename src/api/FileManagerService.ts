@@ -3,7 +3,7 @@ import { FileManagerDto } from '@/types/models';
 import { ResponseMessage } from '@/types/common';
 import { FILES_UPLOAD_ATT, FILES_DIRECTORY_ID_ATT } from '@/utils/constant';
 export default () => {
-  const { callAxios, validateServerResponse } = useAxios();
+  const { callAxios, validateServerResponse, callAxiosFile } = useAxios();
   const uploadApi = async (
     file: any,
     fileDirectoryId = 0
@@ -45,11 +45,22 @@ export default () => {
       baseURL: process.env.cdnBaseUrl,
     });
   };
-
+  const fethCdnData = async (
+    path: string
+  ): Promise<any> => {
+    const cdnBase = process.env.cdnBaseUrl;
+    const src = cdnBase ? path.replace(cdnBase, '') : path;
+    return await callAxiosFile<any>({
+      API: src,
+      method: 'GET',
+      responseType: 'arraybuffer'
+    });
+  };
   return {
     uploadApi,
     updateUserAvatar,
     updateUserCover,
-    deleteFileApi
+    deleteFileApi,
+    fethCdnData
   };
 };
