@@ -32,6 +32,7 @@ export const useAuthenStore = defineStore('authenStore', {
         if (authTokenKey) {
           const refreshIt = await canRefreshToken(authTokenKey, this.devMode, 'authenStore > refreshToken');
           if (refreshIt) {
+            const refreshTokenKey = ck.get(AppAuthRefeshTokenKey);
             if (isServerMode) {
               // const refreshTokenKey = ck.get(AppAuthRefeshTokenKey);
               // const deviceId = ck.get(SucureDeviceIdAtt);
@@ -39,25 +40,32 @@ export const useAuthenStore = defineStore('authenStore', {
               //   api.defaults.headers.Cookie = `${SucureDeviceIdAtt}=${deviceId};`;
               // }
             }
+            api.defaults.headers.common.Authorization = `Bearer ${authTokenKey}`;
+            api.defaults.responseType = 'json';
             const response = await api({
               method: 'POST',
               url: '/api/auth/refreshToken',
+              data: {
+                refreshToken: {
+                  refreshToken: refreshTokenKey
+                }
+              },
             });
             if (this.devMode) {
               console.log(`api ${api.defaults.baseURL}/api/auth/refreshToken`, response);
             }
             if (response && response.status == 200 && response.data && response.data.refreshToken && response.data.authenticationToken) {
               const isDevMode = process.env.NODE_ENV == 'development';
-              if (isServerMode) {
-                ck.set(SucureDeviceIdAtt, response.data.refreshToken, {
-                  expires: addDateByDays(ExpireCookieDays),
-                  path: '/',
-                  domain: isDevMode ? undefined : AppDomain,
-                  secure: true,
-                  httpOnly: true,
-                  sameSite: 'None'
-                });
-              }
+              // if (isServerMode) {
+              //   ck.set(SucureDeviceIdAtt, response.data.refreshToken, {
+              //     expires: addDateByDays(ExpireCookieDays),
+              //     path: '/',
+              //     domain: isDevMode ? undefined : AppDomain,
+              //     secure: true,
+              //     httpOnly: true,
+              //     sameSite: 'None'
+              //   });
+              // }
 
               ck.set(AppAuthRefeshTokenKey, response.data.refreshToken, {
                 expires: addDateByDays(ExpireCookieDays),
@@ -75,6 +83,9 @@ export const useAuthenStore = defineStore('authenStore', {
                 sameSite: 'Strict'
               });
               this.sessionExpired = false;
+              if (!isServerMode) {
+                this.startRefreshTokenTimer();
+              }
             } else if (response && response.status == 401) {
               this.sessionExpired = true;
               return new Promise((resolve, /*reject*/) => {
@@ -88,9 +99,6 @@ export const useAuthenStore = defineStore('authenStore', {
         }
       }
       return new Promise((resolve, /*reject*/) => {
-        if (!isServerMode) {
-          this.startRefreshTokenTimer();
-        }
         resolve({
           status: true,
           fourceLogout: false
