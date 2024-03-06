@@ -6,94 +6,17 @@
     </q-card-section>
 
     <q-card-section>
-      <q-form
-        @submit="onSubmit"
-        @reset="onReset"
-        ref="loginForm"
-        class="q-px-sm"
-      >
-        <q-card-section>
-          <q-input
-            :readonly="loading"
-            outlined
-            dense
-            v-model="currentPassword"
-            :type="showPassword ? 'text' : 'password'"
-            :label="t('authen.currentPassword')"
-            :rules="[(val) => requireField(val, t('authen.currentPassword'))]"
-          >
-            <template v-slot:prepend>
-              <q-icon :name="biShieldLock" />
-            </template>
-            <template v-slot:append>
-              <q-icon
-                :name="showPassword ? biEye : biEyeSlash"
-                @click="showPassword = !showPassword"
-              />
-            </template>
-          </q-input>
-          <q-input
-            class="q-pt-md"
-            :readonly="loading"
-            outlined
-            dense
-            v-model="newPassword"
-            :type="showPassword ? 'text' : 'password'"
-            :label="t('authen.newPassword')"
-            :rules="[
-              (val) => requireField(val, t('authen.newPassword')),
-              (val) =>
-                validatePasswordStrongV2(val) || t('error.passwordStrongError'),
-            ]"
-          >
-            <template v-slot:prepend>
-              <q-icon :name="biLock" color="grey-9" />
-            </template>
-            <template v-slot:append>
-              <q-icon v-if="isValidPwd" :name="biCheck" color="positive" />
-            </template>
-          </q-input>
-
-          <q-input
-            class="q-pt-md"
-            :readonly="loading"
-            outlined
-            dense
-            v-model="rePassword"
-            :type="showPassword ? 'text' : 'password'"
-            :label="t('authen.confirmPassword')"
-            :rules="[
-              (val) => requireField(val, t('authen.confirmPassword')),
-              (val) =>
-                validateTheSamePwd(val) || t('error.passwordNotMatchNew'),
-            ]"
-          >
-            <template v-slot:prepend>
-              <q-icon :name="biLock" color="grey-9" />
-            </template>
-            <template v-slot:append>
-              <q-icon v-if="isSamePwd" :name="biCheck" color="positive" />
-            </template>
-          </q-input>
-        </q-card-section>
-        <q-card-section>
-          <div>
-            <q-checkbox
-              v-model="logoutAllDevice"
-              :label="t('authen.logoutAll')"
-            />
-          </div>
-        </q-card-section>
-        <q-card-actions>
-          <q-btn
-            unelevated
-            outline
-            :loading="loading"
-            :label="t('updatePassword')"
-            type="submit"
-          />
-        </q-card-actions>
-      </q-form>
+      <password-form
+        v-model:currentPassword="currentPassword"
+        v-model:newPassword="newPassword"
+        v-model:logoutAllDevice="logoutAllDevice"
+        v-model:loading="loading"
+        show-current-password
+        show-logout
+        @on-submit="onSubmit"
+        :submit-label="t('updatePassword')"
+        action-align="left"
+      ></password-form>
     </q-card-section>
     <q-separator />
     <q-card-section>
@@ -121,8 +44,8 @@
                 item.loginFrom == 'WEB'
                   ? biDisplay
                   : item.loginFrom == 'IOS'
-                  ? mdiApple
-                  : mdiAndroid
+                    ? mdiApple
+                    : mdiAndroid
               "
               color="black"
               size="34px"
@@ -168,30 +91,47 @@
         </q-item>
       </q-virtual-scroll>
     </q-list>
+    <base-loadmore
+      v-if="!isInfiniteDisabled && fristLoaded"
+      :loading="loading"
+      :frist-loaded="fristLoaded"
+      :is-infinite-disabled="isInfiniteDisabled"
+      :label="t('base.loadMore')"
+      @on-next-page="loadNextPage"
+      button
+      show-icon
+      full-width
+    >
+    </base-loadmore>
   </q-card>
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, onBeforeUnmount } from 'vue';
-import { useLang } from '@/composables/useLang';
-import { AccessTokenDto } from '@/types/models';
-import { useAuth } from '@/composables/useAuth';
-import UserService from '@/api/UserService';
 import AuthenService from '@/api/AuthenService';
-import { date } from 'quasar';
-import { useBase } from '@/composables/useBase';
+import UserService from '@/api/UserService';
 import { useAppMeta } from '@/composables/useAppMeta';
+import { useAuth } from '@/composables/useAuth';
+import { useBase } from '@/composables/useBase';
+import { useLang } from '@/composables/useLang';
+import { usePaging } from '@/composables/usePaging';
 import { useValidation } from '@/composables/useValidation';
-import {
-  biLock,
-  biEye,
-  biEyeSlash,
-  biShieldLock,
-  biCheck,
-  biDisplay,
-  biDot,
-} from '@quasar/extras/bootstrap-icons';
+import { AccessTokenDto } from '@/types/models';
+import { biDisplay, biDot } from '@quasar/extras/bootstrap-icons';
 import { mdiAndroid, mdiApple } from '@quasar/extras/mdi-v6';
+import { date } from 'quasar';
+import {
+  computed,
+  defineAsyncComponent,
+  onBeforeUnmount,
+  onMounted,
+  ref,
+} from 'vue';
+const BaseLoadmore = defineAsyncComponent(
+  () => import('@/components/BaseLoadmore.vue'),
+);
+const PasswordForm = defineAsyncComponent(
+  () => import('@/components/app/PasswordForm.vue'),
+);
 useAppMeta();
 const { WeeConfirm, WeeLoader } = useBase();
 const { t } = useLang();
@@ -199,6 +139,7 @@ const { signOut } = useAuth();
 const { selfUpdatePassword, currentAuthSession } = UserService();
 const { removeAccessTokenSession } = AuthenService();
 const { validatePasswordStrongV2, requireField } = useValidation();
+const { pages } = usePaging(10);
 const currentPassword = ref<string>('');
 const newPassword = ref<string>('');
 const rePassword = ref<string>('');
@@ -208,6 +149,9 @@ const loading = ref(false);
 const sessionList = ref<AccessTokenDto[]>([]);
 const sessionLoading = ref(true);
 const timeout = ref<any>(null);
+
+const isInfiniteDisabled = ref(false);
+const fristLoaded = ref(false);
 onMounted(() => {
   loadSeesionLogined();
 });
@@ -217,6 +161,12 @@ onBeforeUnmount(() => {
     timeout.value = null;
   }
 });
+const pageParam = computed(
+  () =>
+    `?page=${pages.value.current > 0 ? pages.value.current - 1 : 0}&size=${
+      pages.value.itemsPerPage
+    }`,
+);
 const onSubmit = async () => {
   loading.value = true;
   const res = await selfUpdatePassword({
@@ -227,7 +177,7 @@ const onSubmit = async () => {
     },
   });
   loading.value = false;
-  if (res.status == 'OK') {
+  if (res && res.status == 'OK') {
     timeout.value = setTimeout(() => {
       signOut();
     }, 1500);
@@ -240,14 +190,28 @@ const onReset = () => {
   showPassword.value = false;
 };
 
-const validateTheSamePwd = (pwd: string) => pwd === newPassword.value;
-const isValidPwd = computed(() => validatePasswordStrongV2(newPassword.value));
-const isSamePwd = computed(
-  () => rePassword.value && newPassword.value === rePassword.value,
-);
-
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const loadNextPage = async () => {
+  pages.value.current++;
+  await loadSeesionLogined();
+};
 const loadSeesionLogined = async (): Promise<void> => {
-  sessionList.value = await currentAuthSession();
+  const res = await currentAuthSession(pageParam.value);
+  if (res) {
+    if (res.length > 0) {
+      sessionList.value.push(...res);
+      if (res.length < pages.value.itemsPerPage) {
+        isInfiniteDisabled.value = true;
+      }
+    } else {
+      isInfiniteDisabled.value = true;
+    }
+  } else {
+    isInfiniteDisabled.value = true;
+  }
+  if (!fristLoaded.value) {
+    fristLoaded.value = true;
+  }
   sessionLoading.value = false;
 };
 
@@ -261,12 +225,12 @@ const onDeleteSession = async (index: number) => {
   const conf = await WeeConfirm(t('authSessions'), t('base.deleteConfirm'));
   if (conf) {
     const item = sessionList.value[index];
-    if (item) {
+    if (item && item.id) {
       WeeLoader();
       const res = await removeAccessTokenSession(item.id);
 
       WeeLoader(false);
-      if (res.status == 'OK') {
+      if (res && res.status == 'OK') {
         sessionList.value.splice(index, 1);
       }
     }

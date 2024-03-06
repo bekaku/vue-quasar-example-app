@@ -69,7 +69,7 @@ const props = defineProps({
   },
   dialogStyle: {
     type: String,
-    default: 'max-width: 480px',
+    default: '',
   },
   dialogClass: {
     type: String,
@@ -92,7 +92,7 @@ watch(
   () => props.dialog,
   (dialog) => {
     show.value = dialog;
-  }
+  },
 );
 const onClose = () => {
   emit('on-close');

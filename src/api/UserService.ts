@@ -66,9 +66,9 @@ export default () => {
       body: req,
     });
   };
-  const currentAuthSession = async (): Promise<AccessTokenDto[] | null> => {
+  const currentAuthSession = async (q: string): Promise<AccessTokenDto[] | null> => {
     return await callAxiosV2<AccessTokenDto[]>({
-      API: '/api/user/currentAuthSession',
+      API: `/api/user/currentAuthSession${q}`,
       method: 'GET',
     });
   };

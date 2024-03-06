@@ -1,5 +1,5 @@
 export default {
-    error: {
+    'error': {
         '404': 'The page you were looking for does not exist',
         '401': 'The user does not have permission to this page.',
         'emailFormat': 'Invalid E-mail address',
@@ -24,6 +24,7 @@ export default {
         'validateEmail': 'Invalid e-mail address format',
         'validateNumber': 'Number is required',
         'validatePositiveNumber': 'Positive number is required',
+        'validateMinusNumber': 'This information cannot be negative.',
         'validateDatetime': "Wrong format datetime 'yyy-MM-dd HH:mm:ss'",
         'validateDate': "Wrong format date 'yyy-MM-dd'",
         'contactAdmin': 'There was an error, please contact the administrator.',
@@ -47,6 +48,7 @@ export default {
         'passwordNotMatchNew': 'Confirm password does not match the new password.',
         'validatePhone': 'Invalid phone number',
         'fileExcelError': 'Please select a file with the extension .xlsx.',
-        'percentageValueWrong': 'The percentage value is incorrect.'
+        'percentageValueWrong': 'The percentage value is incorrect.',
+        'validateStartDateGreterThenEndDate': 'The start date cannot be greater than the end date.',
     }
 }

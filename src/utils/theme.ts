@@ -10,6 +10,7 @@ import { Cookies } from 'quasar';
 import { useLangugeAndThemeStore } from '@/stores/langugeAndThemeStore';
 import { ThemeKey } from '@/utils/constant';
 import { addDateByDays } from '@/utils/dateUtil';
+import { useBase } from '@/composables/useBase';
 import {
   biLaptop,
   biSun,
@@ -23,11 +24,12 @@ export const availableThemes: {
 }[] = [
     { key: 'light', text: 'theme.lightTheme', icon: biSun },
     { key: 'dark', text: 'theme.darkTheme', icon: biMoon },
-    { key: 'system', text: 'theme.systemTheme', icon: biLaptop },
-    { key: 'realtime', text: 'theme.realtimeTheme', icon: biClock },
+    // { key: 'system', text: 'theme.systemTheme', icon: biLaptop },
+    // { key: 'realtime', text: 'theme.realtimeTheme', icon: biClock },
   ];
 
 export function ThemeManager() {
+  const { isDevMode } = useBase();
   const ssrContext = process.env.SERVER ? useSSRContext() : null;
   const cookies = process.env.SERVER ? Cookies.parseSSR(ssrContext) : Cookies;
   // composable
@@ -35,7 +37,7 @@ export function ThemeManager() {
 
   // methods
   const getUserSetting = (): IThemeSettingOptions =>
-    cookies.get(ThemeKey) || 'system';
+    cookies.get(ThemeKey) || 'light';
 
   const getSystemTheme = (): ITheme => {
     try {
@@ -78,6 +80,8 @@ export function ThemeManager() {
       // maxAge: 60 * 60 * 24 * 365 * 5,
       expires: addDateByDays(365),
       path: '/',
+      secure: !isDevMode(),
+      sameSite: 'Strict'
     });
   };
 
@@ -117,7 +121,9 @@ export function ThemeManager() {
     window
       .matchMedia('(prefers-color-scheme: dark)')
       .removeEventListener('change', onThemeSystemChange);
-    if (intervalCheckTime) clearInterval(intervalCheckTime);
+    if (intervalCheckTime) {
+      clearInterval(intervalCheckTime as any)
+    };
   });
 
   return {

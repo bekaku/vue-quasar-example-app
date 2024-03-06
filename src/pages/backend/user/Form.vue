@@ -98,10 +98,7 @@
             /> -->
             <form-togle
               :title="t('model_role_status')"
-              :model-value="entity.active"
-              @update:modelValue="
-                (newValue: boolean) => (entity.active = newValue)
-              "
+              v-model="entity.active"
             />
           </div>
         </div>

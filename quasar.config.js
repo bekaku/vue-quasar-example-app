@@ -33,7 +33,8 @@ module.exports = configure(function (ctx) {
       // { path: 'emojiMart', server: false },
       { path: 'vueSlicksort', server: false },
       { path: 'vueZoomer', server: false },
-      { path: ctx.dev ? 'VueApexcharts' : 'VueApexchartsTs', server: false },
+      { path: 'VueApexchartsTs', server: false },
+      // { path: ctx.dev ? 'VueApexcharts' : 'VueApexchartsTs', server: false },
     ],
 
     // https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#css
@@ -198,6 +199,8 @@ module.exports = configure(function (ctx) {
         'QOptionGroup',
         'QBreadcrumbs',
         'QBreadcrumbsEl',
+        'QStepper',
+        'QStep',
       ],
       // directives: [],
 

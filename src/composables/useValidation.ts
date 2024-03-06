@@ -75,19 +75,20 @@ export const useValidation = () => {
     }
 
     // Return results
-    if (strength < 2) {
-      // return 'Easy to guess. ' + tips;
-      return false;
-    } else if (strength === 2) {
-      // return 'Medium difficulty. ' + tips;
-      return true;
-    } else if (strength === 3) {
-      // return 'Difficult. ' + tips;
-      return true;
-    } else {
-      // return 'Extremely difficult. ' + tips;
-      return true;
-    }
+    return strength > 2;
+    // if (strength < 2) {
+    //   // return 'Easy to guess. ' + tips;
+    //   return false;
+    // } else if (strength === 2) {
+    //   // return 'Medium difficulty. ' + tips;
+    //   return true;
+    // } else if (strength === 3) {
+    //   // return 'Difficult. ' + tips;
+    //   return true;
+    // } else {
+    //   // return 'Extremely difficult. ' + tips;
+    //   return true;
+    // }
   };
   return {
     required,

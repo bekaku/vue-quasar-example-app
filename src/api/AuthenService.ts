@@ -4,9 +4,10 @@ import {
   RefreshTokenRequest,
   RefreshTokenResponse,
 } from '@/types/models';
-import { ResponseMessage } from '@/types/common';
+import { AppException, ForgotPasswordRequest, ResponseMessage, } from '@/types/common';
+import { AxiosResponse } from 'axios';
 export default () => {
-  const { callAxios } = useAxios();
+  const { callAxios, callAxiosProcess } = useAxios();
   const singin = async (
     loginRequest: LoginRequest
   ): Promise<RefreshTokenResponse> => {
@@ -42,11 +43,47 @@ export default () => {
       method: 'DELETE',
     });
   };
-
+  //Forgot password
+  const requestVerifyCodeToResetPwd = async (
+    req: ForgotPasswordRequest
+  ): Promise<AxiosResponse<ResponseMessage | AppException>> => {
+    return await callAxiosProcess<ResponseMessage | AppException>({
+      API: '/api/auth/requestVerifyCodeToResetPwd',
+      method: 'POST',
+      body: {
+        forgotPasswordRequest: req
+      },
+    });
+  };
+  const sendVerifyCodeToResetPwd = async (
+    req: ForgotPasswordRequest
+  ): Promise<AxiosResponse<ResponseMessage | AppException>> => {
+    return await callAxiosProcess<ResponseMessage | AppException>({
+      API: '/api/auth/sendVerifyCodeToResetPwd',
+      method: 'POST',
+      body: {
+        forgotPasswordRequest: req
+      },
+    });
+  };
+  const resetPassword = async (
+    req: ForgotPasswordRequest
+  ): Promise<AxiosResponse<ResponseMessage | AppException>> => {
+    return await callAxiosProcess<ResponseMessage | AppException>({
+      API: '/api/auth/resetPassword',
+      method: 'POST',
+      body: {
+        forgotPasswordRequest: req
+      },
+    });
+  };
   return {
     singin,
     singoutToServer,
     refreshToken,
     removeAccessTokenSession,
+    requestVerifyCodeToResetPwd,
+    sendVerifyCodeToResetPwd,
+    resetPassword
   };
 };

@@ -42,6 +42,7 @@ export default {
         'imgDelete': 'ลบรูป',
         'develop': 'นักพัฒนา',
         'admin': 'ผู้ดูแลระบบ',
+        'adminHome': 'หน้าหลักผู้ดูแลระบบ',
         'baseData': 'ข้อมูลพื้นฐาน',
         'userData': 'ข้อมูลผู้ใช้ระบบ',
         'setting': 'ตั้งค่า',
@@ -207,7 +208,7 @@ export default {
         'accountSetting': 'การตั้งค่าบัญชี',
         'editPhoto': 'แก้ไขรูปภาพ',
         'editName': 'แก้ไขชื่อ',
-        'versionUpdateHelp': "หมายเหตุเมื่อเข้า Store แล้วไม่มีให้อัพเดท ท่านสามารถกด 'เอาไว้คราวหน้า' เพื่อข้ามการอัพเดทเวอร์ชั่นนี้และเข้าไปใช้งาน Vue Quasar ก่อนได้ เนื่องจากการส่งอัพเดทเวอร์ชั่นเข้าแต่ละอุปกรณ์อาจจะไม่พร้อมกันหรือ Store อาจจะยังจำแคชเดิมอยู่",
+        'versionUpdateHelp': "หมายเหตุเมื่อเข้า Store แล้วไม่มีให้อัพเดท ท่านสามารถกด 'เอาไว้คราวหน้า' เพื่อข้ามการอัพเดทเวอร์ชั่นนี้และเข้าไปใช้งาน GiveDeeFive ก่อนได้ เนื่องจากการส่งอัพเดทเวอร์ชั่นเข้าแต่ละอุปกรณ์อาจจะไม่พร้อมกันหรือ Store อาจจะยังจำแคชเดิมอยู่",
         'fourceAppUpdate': 'เนื่องจากมีการแก้ไขฟีเจอร์สำคัญที่จำเป็นต้องทำการอัพเดทแอพ ดังนั้นเพื่อให้ผู้ใช้สามารถใช้งานได้อย่างมีประสิทธิภาพจึงจำเป็นต้องทำการอัพเดทแอพให้เป็นเวอร์ชั่นล่าสุดก่อนการเข้าใช้งาน',
         'appVersionUpdateFound': 'เวอร์ชั่นแอพมีการอัพเดท',
         'appVersionChanged': 'เวอร์ชั่นแอพของผู้ใช้ {userVersion} เวอร์ชั่นล่าสุด {storeVersion}',
@@ -217,7 +218,7 @@ export default {
         'done': 'เสร็จสิ้น',
         'appExit': 'ออกจากแอพ',
         'termAcceptText': 'ฉันได้อ่านและยอมรับ',
-        'termAcceptText2': "<a class='app-text-link' href='http://www.grandats.com/synapse-policy/policy.html' target='_blank'>ข้อกำหนดในการให้บริการ</a> และ <a class='app-text-link' href='http://www.grandats.com/synapse-policy/policy.html' target='_blank'>นโยบายความเป็นส่วนตัว</a> ของ Vue Quasar",
+        'termAcceptText2': "<a class='app-text-link' href='http://www.grandats.com/synapse-policy/policy.html' target='_blank'>ข้อกำหนดในการให้บริการ</a> และ <a class='app-text-link' href='http://www.grandats.com/synapse-policy/policy.html' target='_blank'>นโยบายความเป็นส่วนตัว</a> ของ GiveDeeFive",
         'continue': 'ต่อไป',
         'previous': 'ก่อนหน้า',
         'activityLogs': 'ประวัติกิจกรรม',
@@ -225,6 +226,7 @@ export default {
         'aproved': 'อนุมัติแล้ว',
         'notYetAproved': 'ยังไม่อนุมัติ',
         'progress': 'ความก้าวหน้า',
+        'progressProgress': 'ความก้าวหน้าสะสม',
         'countPost': 'จำนวนโพสต์ {total}',
         'about': 'เกี่ยวกับ',
         'latestVersionHelp': 'มีการติดตั้งเวอร์ชันล่าสุดแล้ว',
@@ -265,7 +267,11 @@ export default {
         'deletePhotoConfirm': 'ยืนยันการลบรูปภาพนี้',
         'selectYear': 'เลือกปี',
         'checkOut': 'เช็คเอาท์',
-        'filterField': 'กรองฟิลด์'
+        'filterField': 'กรองฟิลด์',
+        'set': 'กำหนด',
+        'remark': 'หมายเหตุ',
+        'view2': 'ดู',
+        'filter': 'กรองข้อมูล',
     },
     'theme': {
         'light': 'กลางวัน',
@@ -285,8 +291,8 @@ export default {
         'rowsPerPage': 'จำนวนรายการ/หน้า'
     },
     'readableNum': {
-        'k': 'พัน',
-        'M': 'ล้าน',
+        'k': 'K',
+        'M': 'M',
         'G': 'G',
         'T': 'T',
         'P': 'P',
@@ -317,6 +323,10 @@ export default {
         'pastWeek': 'สัปดาห์นี้',
         'pastMonth': 'เดือนนี้',
         'pastYear': 'ปีนี้',
+        'everyDate': 'ทุกวันที่',
+        'everyMonth': 'ทุกเดือน',
+        'everyMonths': 'ทุก {amount} เดือน',
+        'everyLastMonth': 'วันสุดท้ายของเดือน',
         'monthArray': 'มกราคม กุมภาพันธ์ มีนาคม เมษายน พฤษภาคม มิถุนายน กรกฎาคม สิงหาคม กันยายน ตุลาคม พฤศจิกายน ธันวาคม',
         'dayOfWeek': {
             'day_of_weekSUN': 'อาทิตย์',
@@ -335,7 +345,7 @@ export default {
     'authen': {
         'login': 'เข้าสู่ระบบ',
         'helper1': 'ป้อนรหัสยืนยันที่ได้รับจากทางอีเมล',
-        'helper2': "เพื่อความปลอดภัยในการใช้งานระบบ รหัสผ่านใหม่ 'ต้องมีขนาดความยาว 5 อักขระขึ้นไป' และ 'ต้องผสมด้วยตัวเลขและตัวอักษร'",
+        'helper2': "เพื่อความปลอดภัยในการใช้งานระบบ รหัสผ่าน 'ต้องมีขนาดความยาว 8 อักขระขึ้นไป' และ 'ต้องผสมด้วยตัวเลขและตัวอักษร' และ 'ต้องผสมตัวอักษรพิมพ์เล็กและตัวอักษรพิมพ์ใหญ่'",
         'username': 'ชื่อผู้ใช้',
         'password': 'รหัสผ่าน',
         'currentPassword': 'รหัสผ่านปัจจุบัน',
@@ -349,7 +359,14 @@ export default {
         'verification': 'ยืนยันตัวตน',
         'verificationCode': 'รหัสยืนยัน',
         'setPassword': 'กำหนดรหัสผ่านใหม่',
-        'logoutAll': 'ออกจากระบบทุกอุปกรณ์'
+        'logoutAll': 'ออกจากระบบทุกอุปกรณ์',
+        'forgot_pwd_title': 'กรอกที่อยู่อีเมล์ที่ได้ลงทะเบียนไว้กับระบบ GiveDeeFive',
+        'forgot_pwd_subtitle': 'เราจะส่ง รหัสยืนยัน สำหรับการรีเซ็ตรหัสผ่านให้ทางอีเมล์',
+        'verification_code': 'รหัสยืนยัน',
+        'set_password': 'กำหนดรหัสผ่านใหม่',
+        'login_main_helper4': 'ป้อนรหัสยืนยันที่ได้รับจากทางอีเมล',
+        'login_main_helper5': 'หากไม่พบที่กล่องข้อความเข้าเป็นไปได้ว่าอาจจะอยู่ในกล่องขยะ',
+        'login_main_helper6': 'รหัสยืนยันมีอายุ 15 นาที',
     },
     'http': {
         '2xx': 'Successful',
@@ -395,7 +412,8 @@ export default {
         '507': 'Insufficient Storage',
         '508': 'Loop Detected',
         '510': 'Not Extended',
-        '511': 'Network Authentication Required'
+        '511': 'Network Authentication Required',
+        'ECONNREFUSED': 'Server Offline',
     },
     'sort': {
         'sort': 'เรียงลำดับ',
@@ -406,9 +424,11 @@ export default {
             'NEW_POST': 'โพสต์ล่าสุด',
             'NEW_POST_DESC': 'แสดงโพสต์ล่าสุดก่อน',
             'NEW_ACTIVITY': 'กิจกรรมใหม่ล่าสุด',
-            'NEW_ACTIVITY_DESC': 'แสดงโพสต์ที่มีความคิดเห็นล่าสุดก่อน',
-            'TOP_POST': 'โพสต์ยอดนิยม',
-            'TOP_POST_DESC': 'แสดงโพสต์ที่ผู้ใช้มีส่วนร่วมสูงที่สุดก่อน'
+            'NEW_ACTIVITY_DESC': 'แสดงโพสต์ที่มีความเคลื่อนไหวล่าสุดก่อน',
+            'TOP_POST': 'โพสต์ดีเด่น',
+            'TOP_POST_DESC': 'แสดงโพสต์ที่ได้รับรางวัลสูงสุดก่อน',
+            'HOT_POST': 'โพสต์ยอดนิยม',
+            'HOT_POST_DESC': 'แสดงโพสต์ที่ผู้ใช้มีส่วนร่วมสูงที่สุดก่อน'
         },
         'comment': {
             'ALL_COMMENT': 'ความเห็นตั้งแต่เริ่มต้น',

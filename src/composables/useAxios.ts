@@ -191,5 +191,5 @@ export const useAxios = () => {
       //   });
     });
   };
-  return { callAxios, validateServerResponse, callAxiosV2, callAxiosFile };
+  return { callAxios, validateServerResponse, callAxiosV2, callAxiosFile, callAxiosProcess };
 };

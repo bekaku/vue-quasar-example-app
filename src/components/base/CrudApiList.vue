@@ -170,11 +170,7 @@
                           >
                             <form-togle
                               :title="t(searchCol.label)"
-                              :model-value="searchCol.options.searchModel"
-                              @update:modelValue="
-                                (newValue: any) =>
-                                  (searchCol.options.searchModel = newValue)
-                              "
+                              v-model="searchCol.options.searchModel"
                             />
                           </template>
                           <template
@@ -203,11 +199,7 @@
                             >
                               <date-picker
                                 dense
-                                :modelValue="searchCol.options.searchModel"
-                                @update:modelValue="
-                                  (newValue) =>
-                                    (searchCol.options.searchModel = newValue)
-                                "
+                                v-model="searchCol.options.searchModel"
                                 :title="t(searchCol.label)"
                               />
                             </template>

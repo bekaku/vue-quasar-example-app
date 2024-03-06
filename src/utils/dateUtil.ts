@@ -6,6 +6,9 @@ import {
   parse,
   differenceInDays,
   parseISO,
+  isEqual,
+  isAfter,
+  isBefore
 } from 'date-fns';
 import { th, enUS } from 'date-fns/locale';
 
@@ -57,6 +60,21 @@ export const convertStringToDate = (
   return parse(dateString, format, new Date());
   // return new Date(dateString);
 };
+export const convertDateFormatToThai = (dateString?: string | null) => {//convert YYYY-MM-DD to DD/MM/YYYY
+  if (!dateString) {
+    return undefined
+  }
+  const parts = dateString.split('-');
+  return parts[2] + '/' + parts[1] + '/' + parts[0];
+}
+export const convertThaiDateFormatToEng = (dateString?: string | null) => {//convert DD/MM/YYYY to YYYY-MM-DD
+  if (!dateString) {
+    return undefined
+  }
+  const parts = dateString.split('/');
+  return parts[2] + '-' + parts[1] + '-' + parts[0];
+}
+
 export const isDate2GreaterThan = (d1: Date, d2: Date) => {
   return d2.getTime() > d1.getTime();
 };
@@ -132,9 +150,9 @@ export const formatDate = (
   forMatString: string,
   locale: string | unknown
 ) => {
-  return format(convertStringToDate(dateString, FORMAT_DATE14), forMatString, {
+  return dateString ? format(convertStringToDate(dateString, FORMAT_DATE14), forMatString, {
     locale: locale == 'th' ? th : enUS,
-  });
+  }) : undefined;
 };
 export const formatDateBy = (d: Date, forMatString: string) => {
   return format(d, forMatString);
@@ -145,3 +163,18 @@ export const formatIos = (d: string, forMatString: string) => {
 export const getCurrentDateByFormat = (forMatString: string | undefined = undefined) => {
   return formatDateBy(getDateNow(), forMatString ? forMatString : FORMAT_DATE14);
 };
+export const isDateEqua = (dateLeft: string, dateRight: string) => {
+  const d1 = convertStringToDate(dateLeft, FORMAT_DATE14);
+  const d2 = convertStringToDate(dateRight, FORMAT_DATE14);
+  return isEqual(d1, d2)
+}
+export const isDateAfter = (dateLeft: string, dateRight: string) => {
+  const d1 = convertStringToDate(dateLeft, FORMAT_DATE14);
+  const d2 = convertStringToDate(dateRight, FORMAT_DATE14);
+  return isAfter(d1, d2)
+}
+export const isDateBefore = (dateLeft: string, dateRight: string) => {
+  const d1 = convertStringToDate(dateLeft, FORMAT_DATE14);
+  const d2 = convertStringToDate(dateRight, FORMAT_DATE14);
+  return isBefore(d1, d2)
+}

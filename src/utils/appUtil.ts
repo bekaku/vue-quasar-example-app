@@ -27,6 +27,7 @@ import {
   ExpireCookieDays,
   AppAuthRefeshTokenKey,
   AppAuthTokenExpireKey,
+  SucureDeviceIdAtt,
 } from '@/utils/constant';
 export const isNumber = (value: string | number): boolean => {
   return value != null && value !== '' && !isNaN(Number(value.toString()));
@@ -412,3 +413,18 @@ export const numberFormat = (no: number) => {
 export const isArray = (value: any): boolean => {
   return Array.isArray(value);
 };
+export const detroyAuthCookie = (cookies: any) => {
+  if (cookies) {
+    cookies.remove(AppAuthTokenKey, { path: '/', });
+    cookies.remove(AppAuthRefeshTokenKey, { path: '/', });
+    cookies.remove(AppAuthTokenExpireKey, { path: '/', });
+    cookies.remove(AppAuthTokenCreatedKey, { path: '/', });
+    if (process.env.SERVER) {
+      cookies.remove(SucureDeviceIdAtt, { path: '/', });
+    }
+    // cookies.remove(AppAuthTokenKey, { path: '/', domain: !devMode ? AppDomain : undefined, });
+    // cookies.remove(AppAuthRefeshTokenKey, { path: '/', domain: !devMode ? AppDomain : undefined, });
+    // cookies.remove(AppAuthTokenExpireKey, { path: '/', domain: !devMode ? AppDomain : undefined, });
+    // cookies.remove(AppAuthTokenCreatedKey, { path: '/', domain: !devMode ? AppDomain : undefined, });
+  }
+}

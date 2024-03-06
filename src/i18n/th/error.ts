@@ -1,5 +1,5 @@
 export default {
-    error: {
+    'error': {
         '404': 'ไม่พบหน้าที่ต้องการ',
         '401': 'ผู้ใช้ไม่มีสิทธิ์ในหน้านี้',
         'emailFormat': 'อีเมล์ไม่ถูกต้อง',
@@ -24,6 +24,7 @@ export default {
         'validateEmail': 'รูปแบบอีเมล์ไม่ถูกต้อง',
         'validateNumber': 'ข้อมูลนี้ต้องกรอกเป็นตัวเลขเท่านั้น',
         'validatePositiveNumber': 'ข้อมูลนี้ต้องกรอกเป็นตัวเลขมากกว่า 0 เท่านั้น',
+        'validateMinusNumber': 'ข้อมูลนี้ไม่สามารถติดลบได้',
         'validateDatetime': "รูปแบบวันที่ไม่ถูกต้อง 'yyyy-MM-dd HH:mm:ss'",
         'validateDate': "รูปแบบวันที่ ต้องระบุในรูปแบบ 'yyyy-MM-dd' เท่านั้น",
         'contactAdmin': 'เกิดข้อผิดพลาดกรุณาติดต่อผู้ดูแลระบบ',
@@ -47,6 +48,7 @@ export default {
         'passwordNotMatchNew': 'ยืนยันรหัสผ่านไม่ตรงกับรหัสผ่านใหม่',
         'validatePhone': 'รูปแบบเบอร์โทรศัพท์ไม่ถูกต้อง',
         'fileExcelError': 'กรุณาเลือกไฟล์นามสกุล .xlsx',
-        'percentageValueWrong': 'ค่าเปอร์เซ็นต์ไม่ถูกต้องกรุณาตรวจสอบ'
+        'percentageValueWrong': 'ค่าเปอร์เซ็นต์ไม่ถูกต้องกรุณาตรวจสอบ',
+        'validateStartDateGreterThenEndDate': 'วันที่เริ่มต้นต้องไม่มากกว่าวันที่สิ้นสุด',
     }
 }

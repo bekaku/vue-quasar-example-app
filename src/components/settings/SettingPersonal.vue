@@ -24,10 +24,7 @@
         <div class="col-12 col-md-12 q-pa-md">
           <form-togle
             :title="t('base.other')"
-            :model-value="entity.autoFollowUser"
-            @update:modelValue="
-              (newValue: boolean) => (entity.autoFollowUser = newValue)
-            "
+            v-model="entity.autoFollowUser"
           />
         </div>
         <q-card-actions align="right">

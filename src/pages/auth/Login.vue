@@ -186,11 +186,14 @@
             </q-card-actions>
           </q-form>
 
-          <!-- <q-card-section class="text-center q-pa-sm">
-            <a class="wee-link text-grey-6" href="javascript:void(0)">
-              {{ t('authen.forgetPassword') }}
-            </a>
-          </q-card-section> -->
+          <q-card-section class="text-center q-pa-sm">
+            <q-btn
+              flat
+              :label="t('authen.forgetPassword')"
+              class="text-muted text-capitalize"
+              @click="dialogForgotPassword = true"
+            ></q-btn>
+          </q-card-section>
           <q-card-section class="q-mt-lg text-center">
             <div :class="$q.dark.isActive ? 'text-grey-5' : 'text-grey-7'">
               {{ `@ ${getYearNow()} ${t('app.monogram')}` }}
@@ -213,12 +216,16 @@
         <li></li>
       </ul>
     </div> -->
+    <forgot-password
+      v-if="dialogForgotPassword"
+      v-model="dialogForgotPassword"
+    ></forgot-password>
   </q-page>
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue';
-import { useMeta } from 'quasar';
+import { ref, computed, onMounted, defineAsyncComponent } from 'vue';
+import { Cookies, useMeta } from 'quasar';
 import { getYearNow } from '@/utils/dateUtil';
 import { useLang } from '@/composables/useLang';
 import { useValidation } from '@/composables/useValidation';
@@ -236,22 +243,32 @@ import { useLangugeAndThemeStore } from 'stores/langugeAndThemeStore';
 import AuthenService from '@/api/AuthenService';
 import { useAuth } from '@/composables/useAuth';
 import { useDevice } from '@/composables/useDevice';
-
+import { detroyAuthCookie } from '@/utils/appUtil';
+const ForgotPassword = defineAsyncComponent(
+  () => import('@/components/app/ForgotPassword.vue'),
+);
 const { getDeviceId } = useDevice();
 const { singin } = AuthenService();
 const { setAuthenticationCookies, destroyAuthDataAndRedirect } = useAuth();
 const { t } = useLang();
 const { required } = useValidation();
 const cardHeight = ref('700px');
-const email = ref<string | null>('admin');
-const password = ref<string | null>('P@ssw0rd');
+const email = ref<string | null>('');
+const password = ref<string | null>('');
 const showPassword = ref<boolean>(false);
 const loading = ref<boolean>(false);
 const loginForm = ref(null);
 const deviceId = ref();
+const dialogForgotPassword = ref<boolean>(false);
 // useMeta({
 //   title: `${t('page.login')} | ${t('app.monogram')}`,
 // });
+defineOptions({
+  preFetch({ ssrContext }) {
+    const cookies = process.env.SERVER ? Cookies.parseSSR(ssrContext) : Cookies;
+    detroyAuthCookie(cookies);
+  },
+});
 const metaData = {
   // sets document title
   title: t('page.login'),
@@ -292,7 +309,7 @@ const metaData = {
   },
 };
 useMeta(metaData);
-onMounted(async() => {
+onMounted(async () => {
   destroyAuthDataAndRedirect(false);
   deviceId.value = await getDeviceId();
 });
