@@ -5,13 +5,13 @@ import { RequestType } from '@/types/common';
 import { isAppException } from '@/utils/appUtil';
 import { useExceptionStore } from '@/stores/exceptionStore';
 import { AxiosResponse } from 'axios';
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const usePreFetch = (ssrContext: any, redirect: any) => {
   const ck: any = process.env.SERVER ? Cookies.parseSSR(ssrContext) : Cookies;
   const exceptionStore = useExceptionStore();
 
   const callAxios = async <T>(req: RequestType): Promise<T> => {
     //TODO implement refresh token hear 
+    // await refeshTokenCheckProcess();
     return new Promise(async (resolve, /*reject*/) => {
       const response = await callAxiosProcess<T>(req);
       if (isAppException(response.data)) {
@@ -31,23 +31,21 @@ export const usePreFetch = (ssrContext: any, redirect: any) => {
       resolve(response.data as T);
     });
   };
-
   const callAxiosProcess = <T>(req: RequestType): Promise<AxiosResponse<T>> => {
     return new Promise((resolve, /*reject*/) => {
       if (api.defaults.headers != null) {
         api.defaults.headers.common['Accept-Language'] = ck.get(LocaleKey);
-        api.defaults.headers.common.Authorization = `Bearer ${ck.get(
-          AppAuthTokenKey
-        )}`;
+        api.defaults.headers.common.Authorization = `Bearer ${ck.get(AppAuthTokenKey)}`;
       }
-      const secureDeviceId = ck.get(AppAuthRefeshTokenKey);
-      const _gd5_secure_jid = ck.get(SucureDeviceIdAtt);
+      const refreshTokenKey = ck.get(AppAuthRefeshTokenKey);
+      const deviceId = ck.get(SucureDeviceIdAtt);
       // api.defaults.headers.Cookie = 'ookie1=value; cookie2=value; cookie3=value;';
-      if (_gd5_secure_jid) {
-        api.defaults.headers.Cookie = `${SucureDeviceIdAtt}=${_gd5_secure_jid};`;
-      } else if (secureDeviceId) {
-        api.defaults.headers.Cookie = `${SucureDeviceIdAtt}=${secureDeviceId};`;
+      if (deviceId || refreshTokenKey) {
+        api.defaults.headers.Cookie = `${SucureDeviceIdAtt}=${deviceId ? deviceId : refreshTokenKey};`;
       }
+      // else if (refreshTokenKey) {
+      //   api.defaults.headers.Cookie = `${SucureDeviceIdAtt}=${refreshTokenKey};`;
+      // }
       // api.defaults.headers['Accept-Language'] = ck.get(LocaleKey);
       // console.log('callAxiosProcess : defaults', api.defaults);
       if (req.baseURL) {
@@ -88,5 +86,6 @@ export const usePreFetch = (ssrContext: any, redirect: any) => {
 
   return {
     callAxios,
+    callAxiosProcess
   };
 };

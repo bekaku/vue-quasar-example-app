@@ -106,3 +106,7 @@ export const FeelingColors = {
   DANGER: '#ec1c27',
 };
 export const FCM_USER_TOPIC = 'io.synapse.fcm.user.';
+export const AUTH_NO_FILTER: string[] = [
+  '/auth/login',
+  '/error',
+];

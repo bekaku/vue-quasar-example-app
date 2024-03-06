@@ -13,39 +13,59 @@ import { useRouter } from 'vue-router';
 import { useDrawerStore } from '@/stores/drawerStore';
 import { usePermissionStore } from '@/stores/permissionStore';
 import { usePreFetch } from '@/composables/usePreFetch';
-import { IAcl } from '@/types/models';
-import { useInitAuth } from '@/composables/useInitAuth';
-import { useBase } from './composables/useBase';
+import { IAcl, UserDto } from '@/types/models';
+import { useBase } from '@/composables/useBase';
+import { detroyAuthCookie, isAppException } from '@/utils/appUtil';
+import { useExceptionStore } from '@/stores/exceptionStore';
+import { Cookies } from 'quasar';
+import { AppAuthTokenKey, AUTH_NO_FILTER } from '@/utils/constant';
 export default defineComponent({
   name: 'App',
-  async preFetch({ ssrContext, redirect }) {
+  async preFetch({ currentRoute, ssrContext, redirect }) {
+    const cookies = process.env.SERVER ? Cookies.parseSSR(ssrContext) : Cookies;
     const authenStore = useAuthenStore();
-
-    const refreshTokenReponse = await authenStore.refreshToken(ssrContext);
-    console.log('refreshTokenReponse', refreshTokenReponse);
-    if (
-      refreshTokenReponse &&
-      !refreshTokenReponse.status &&
-      refreshTokenReponse.fourceLogout
-    ) {
-      redirect({ path: '/auth/login' });
-    }
-
     const drawerStore = useDrawerStore();
     const permissionStore = usePermissionStore();
-    const { callAxios } = usePreFetch(ssrContext, redirect);
-    if (!authenStore.auth) {
-      const { init } = useInitAuth(ssrContext, redirect);
-      const userData = await init();
-      if (userData) {
+    const { callAxiosProcess } = usePreFetch(ssrContext, redirect);
+    if (
+      !AUTH_NO_FILTER.find((t) => t == currentRoute.path) &&
+      cookies &&
+      cookies.get(AppAuthTokenKey) &&
+      !authenStore.auth
+    ) {
+      const refreshTokenReponse = await authenStore.refreshToken(ssrContext);
+      if (
+        refreshTokenReponse &&
+        !refreshTokenReponse.status &&
+        refreshTokenReponse.fourceLogout
+      ) {
+        redirect({ path: '/auth/login' });
+      }
+      const userDataResponse = await callAxiosProcess<UserDto>({
+        API: '/api/user/currentUserData',
+        method: 'GET',
+      });
+      if (
+        userDataResponse &&
+        userDataResponse.status &&
+        userDataResponse.status == 200 &&
+        userDataResponse.data &&
+        !isAppException(userDataResponse.data)
+      ) {
+        const userData = userDataResponse.data;
         authenStore.setAuthen(userData);
         // fetch user permission for backend
-        const acl = await callAxios<IAcl>({
+        const response = await callAxiosProcess<IAcl>({
           API: '/api/permission/userAcl',
           method: 'GET',
         });
-        console.log('App > preFetch');
-        if (acl) {
+        if (
+          response &&
+          response.status &&
+          response.status == 200 &&
+          response.data
+        ) {
+          const acl = response.data;
           if (acl.menus && acl.menus.length > 0) {
             drawerStore.setDrawers(acl.menus);
           }
@@ -53,11 +73,21 @@ export default defineComponent({
             permissionStore.setPermissions(acl.permissions);
           }
         }
+      } else if (
+        userDataResponse &&
+        userDataResponse.status &&
+        userDataResponse.status == 403
+      ) {
+        detroyAuthCookie(cookies);
+        redirect({ path: '/auth/login' });
+      } else {
+        redirect(`/error?code=${userDataResponse.status}`);
       }
     }
   },
   setup() {
-    const { WeeGoTo } = useBase();
+    const { WeeGoTo, isDevMode } = useBase();
+    const exceptionStore = useExceptionStore();
     const router = useRouter();
     const authenStore = useAuthenStore();
     const $q = useQuasar();
@@ -65,6 +95,19 @@ export default defineComponent({
     AppSetup();
 
     onMounted(() => {
+      if (
+        exceptionStore.error &&
+        exceptionStore.error.status &&
+        exceptionStore.error.message
+      ) {
+        WeeGoTo('/error', true);
+      }
+      if (authenStore.auth) {
+        if (isDevMode()) {
+          console.log('App.vue > authenStore >', authenStore.auth);
+        }
+        authenStore.startRefreshTokenTimer();
+      }
       if (!$q.screen.gt.xs) {
         // langugeAndThemeStore.setLeftDrawer(false);
       }
