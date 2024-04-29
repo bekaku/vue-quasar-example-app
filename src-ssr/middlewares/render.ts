@@ -1,3 +1,4 @@
+import { RenderError } from '@quasar/app-vite';
 import { ssrMiddleware } from 'quasar/wrappers';
 
 // This middleware should execute as last one
@@ -15,7 +16,7 @@ export default ssrMiddleware(({ app, resolve, render, serve }) => {
         // now let's send the rendered html to the client
         res.send(html);
       })
-      .catch((err) => {
+      .catch((err: RenderError) => {
         // oops, we had an error while rendering the page
 
         // we were told to redirect to another URL
@@ -27,6 +28,7 @@ export default ssrMiddleware(({ app, resolve, render, serve }) => {
           }
         } else if (err.code === 404) {
           // hmm, Vue Router could not find the requested route
+
           // Should reach here only if no "catch-all" route
           // is defined in /src/routes
           res.status(404).send('404 | Page Not Found');
@@ -35,6 +37,7 @@ export default ssrMiddleware(({ app, resolve, render, serve }) => {
           // if we're in dev mode, then we can use Quasar CLI
           // to display a nice error page that contains the stack
           // and other useful information
+
           // serve.error is available on dev only
           serve.error({ err, req, res });
         } else {
@@ -45,9 +48,11 @@ export default ssrMiddleware(({ app, resolve, render, serve }) => {
 
           // Render Error Page on production or
           // create a route (/src/routes) for an error page and redirect to it
-          // res.status(500).send('500 | Internal Server Error')
-          res.redirect(resolve.urlPath('/error500')); // keep account of publicPath though!
-          // console.error(err.stack)
+          res.status(500).send('500 | Internal Server Error');
+
+          if (process.env.DEBUGGING) {
+            console.error(err.stack);
+          }
         }
       });
   });

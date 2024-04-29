@@ -253,8 +253,8 @@ const { setAuthenticationCookies, destroyAuthDataAndRedirect } = useAuth();
 const { t } = useLang();
 const { required } = useValidation();
 const cardHeight = ref('700px');
-const email = ref<string | null>('');
-const password = ref<string | null>('');
+const email = ref<string | null>('admin@mydomain.com');
+const password = ref<string | null>('P@ssw0rd');
 const showPassword = ref<boolean>(false);
 const loading = ref<boolean>(false);
 const loginForm = ref(null);
@@ -325,7 +325,7 @@ const onSubmit = async () => {
     },
   });
   loading.value = false;
-  if (response.authenticationToken) {
+  if (response && response.authenticationToken) {
     setAuthenticationCookies(response);
     loading.value = false;
     // redirect to index page
