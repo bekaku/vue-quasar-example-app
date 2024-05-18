@@ -288,6 +288,7 @@ const {
     crudName: 'role',
     apiEndpoint: '/api',
     fectchDataOnLoad: false,
+    backToPreviousPath: true,
   },
   entity,
 );

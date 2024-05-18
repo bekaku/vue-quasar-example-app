@@ -254,6 +254,7 @@ const {
     crudName: 'user',
     apiEndpoint: '/api',
     fectchDataOnLoad: false,
+    backToPreviousPath: true,
   },
   {
     id: null,

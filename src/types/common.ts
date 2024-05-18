@@ -235,6 +235,7 @@ export interface CrudFormApiOptions {
   crudName?: string;
   fetchDataLink?: string;
   backLink?: string;
+  backToPreviousPath?: boolean;
   actionList?: string;
   actionPost?: string;
   actionPut?: string;
@@ -243,6 +244,7 @@ export interface CrudFormApiOptions {
   autoPageTitle?: boolean;
   preventRedirectToList?: boolean;
   requestEntityName?: string;
+  methodPutIncludeId?: boolean;
 }
 
 export type IAlign = 'center' | 'left' | 'right';

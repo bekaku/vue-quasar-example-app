@@ -114,13 +114,21 @@ export const useCrudForm = <T>(options: CrudFormApiOptions, initialEntity: T) =>
     crudEntity.value = Object.assign({}, initialEntity) as T;
   };
   const onBack = () => {
-    const backLink = options.backLink
-      ? options.backLink
-      : previousPath.value ? previousPath.value
-        : options.crudName
-          ? `/${BackendRootPath}/${options.crudName.replaceAll('_', '-')}`
-          : '';
-    WeeGoTo(backLink);
+    let backLink: string | undefined = '';
+    if (options.backToPreviousPath != undefined && options.backToPreviousPath) {
+      backLink = previousPath.value;
+    }
+    if (!backLink) {
+      backLink = options.backLink
+        ? options.backLink
+        : previousPath.value ? previousPath.value
+          : options.crudName
+            ? `/${BackendRootPath}/${options.crudName.replaceAll('_', '-')}`
+            : '';
+    }
+    if (backLink) {
+      WeeGoTo(backLink);
+    }
   };
   const apiEnpoint = computed(() => {
     if (!options.apiEndpoint || !options.crudName) {

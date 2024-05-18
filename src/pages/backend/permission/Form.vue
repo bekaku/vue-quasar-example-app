@@ -129,6 +129,7 @@ const {
     crudName: 'permission',
     apiEndpoint: '/api',
     fectchDataOnLoad: true,
+    backToPreviousPath: true,
   },
   entity,
 );

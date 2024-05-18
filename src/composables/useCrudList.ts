@@ -269,7 +269,7 @@ export const useCrudList = <T>(
     await fetchList();
   };
   const onAdvanceSearch = (q: string) => {
-    advanceSearchUri.value = `&${SearchParamiter}=${q}`;
+    advanceSearchUri.value = `${SearchParamiter}=${q}`;
     onPasteUrlPathParamAndFetchData();
   };
   const onReload = () => {
