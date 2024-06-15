@@ -379,6 +379,7 @@ export interface Breadcrumb {
 export interface RefeshTokenStatus {
   status: boolean;
   fourceLogout: boolean;
+  token?: string;
 }
 export interface ForgotPasswordRequest {
   email: string;

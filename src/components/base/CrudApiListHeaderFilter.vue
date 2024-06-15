@@ -27,7 +27,7 @@
 import { PropType, computed } from 'vue';
 import { useLang } from '@/composables/useLang';
 import { ICrudListHeader } from '@/types/common';
-import { biFilter } from '@quasar/extras/bootstrap-icons';
+import { biFunnel } from '@quasar/extras/bootstrap-icons';
 const props = defineProps({
   headers: {
     type: Array as PropType<ICrudListHeader[]>,
@@ -35,7 +35,7 @@ const props = defineProps({
   },
   icon: {
     type: String,
-    default: biFilter,
+    default: biFunnel,
   },
   label: {
     type: String,

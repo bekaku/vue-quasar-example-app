@@ -1,32 +1,23 @@
-import { api } from 'boot/axios';
-import { RequestType, AppException, ResponseMessage } from '@/types/common';
-import { RefreshTokenResponse } from '@/types/models';
-import { biX } from '@quasar/extras/bootstrap-icons';
-import { Cookies } from 'quasar';
 import { useBase } from '@/composables/useBase';
 import { useLang } from '@/composables/useLang';
-import { AxiosResponse } from 'axios';
+import { AppException, RequestType, ResponseMessage } from '@/types/common';
 import {
   isAppException,
-  isServerResponseMessage,
   isServerException,
+  isServerResponseMessage,
 } from '@/utils/appUtil';
+import { AppAuthTokenKey } from '@/utils/constant';
+import { formatRelativeFromNow } from '@/utils/dateUtil';
+import { biX } from '@quasar/extras/bootstrap-icons';
+import { AxiosResponse } from 'axios';
+import { api } from 'boot/axios';
+import { Cookies } from 'quasar';
 import { useSSRContext } from 'vue';
-import { AppAuthTokenKey, SucureDeviceIdAtt, AppAuthRefeshTokenKey, ExpireCookieDays } from '@/utils/constant';
-import { formatRelativeFromNow, addDateByDays } from '@/utils/dateUtil';
 export const useAxios = () => {
   const { WeeToast, WeeLoader, isDevMode } = useBase();
   const { locale } = useLang();
   const ssrContext = process.env.SERVER ? useSSRContext() : null;
   const cookies = process.env.SERVER ? Cookies.parseSSR(ssrContext) : Cookies; // otherwise we're on client
-  // const reqHeader = () => {
-  //   return {
-  //     Authorization: `Bearer ${token}`,
-  //     'Content-Type': 'application/json',
-  //     'Accept-Apiclient': 'default',
-  //     'Accept-Language': locale.value,
-  //   };
-  // };
   const validateServerResponse = <T>(res: T): Promise<T | null> => {
     if (!res) {
       return new Promise((resolve) => {
@@ -116,18 +107,19 @@ export const useAxios = () => {
   };
   const callAxiosProcess = <T>(req: RequestType, devLog: boolean = true): Promise<AxiosResponse<T>> => {
     return new Promise((resolve, /*reject*/) => {
-      // api.defaults.headers = reqHeader();
-      // api.defaults.headers['Accept-Language'] = locale.value;
-      // api.defaults.headers.Authorization = `Bearer ${token}`;
-      // api.defaults.headers.common['Content-Type'] = 'application/json';
-      // api.defaults.headers.common['Accept-Language'] = locale.value as string;
-      // api.defaults.headers.common.Authorization = `Bearer ${cookies.get(
-      //   AppAuthTokenKey
-      // )}`;
-      api.defaults.headers['Accept-Language'] = locale.value as string;
-      api.defaults.headers.Authorization = `Bearer ${cookies.get(
-        AppAuthTokenKey
-      )}`;
+      /* Deprecated
+    // api.defaults.headers = reqHeader();
+    // api.defaults.headers['Accept-Language'] = locale.value;
+    // api.defaults.headers.Authorization = `Bearer ${token}`;
+    // api.defaults.headers.common['Content-Type'] = 'application/json';
+    // api.defaults.headers.common['Accept-Language'] = locale.value as string;
+    // api.defaults.headers.common.Authorization = `Bearer ${cookies.get(
+    //   AppAuthTokenKey
+    // )}`;
+    // api.defaults.headers['Accept-Language'] = locale.value as string;
+     */
+      // api.defaults.headers['Accept-Language'] = locale.value as string;
+      api.defaults.headers.Authorization = `Bearer ${cookies.get(AppAuthTokenKey)}`;
 
       // console.log('useAxios > callAxios :', req);
       if (req.baseURL != undefined) {
@@ -163,32 +155,22 @@ export const useAxios = () => {
           }
           resolve(error.message);
           WeeLoader(false);
-          WeeToast(`<strong>${error.code}</strong><br> ${error.message}`, {
-            multiLine: true,
-            html: true,
-            type: 'negative',
-            color: 'white',
-            textColor: 'negative',
-            timeout: 10 * 1000,
-            position: 'bottom',
-            actions: [{ icon: biX, color: 'negative' }],
-          });
+          const errResponse = error?.response;
+          if (errResponse && errResponse.status) {
+            if (errResponse.status != 401 && errResponse.status != 403) {
+              WeeToast(`<strong>${error.code}</strong><br> ${error.message}`, {
+                multiLine: true,
+                html: true,
+                type: 'negative',
+                color: 'white',
+                textColor: 'negative',
+                timeout: 10 * 1000,
+                position: 'bottom',
+                actions: [{ icon: biX, color: 'negative' }],
+              });
+            }
+          }
         });
-
-      // api
-      //   .get(req.API)
-      //   .then((response) => {
-      //     resolve(response.data);
-      //   })
-      //   .catch((error) => {
-      //     reject(error.message);
-      //     WeeLoader(false);
-      //     WeeToast(error.message, {
-      //       multiLine: true,
-      //       type: 'negative',
-      //       timeout: 10 * 1000,
-      //     });
-      //   });
     });
   };
   return { callAxios, validateServerResponse, callAxiosV2, callAxiosFile, callAxiosProcess };

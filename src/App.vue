@@ -106,7 +106,7 @@ export default defineComponent({
         if (isDevMode()) {
           console.log('App.vue > authenStore >', authenStore.auth);
         }
-        authenStore.startRefreshTokenTimer();
+        // authenStore.startRefreshTokenTimer();
       }
       if (!$q.screen.gt.xs) {
         // langugeAndThemeStore.setLeftDrawer(false);

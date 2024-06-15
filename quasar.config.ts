@@ -117,27 +117,6 @@ export default configure((ctx) => {
                 //Development
                 // API: 'http://localhost:8080',
                 // cdnBaseUrl: 'http://localhost:8080',
-
-                //Production Test
-                // API: 'https://testapi.givedeefive.com',
-                // cdnBaseUrl: 'https://testapi.givedeefive.com',
-
-                //Production
-                // API: 'https://api.givedeefive.com',
-                // cdnBaseUrl: 'https://cdn.givedeefive.com',
-
-                // devMode: true,
-                // TIME_OUT: 5 * 60000, // 60000 = 1 minute, 0 = no timeout
-                // API_CLIENT: 'default',
-                // appVersion: '1.0.0',
-                // codeVersion: 1,
-                // feedPostPerPage: 5,
-                // commentsPerPage: 3,
-                // webAppUrl: 'https://app.givedeefive.com',
-                // androidStoreLink:
-                //   'https://play.google.com/store/apps/details?id=com.grandats.mobile.givedeefive',
-                // iOSStoreLink: 'https://apps.apple.com/th/app/givedeefive/id6474194025',
-                // apkLink: 'https://cdn.appedr.com/files/apk/gd5/app-release.apk',
             },
         },
 

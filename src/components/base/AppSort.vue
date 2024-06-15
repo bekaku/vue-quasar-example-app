@@ -48,7 +48,7 @@ import { PropType } from 'vue';
 import { useLang } from '@/composables/useLang';
 import { ISort, ISortModeType } from '@/types/common';
 import { useSort } from '@/composables/useSort';
-import { biFunnel, biCheck } from '@quasar/extras/bootstrap-icons';
+import { biSortDown, biCheck } from '@quasar/extras/bootstrap-icons';
 const props = defineProps({
   fields: {
     type: Array as PropType<any[]>,
@@ -60,7 +60,7 @@ const props = defineProps({
   },
   icon: {
     type: String,
-    default: biFunnel,
+    default: biSortDown,
   },
   label: {
     type: String,

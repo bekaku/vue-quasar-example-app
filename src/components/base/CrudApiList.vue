@@ -685,7 +685,7 @@ import {
 } from '@quasar/extras/bootstrap-icons';
 import { DEFULT_ITEM_PER_PAGET } from '@/utils/constant';
 import { isEmpty } from '@/utils/appUtil';
-import { getValFromObjectByPath } from '@/utils/AppUtilJs';
+import { getValFromObjectByPath } from '@/utils/appUtilJs';
 import SkeletonTable from '@/components/skeleton/SkeletonTable.vue';
 import AppSort from '@/components/base/AppSort.vue';
 import AppPaging from '@/components/base/Paging.vue';

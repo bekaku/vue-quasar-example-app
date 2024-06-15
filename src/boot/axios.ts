@@ -1,9 +1,13 @@
-import { boot } from 'quasar/wrappers';
+import { useAuthenStore } from '@/stores/authenStore';
+import { AppAuthRefeshTokenKey, DefaultApiCLient, LocaleKey } from '@/utils/constant';
 import axios, { AxiosInstance } from 'axios';
-import { DefaultApiCLient } from '@/utils/constant';
+import { Cookies } from 'quasar';
+import { boot } from 'quasar/wrappers';
+
 declare module '@vue/runtime-core' {
   interface ComponentCustomProperties {
     $axios: AxiosInstance;
+    $api: AxiosInstance;
   }
 }
 
@@ -21,35 +25,100 @@ const api = axios.create({
   headers: {
     // Authorization: `Bearer ${token}`,
     'Content-Type': 'application/json',
-    'Accept-Apiclient': process.env.API_CLIENT || DefaultApiCLient,
+    'Accept-Apiclient': process.env.API_CLIENT || DefaultApiCLient
     // 'Accept-Language': DefaultLocale,
   },
-  validateStatus: (status) => status <= 500,
+  validateStatus: (status) => status < 400 // Resolve only if the status code is less than 400
+  // validateStatus: (status) => status <= 500 // Resolve only if the status code is less than 500
 });
-export default boot(({ app }) => {
-  // for use inside Vue files (Options API) through this.$axios and this.$api
-  /*
-  api.interceptors.request.use(
-    (config) => {
-      // const ck = process.env.SERVER ? Cookies.parseSSR(ssrContext) : Cookies;
-      // const token = '000000000000000000000';
-      // config.headers.Authorization = `bearer ${token}`;
-      // config.headers['Accept-Language'] = ck.get(LocaleKey);
-      return config;
-    },
-    (error) => {
-      return Promise.reject(error);
+
+
+// for multiple requests
+let isRefreshing = false;
+let failedQueue: any[] = [];
+const processQueue = (error: any, token = null) => {
+  failedQueue.forEach(prom => {
+    if (error) {
+      prom.reject(error);
+    } else {
+      prom.resolve(token);
     }
-  );
-*/
+  });
 
+  failedQueue = [];
+};
+
+export default boot(({ app, redirect, ssrContext, store }) => {
+  const authenStore = useAuthenStore(store);
+  // Check if interceptors are already set up
+  const isServer = process.env.SERVER;
+  if (!isServer) {
+    api.interceptors.request.use(async (config) => {
+      const ck = isServer ? Cookies.parseSSR(ssrContext) : Cookies;
+      // const jwtKey = ck.get(AppAuthTokenKey);
+      config.headers['Accept-Language'] = ck.get(LocaleKey);
+      console.log('appAxiosInstance.interceptors.request', config.url);
+      return config;
+    }, error => {
+      return Promise.reject(error);
+    });
+    api.interceptors.response.use(function (response) {
+      return response;
+    }, async (error) => {
+
+      const originalRequest = error.config;
+
+      if (error.response && error.response.status === 403 && !originalRequest._retry) {
+
+        if (isRefreshing) {
+          return new Promise(function (resolve, reject) {
+            console.warn('isRefreshing > failedQueue.push', originalRequest.url);
+            failedQueue.push({ resolve, reject });
+          }).then(token => {
+            originalRequest.headers['Authorization'] = 'Bearer ' + token;
+            return api(originalRequest);
+          }).catch(err => {
+            return Promise.reject(err);
+          });
+        }
+
+        originalRequest._retry = true;
+        isRefreshing = true;
+
+        const ck = isServer ? Cookies.parseSSR(ssrContext) : Cookies;
+        const refreshToken = ck.get(AppAuthRefeshTokenKey);
+        originalRequest.baseURL = process.env.API;
+        return new Promise(function (resolve, reject) {
+          api.post('/api/auth/refreshToken', {
+            refreshToken: {
+              refreshToken: refreshToken
+            }
+          })
+            .then(async ({ data }) => {
+              if (data && data.refreshToken && data.authenticationToken) {
+                await authenStore.setRefreshTokenCookie(ssrContext, data);
+                api.defaults.headers.common['Authorization'] = 'Bearer ' + data.authenticationToken;
+                originalRequest.headers['Authorization'] = 'Bearer ' + data.authenticationToken;
+                processQueue(null, data.authenticationToken);
+                resolve(api(originalRequest));
+              }
+            })
+            .catch((err) => {
+              processQueue(err, null);
+              redirect({ path: '/auth/login' });
+              resolve(err);
+            })
+            .finally(() => {
+              isRefreshing = false;
+            });
+        });
+      }
+
+      return Promise.reject(error);
+    });
+  }
   app.config.globalProperties.$axios = axios;
-  // ^ ^ ^ this will allow you to use this.$axios (for Vue Options API form)
-  //       so you won't necessarily have to import axios in each vue file
-
   app.config.globalProperties.$api = api;
-  // ^ ^ ^ this will allow you to use this.$api (for Vue Options API form)
-  //       so you can easily perform requests against your app's API
 });
 
 export { api };
