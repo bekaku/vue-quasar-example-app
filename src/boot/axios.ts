@@ -1,8 +1,10 @@
-import { useAuthenStore } from '@/stores/authenStore';
-import { AppAuthRefeshTokenKey, DefaultApiCLient, LocaleKey } from '@/utils/constant';
-import axios, { AxiosInstance } from 'axios';
-import { Cookies } from 'quasar';
 import { boot } from 'quasar/wrappers';
+import axios, { AxiosInstance } from 'axios';
+import { AppAuthRefeshTokenKey, AppAuthTokenKey, DefaultApiCLient, LocaleKey } from '@/utils/constant';
+import { Cookies } from 'quasar';
+// import { canRefreshToken } from '@/utils/JwtUtil';
+import { useAuthenStore } from '@/stores/authenStore';
+import { getTokenStatus } from '@/utils/jwtUtil';
 
 declare module '@vue/runtime-core' {
   interface ComponentCustomProperties {
@@ -53,11 +55,11 @@ export default boot(({ app, redirect, ssrContext, store }) => {
   // Check if interceptors are already set up
   const isServer = process.env.SERVER;
   if (!isServer) {
+
     api.interceptors.request.use(async (config) => {
-      const ck = isServer ? Cookies.parseSSR(ssrContext) : Cookies;
+      // const ck = isServer ? Cookies.parseSSR(ssrContext) : Cookies;
       // const jwtKey = ck.get(AppAuthTokenKey);
-      config.headers['Accept-Language'] = ck.get(LocaleKey);
-      console.log('appAxiosInstance.interceptors.request', config.url);
+      config.headers['Accept-Language'] = Cookies.get(LocaleKey);
       return config;
     }, error => {
       return Promise.reject(error);
@@ -67,12 +69,12 @@ export default boot(({ app, redirect, ssrContext, store }) => {
     }, async (error) => {
 
       const originalRequest = error.config;
-
-      if (error.response && error.response.status === 403 && !originalRequest._retry) {
+      // const ck = isServer ? Cookies.parseSSR(ssrContext) : Cookies;
+      const refreshToken = Cookies.get(AppAuthRefeshTokenKey);
+      if (refreshToken && error.response && error.response.status === 403 && !originalRequest._retry) {
 
         if (isRefreshing) {
           return new Promise(function (resolve, reject) {
-            console.warn('isRefreshing > failedQueue.push', originalRequest.url);
             failedQueue.push({ resolve, reject });
           }).then(token => {
             originalRequest.headers['Authorization'] = 'Bearer ' + token;
@@ -82,31 +84,43 @@ export default boot(({ app, redirect, ssrContext, store }) => {
           });
         }
 
+        const currentToken = Cookies.get(AppAuthTokenKey);
+        if (currentToken) {
+          const currentExpireStatus = await getTokenStatus(currentToken);
+          if (currentExpireStatus && currentExpireStatus == 'VALID') {
+            originalRequest.headers['Authorization'] = 'Bearer ' + currentToken;
+            return api(originalRequest);
+          }
+        }
         originalRequest._retry = true;
         isRefreshing = true;
 
-        const ck = isServer ? Cookies.parseSSR(ssrContext) : Cookies;
-        const refreshToken = ck.get(AppAuthRefeshTokenKey);
-        originalRequest.baseURL = process.env.API;
-        return new Promise(function (resolve, reject) {
+        return new Promise(async (resolve, reject) => {
+
+          api.defaults.baseURL = process.env.API;
+          api.defaults.responseType = 'json';
+          api.defaults.headers['Content-Type'] = 'application/json';
           api.post('/api/auth/refreshToken', {
             refreshToken: {
               refreshToken: refreshToken
             }
           })
             .then(async ({ data }) => {
-              if (data && data.refreshToken && data.authenticationToken) {
-                await authenStore.setRefreshTokenCookie(ssrContext, data);
-                api.defaults.headers.common['Authorization'] = 'Bearer ' + data.authenticationToken;
-                originalRequest.headers['Authorization'] = 'Bearer ' + data.authenticationToken;
-                processQueue(null, data.authenticationToken);
-                resolve(api(originalRequest));
-              }
+              // if (data && data.refreshToken && data.authenticationToken) {
+              await authenStore.setRefreshTokenCookie(undefined, data);
+              originalRequest.headers['Authorization'] = 'Bearer ' + data.authenticationToken;
+              processQueue(null, data.authenticationToken);
+              resolve(api(originalRequest));
             })
-            .catch((err) => {
-              processQueue(err, null);
-              redirect({ path: '/auth/login' });
-              resolve(err);
+            .catch((errRefesh) => {
+              isRefreshing = false;
+              processQueue(errRefesh, null);
+              if (errRefesh?.response && errRefesh?.response?.status) {
+                if (errRefesh.response.status == 401) {
+                  redirect({ path: '/auth/login' });
+                }
+              }
+              resolve(errRefesh);
             })
             .finally(() => {
               isRefreshing = false;

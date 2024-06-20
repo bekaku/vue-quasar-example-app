@@ -1,107 +1,90 @@
-<!-- eslint-disable @typescript-eslint/no-unused-vars -->
 <template>
-  <q-layout view="hHh lpR fFf">
-    <q-header elevated class="bg-primary text-white">
-      <q-toolbar>
-        <q-toolbar-title>
-          <q-avatar>
-            <img src="https://cdn.quasar.dev/logo-v2/svg/logo-mono-white.svg" />
-          </q-avatar>
-          Title
-        </q-toolbar-title>
-      </q-toolbar>
-    </q-header>
+  <div class="q-pa-md">
+    <q-card flat bordered class="wee-container-responsive-center">
+      <q-card-section>
+        <q-btn @click="fetchData"> Fetch</q-btn>
 
-    <q-page-container>
-      <q-page padding>
-        <q-card flat bordered class="content-limit">
-          <q-card-section> </q-card-section>
-        </q-card>
-      </q-page>
-    </q-page-container>
-  </q-layout>
+        <q-btn @click="start"> start</q-btn>
+        <q-btn @click="stop" color="negative"> stop</q-btn>
+
+        <q-btn @click="testJwt" color="blue"> JWT TEST</q-btn>
+      </q-card-section>
+    </q-card>
+  </div>
 </template>
 
 <script setup lang="ts">
-import { onMounted, defineAsyncComponent, ref, computed } from 'vue';
-import { useLang } from '@/composables/useLang';
-import { usePaging } from '@/composables/usePaging';
-import { useSort } from '@/composables/useSort';
-import { Permission } from '@/types/models';
 import { useAppMeta } from '@/composables/useAppMeta';
-import PermissionService from '@/api/PermissionService';
-import { biArrowLeft, biPlus } from '@quasar/extras/bootstrap-icons';
-const AppResult = defineAsyncComponent(
-  () => import('@/components/base/AppResult.vue'),
-);
-const BaseLoadmore = defineAsyncComponent(
-  () => import('@/components/BaseLoadmore.vue'),
-);
-const BaseSpinner = defineAsyncComponent(
-  () => import('@/components/base/BaseSpinner.vue'),
-);
-const { t } = useLang();
-const { pages, resetPaging } = usePaging(5);
-const { sort } = useSort({
-  column: 'id',
-  mode: 'desc',
+import { onMounted, ref } from 'vue';
+import UserService from '@/api/UserService';
+import { getTokenStatus } from '@/utils/jwtUtil';
+import { Cookies } from 'quasar';
+import { AppAuthTokenKey } from '@/utils/constant';
+
+useAppMeta({
+  additionalTitle: 'Test Page',
 });
-
-const { setTitle } = useAppMeta();
-setTitle(`${t('model_files_manager')} | ${t('app.name')}`);
-const { findAll } = PermissionService();
-const isInfiniteDisabled = ref(false);
-const fristLoaded = ref(false);
-const loading = ref(false);
-
-// const reponseItem = ref<IApiListResponse<Permission>>();
-const items = ref<Permission[]>([]);
-
-const pageParam = computed(
-  () =>
-    `?page=${pages.value.current > 0 ? pages.value.current - 1 : 0}&size=${
-      pages.value.itemsPerPage
-    }&sort=${sort.value.column},${sort.value.mode}`,
+const { findCurrentUserData } = UserService();
+const src = ref(
+  'http://localhost:8080/cdn/images/202211/145_1668642842865_fe718909cb0d4bd88e17c8568fe12e2f.jpg',
 );
+const interVal = ref();
+const interVal2 = ref();
+const interVal3 = ref();
+const interVal4 = ref();
+const interVal5 = ref();
+const timeout = 500;
+const totalRequest = 20;
 onMounted(async () => {
-  loadData();
+  console.log('onMounted');
 });
-const resetData = () => {
-  resetPaging();
-  items.value = [];
-  fristLoaded.value = false;
-  isInfiniteDisabled.value = false;
-};
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const doRefresh = async (event: any) => {
-  resetData();
-  await loadData();
-  if (event) {
-    event.target.complete();
+
+const start = () => {
+  // interVal.value = setInterval(fetchData, timeout);
+  // interVal2.value = setInterval(fetchData, timeout);
+  // interVal3.value = setInterval(fetchData, timeout);
+  // interVal4.value = setInterval(fetchData, timeout);
+  // interVal5.value = setInterval(fetchData, timeout);
+  for (let i = 0; i < totalRequest; i++) {
+    fetchData();
   }
 };
-const loadData = async () => {
-  const res = await findAll(pageParam.value);
-  console.log('findAll', res);
-  if (res) {
-    items.value.push(...res.dataList);
-    if (res.last || res.totalElements == 0) {
-      isInfiniteDisabled.value = true;
-    }
-  } else {
-    isInfiniteDisabled.value = true;
+const stop = () => {
+  if (interVal.value) {
+    clearInterval(interVal.value);
+    interVal.value = null;
   }
-  if (!fristLoaded.value) {
-    fristLoaded.value = true;
+  if (interVal2.value) {
+    clearInterval(interVal2.value);
+    interVal2.value = null;
   }
-  return new Promise((resolve) => {
-    resolve(true);
-  });
+  if (interVal3.value) {
+    clearInterval(interVal3.value);
+    interVal3.value = null;
+  }
+  if (interVal4.value) {
+    clearInterval(interVal4.value);
+    interVal4.value = null;
+  }
+  if (interVal5.value) {
+    clearInterval(interVal5.value);
+    interVal5.value = null;
+  }
 };
-const loadNextPage = async () => {
-  pages.value.current++;
-  loading.value = true;
-  await loadData();
-  loading.value = false;
+const fetchData = async () => {
+  const res = await findCurrentUserData();
+  console.log('res', res);
+};
+const testJwt = async () => {
+  const currentToken = Cookies.get(AppAuthTokenKey);
+  if (currentToken) {
+    const currentExpireStatus = await getTokenStatus(currentToken);
+    console.log(
+      'currentExpireStatus',
+      'currentToken',
+      currentToken,
+      currentExpireStatus,
+    );
+  }
 };
 </script>

@@ -123,6 +123,7 @@ export type ISsIcons =
   | 'theme_leader'
   | 'tick'
   ;
+export type JwtStatus = 'VALID' | 'EXPIRED' | 'NO_EXPIRATION_TIME' | 'INVALID';
 // interface
 export interface ILocales {
   name: string;
