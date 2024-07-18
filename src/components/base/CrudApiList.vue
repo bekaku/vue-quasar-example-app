@@ -1,103 +1,66 @@
 <template>
-  <div
-    class="row"
-    :class="{
-      'wee-container-responsive-center': !fullWidth,
-    }"
-  >
+  <div class="row" :class="{
+    'wee-container-responsive-center': !fullWidth,
+  }">
     <div class="col">
       <q-card flat bordered>
         <slot name="headerCard"></slot>
-
-        <template v-if="!fristLoad || loading">
-          <skeleton-table></skeleton-table>
-        </template>
-        <template v-else>
-          <q-card-section>
-            <q-toolbar>
-              <q-toolbar-title>
+        <q-card-section>
+          <q-toolbar>
+            <q-toolbar-title>
+              <slot name="title">
                 <template v-if="title">
                   <q-icon :name="icon" />
                   {{ title }}
                 </template>
-              </q-toolbar-title>
-              <q-input
-                v-if="showSearchBtn"
-                dense
-                outlined
-                rounded
-                style="width: 350px"
-                v-model="filterText"
-                :placeholder="t('base.searchThisPage')"
-                @update:model-value="updateSearchText"
-              >
-                <!-- @update:model-value="updateSearchText" -->
-                <template v-slot:prepend>
-                  <q-icon :name="biSearch" />
-                </template>
-              </q-input>
-              <q-btn
-                v-if="isHaveManagePermission && showNewBtn"
-                class="q-ml-xs"
-                flat
-                round
-                :icon="biPlus"
-                @click="$emit('on-new-form')"
-              >
+              </slot>
+            </q-toolbar-title>
+            <div class="row items-center">
+              <q-form v-if="showSearchTextBox && !showSearch" @submit="onKeywordSearch">
+                <q-input dense outlined rounded clearable style="width: 350px" v-model="filterText"
+                  :placeholder="t('searchHelp3')">
+                  <!-- @update:model-value="updateSearchText" -->
+                  <template v-slot:prepend>
+                    <q-icon :name="biSearch" />
+                  </template>
+                </q-input>
+              </q-form>
+              <slot name="extraBeforeInnerToolbar"></slot>
+              <q-btn v-if="isHaveManagePermission && showNewBtn" class="q-ml-xs" flat round :icon="biPlus"
+                @click="$emit('on-new-form')">
                 <q-tooltip>{{ t('base.addNew') }}</q-tooltip>
               </q-btn>
-              <q-btn
-                v-if="showSearchBtn"
-                class="q-ml-xs"
-                flat
-                round
-                :icon="biSearch"
-                @click="showSearch = !showSearch"
-              >
-                <q-tooltip>{{ t('base.searchAdvance') }}</q-tooltip>
+              <q-btn v-if="showSearchBtn" class="q-ml-xs" flat round :icon="biSearch" @click="showSearch = !showSearch">
+                <q-tooltip>{{ t('base.search') }}</q-tooltip>
               </q-btn>
-              <app-sort
-                :sort="sort"
-                :fields="sortableHeaders"
-                @on-sort-column="$emit('on-sort', $event)"
-                @on-sort-mode="$emit('on-sort-mode', $event)"
-              />
+              <app-sort v-if="showSort" :sort="sort" :fields="sortableHeaders"
+                @on-sort-column="$emit('on-sort', $event)" @on-sort-mode="$emit('on-sort-mode', $event)" />
 
-              <crud-api-list-header-filter :headers="headers" />
+              <crud-api-list-header-filter v-if="showFilter" :headers="headers" />
 
-              <q-btn flat round dense :icon="biThreeDotsVertical">
+              <q-btn v-if="showThreeDot" flat round dense :icon="biThreeDotsVertical">
                 <q-menu>
                   <q-list style="min-width: 200px" dense>
-                    <q-item
-                      v-if="isHaveManagePermission && showNewBtn"
-                      clickable
-                      @click="$emit('on-new-form')"
-                      v-close-popup
-                    >
+                    <q-item v-if="isHaveManagePermission && showNewBtn" clickable @click="$emit('on-new-form')"
+                      v-close-popup>
                       <q-item-section avatar>
                         <q-icon :name="biPlus" />
                       </q-item-section>
                       <q-item-section>{{ t('base.addNew') }}</q-item-section>
                     </q-item>
-                    <q-item
-                      v-if="isHaveManagePermission && showCheckbox"
-                      clickable
-                      @click="onDeleteItemSelected"
-                      v-close-popup
-                    >
+                    <q-item v-if="isHaveManagePermission && showCheckbox" clickable @click="onDeleteItemSelected"
+                      v-close-popup>
                       <q-item-section avatar>
                         <q-icon :name="biTrash" />
                       </q-item-section>
-                      <q-item-section
-                        >{{ t('base.deleteSeleted') }}
+                      <q-item-section>{{ t('base.deleteSeleted') }}
                       </q-item-section>
                     </q-item>
-                    <q-item clickable v-close-popup @click="showSearch = true">
+                    <q-item v-if="showSearchBtn" clickable v-close-popup @click="showSearch = true">
                       <q-item-section avatar>
                         <q-icon :name="biSearch" />
                       </q-item-section>
-                      <q-item-section
-                        >{{ t('base.searchAdvance') }}
+                      <q-item-section>{{ t('base.searchAdvance') }}
                       </q-item-section>
                     </q-item>
                     <q-separator />
@@ -110,145 +73,89 @@
                   </q-list>
                 </q-menu>
               </q-btn>
-            </q-toolbar>
-            <slot name="extraToolbar"></slot>
-          </q-card-section>
+              <slot name="extraInnerToolbar"></slot>
+            </div>
+          </q-toolbar>
+          <slot name="extraToolbar"></slot>
+        </q-card-section>
+        <q-card-section v-if="showSearch" class="q-mb-lg">
+          <q-card flat bordered>
+            <q-card-section>
+              <div class="text-h6">
+                {{ t('base.search') }}
+              </div>
+            </q-card-section>
+            <q-form @submit="onAdvanceSearch" class="q-pa-md">
 
-          <q-card-section v-if="showSearch" class="q-mb-lg">
-            <q-card flat bordered>
-              <q-card-section>
-                <div class="text-h6">
-                  {{ t('base.searchAdvance') }}
-                </div>
-              </q-card-section>
-              <q-form @submit="onAdvanceSearch" class="q-pa-md">
-                <template v-if="searchableHeaders.length > 0">
-                  <div class="row">
-                    <template
-                      v-for="(searchCol, searchIndex) in searchableHeaders"
-                      :key="`advance-search-${searchIndex}`"
-                    >
-                      <div
-                        v-if="searchCol.options"
-                        class="col-12 col-md-6 q-pa-sm"
-                      >
-                        <div class="q-gutter-md row items-center">
-                          <!-- <div class="text-subtitle2">
-                            {{ t(searchCol.label) }}
-                          </div> -->
-                          <q-select
-                            dense
-                            filled
-                            :label="t(searchCol.label)"
-                            class="q-mx-lg"
-                            v-model="searchCol.options.searchOperation"
-                            :options="searchOperations"
-                            option-value="value"
-                            option-label="text"
-                            emit-value
-                            map-options
-                            :readonly="
-                              searchCol.options.searchOperationReadonly
-                            "
-                            style="min-width: 150px"
-                          />
-                          <template
-                            v-if="
-                              searchCol.options?.searchType ==
-                              ICrudListHeaderOptionSearchType.TEXT
-                            "
-                          >
-                            <q-input
-                              outlined
-                              dense
-                              v-model="searchCol.options.searchModel"
-                              type="text"
-                              :label="t(searchCol.label)"
-                              clearable
-                            >
-                            </q-input>
-                          </template>
-                          <template
-                            v-else-if="
-                              searchCol.options?.searchType ==
-                              ICrudListHeaderOptionSearchType.BOOLEAN
-                            "
-                          >
-                            <form-togle
-                              :title="t(searchCol.label)"
-                              v-model="searchCol.options.searchModel"
-                            />
-                          </template>
-                          <template
-                            v-else-if="
-                              searchCol.options?.searchType ==
-                              ICrudListHeaderOptionSearchType.NUMBER
-                            "
-                          >
-                            <q-input
-                              outlined
-                              dense
-                              v-model="searchCol.options.searchModel"
-                              type="number"
-                              :label="t(searchCol.label)"
-                            >
-                            </q-input>
-                          </template>
-                          <template
-                            v-else-if="
-                              searchCol.options?.searchType ==
-                              ICrudListHeaderOptionSearchType.DATE
-                            "
-                          >
-                            <template
-                              v-if="searchCol.options.searchModel != undefined"
-                            >
-                              <date-picker
-                                dense
-                                v-model="searchCol.options.searchModel"
-                                :title="t(searchCol.label)"
-                              />
+              <slot name="topSearchExtra">
+              </slot>
+              <template v-if="searchableHeaders.length > 0">
+                <div class="row">
+                  <slot name="topInnerSearchExtra">
+                  </slot>
+                  <template v-for="(searchCol, searchIndex) in searchableHeaders"
+                    :key="`advance-search-${searchIndex}`">
+                    <div v-if="searchCol.options" class="col-12 col-md-4 q-pa-sm">
+                      <div class="q-gutter-md row items-center">
+                        <template v-if="
+                          searchCol.options?.searchType == ICrudListHeaderOptionSearchType.TEXT ||
+                          searchCol.options?.searchType == ICrudListHeaderOptionSearchType.NUMBER
+                        ">
+                          <q-input outlined dense v-model="searchCol.options.searchModel"
+                            :type="searchCol.options?.searchType == ICrudListHeaderOptionSearchType.TEXT ? 'text' : 'number'"
+                            :label="t(searchCol.label)" clearable style="width: 100%">
+                            <template v-slot:before>
+                              <q-select v-if="!searchCol.options.searchOperationReadonly" dense filled
+                                :label="t(searchCol.label)" class="q-mx-lg" v-model="searchCol.options.searchOperation"
+                                :options="searchOperations" option-value="value" option-label="text" emit-value
+                                map-options :readonly="searchCol.options.searchOperationReadonly"
+                                style="min-width: 150px" :dropdown-icon="biChevronExpand" />
                             </template>
+                          </q-input>
+                        </template>
+                        <template v-else-if="
+                          searchCol.options?.searchType ==
+                          ICrudListHeaderOptionSearchType.BOOLEAN
+                        ">
+                          <form-togle :title="t(searchCol.label)" v-model="searchCol.options.searchModel" />
+                        </template>
+                        <template v-else-if="
+                          searchCol.options?.searchType ==
+                          ICrudListHeaderOptionSearchType.DATE
+                        ">
+                          <template v-if="searchCol.options.searchModel != undefined">
+                            <date-picker dense v-model="searchCol.options.searchModel" :title="t(searchCol.label)" />
                           </template>
-                        </div>
+                        </template>
                       </div>
-                    </template>
-                  </div>
-                  <q-separator />
-                  <q-card-actions align="center">
-                    <q-btn
-                      type="submit"
-                      flat
-                      :icon="biSearch"
-                      :label="t('base.okay')"
-                    >
-                    </q-btn>
-                    <q-btn
-                      flat
-                      :icon="biX"
-                      @click="showSearch = false"
-                      :label="t('base.close')"
-                    >
-                    </q-btn>
-                    <q-btn
-                      flat
-                      :icon="biEraser"
-                      @click="onClearSearch"
-                      :label="t('base.clear')"
-                    ></q-btn>
-                  </q-card-actions>
-                </template>
-              </q-form>
-            </q-card>
-          </q-card-section>
-          <!-- <q-markup-table v-if="list.length > 0" separator="cell" flat bordered> -->
+                    </div>
+                  </template>
+
+                  <slot name="belowInnerSearchExtra">
+                  </slot>
+                </div>
+
+                <slot name="belowSearchExtra">
+                </slot>
+                <q-separator />
+                <q-card-actions align="center">
+                  <q-btn type="submit" flat :icon="biSearch" :label="t('base.okay')">
+                  </q-btn>
+                  <q-btn flat :icon="biX" @click="showSearch = false" :label="t('base.close')">
+                  </q-btn>
+                  <q-btn flat :icon="biEraser" @click="onClearSearch" :label="t('base.clear')"></q-btn>
+                </q-card-actions>
+              </template>
+            </q-form>
+          </q-card>
+        </q-card-section>
+        <!-- <q-markup-table v-if="list.length > 0" separator="cell" flat bordered> -->
+        <template v-if="!fristLoad || loading">
+          <skeleton-table></skeleton-table>
+        </template>
+        <template v-else>
           <slot name="table">
-            <q-markup-table
-              v-if="list.length > 0"
-              separator="cell"
-              flat
-              bordered
-            >
+            <q-markup-table v-if="list.length > 0" separator="cell" flat bordered>
               <thead>
                 <slot name="theader">
                   <tr>
@@ -263,47 +170,30 @@
                         </q-tooltip>
                       </q-checkbox>
                     </th>
-                    <template
-                      v-for="(tblHeader, tblIndex) in fillableHeaders"
-                      :key="`tblHeader-${tblIndex}`"
-                    >
-                      <template
-                        v-if="tblHeader.type === CrudListDataType.BASE_TOOL"
-                      >
-                        <th
-                          v-if="isHaveManagePermission || isHaveViewPermission"
-                        >
+                    <template v-for="(tblHeader, tblIndex) in fillableHeaders" :key="`tblHeader-${tblIndex}`">
+                      <template v-if="tblHeader.type === CrudListDataType.BASE_TOOL">
+                        <th v-if="isHaveManagePermission || isHaveViewPermission">
                           {{ t(tblHeader.label) }}
                         </th>
                       </template>
                       <th v-else>
-                        <template
-                          v-if="tblHeader.options && tblHeader.options.sortable"
-                        >
-                          <q-btn
-                            @click="
-                              $emit(
-                                'on-sort',
-                                tblHeader.options.sortColunm
-                                  ? tblHeader.options.sortColunm
-                                  : tblHeader.column,
-                              )
-                            "
-                            flat
-                          >
-                            <template
-                              v-if="
-                                sort.column == tblHeader.options.sortColunm ||
-                                sort.column == tblHeader.column
-                              "
-                            >
-                              <q-icon
-                                :name="
-                                  sort.mode == 'desc'
-                                    ? biSortAlphaUpAlt
-                                    : biSortAlphaDown
-                                "
-                              ></q-icon>
+                        <template v-if="tblHeader.options && tblHeader.options.sortable">
+                          <q-btn @click="
+                            $emit(
+                              'on-sort',
+                              tblHeader.options.sortColunm
+                                ? tblHeader.options.sortColunm
+                                : tblHeader.column,
+                            )
+                            " flat>
+                            <template v-if="
+                              sort.column == tblHeader.options.sortColunm ||
+                              sort.column == tblHeader.column
+                            ">
+                              <q-icon :name="sort.mode == 'desc'
+                                ? biSortAlphaUpAlt
+                                : biSortAlphaDown
+                                "></q-icon>
                             </template>
 
                             {{ t(tblHeader.label) }}
@@ -320,53 +210,27 @@
               <tbody>
                 <slot name="tbody" v-bind="{ list, fillableHeaders }">
                   <tr v-for="(item, index) in list" :key="`item-tr-${index}`">
-                    <td
-                      v-if="isHaveManagePermission && showCheckbox"
-                      class="text-center"
-                    >
-                      <q-checkbox
-                        v-model="selected"
-                        :val="item.id"
-                      ></q-checkbox>
+                    <td v-if="isHaveManagePermission && showCheckbox" class="text-center">
+                      <q-checkbox v-model="selected" :val="item.id"></q-checkbox>
                     </td>
 
-                    <template
-                      v-for="(fillable, bodyIndex) in fillableHeaders"
-                      :key="`item-body-${bodyIndex}`"
-                    >
+                    <template v-for="(fillable, bodyIndex) in fillableHeaders" :key="`item-body-${bodyIndex}`">
                       <template v-if="fillable.options">
-                        <template
-                          v-if="fillable.type === CrudListDataType.BASE_TOOL"
-                        >
+                        <template v-if="fillable.type === CrudListDataType.BASE_TOOL">
                           <td class="text-center">
-                            <slot
-                              name="baseTool"
-                              v-bind="{ item: item, index: index }"
-                            >
-                              <template
-                                v-if="
-                                  isHaveManagePermission || isHaveViewPermission
-                                "
-                              >
-                                <template
-                                  v-if="
-                                    fillable.options &&
-                                    fillable.options.editButton
-                                  "
-                                >
-                                  <q-btn
-                                    v-if="
-                                      isHaveManagePermission ||
-                                      isHaveViewPermission
-                                    "
-                                    @click="$emit('on-item-click', index)"
-                                    color="primary"
-                                    :icon="
-                                      isHaveManagePermission ? biPencil : biEye
-                                    "
-                                    flat
-                                    round
-                                  >
+                            <slot name="baseTool" v-bind="{ item: item, index: index }">
+                              <template v-if="
+                                isHaveManagePermission || isHaveViewPermission
+                              ">
+                                <template v-if="
+                                  fillable.options &&
+                                  fillable.options.editButton
+                                ">
+                                  <q-btn v-if="
+                                    isHaveManagePermission ||
+                                    isHaveViewPermission
+                                  " @click="$emit('on-item-click', index)" color="primary" :icon="isHaveManagePermission ? biPencil : biEye
+                                    " flat round>
                                     <q-tooltip>
                                       {{
                                         isHaveManagePermission
@@ -377,42 +241,24 @@
                                   </q-btn>
                                 </template>
 
-                                <template
-                                  v-if="
-                                    fillable.options &&
-                                    fillable.options.copyButton
-                                  "
-                                >
-                                  <q-btn
-                                    v-if="isHaveManagePermission"
-                                    @click="$emit('on-item-copy', index)"
-                                    color="primary"
-                                    class="q-ml-sm"
-                                    :icon="biClipboard"
-                                    flat
-                                    round
-                                  >
+                                <template v-if="
+                                  fillable.options &&
+                                  fillable.options.copyButton
+                                ">
+                                  <q-btn v-if="isHaveManagePermission" @click="$emit('on-item-copy', index)"
+                                    color="primary" class="q-ml-sm" :icon="biClipboard" flat round>
                                     <q-tooltip>
                                       {{ t('base.copy') }}
                                     </q-tooltip>
                                   </q-btn>
                                 </template>
 
-                                <template
-                                  v-if="
-                                    fillable.options &&
-                                    fillable.options.deleteButton
-                                  "
-                                >
-                                  <q-btn
-                                    v-if="isHaveManagePermission"
-                                    @click="onItemDelete(index, true)"
-                                    color="negative"
-                                    class="q-ml-sm"
-                                    :icon="biTrash"
-                                    flat
-                                    round
-                                  >
+                                <template v-if="
+                                  fillable.options &&
+                                  fillable.options.deleteButton
+                                ">
+                                  <q-btn v-if="isHaveManagePermission" @click="onItemDelete(index, true)"
+                                    color="negative" class="q-ml-sm" :icon="biTrash" flat round>
                                     <q-tooltip class="bg-negative">
                                       {{ t('base.delete') }}
                                     </q-tooltip>
@@ -420,43 +266,32 @@
                                 </template>
                               </template>
                             </slot>
-                            <slot
-                              name="additionalBaseTool"
-                              v-bind="{ item: item, index: index }"
-                            >
+                            <slot name="additionalBaseTool" v-bind="{ item: item, index: index }">
                             </slot>
                           </td>
                         </template>
-                        <td
-                          v-else
-                          :class="{
-                            'text-center':
-                              fillable.options &&
-                              fillable.options.align == 'center',
-                            'text-left':
-                              fillable.options &&
-                              fillable.options.align == 'left',
-                            'text-right':
-                              fillable.options &&
-                              fillable.options.align == 'right',
-                            'long-text-break':
-                              fillable.options && fillable.options.maxWidth,
-                          }"
-                          :style="{
-                            maxWidth:
-                              fillable.options && fillable.options.maxWidth
-                                ? fillable.options.maxWidth
-                                : '',
-                          }"
-                        >
-                          <template
-                            v-if="fillable.type === CrudListDataType.TEXT"
-                          >
-                            <template
-                              v-if="
-                                fillable.options && fillable.options.toolTip
-                              "
-                            >
+                        <td v-else :class="{
+                          'text-center':
+                            fillable.options &&
+                            fillable.options.align == 'center',
+                          'text-left':
+                            fillable.options &&
+                            fillable.options.align == 'left',
+                          'text-right':
+                            fillable.options &&
+                            fillable.options.align == 'right',
+                          'long-text-break':
+                            fillable.options && fillable.options.maxWidth,
+                        }" :style="{
+                          maxWidth:
+                            fillable.options && fillable.options.maxWidth
+                              ? fillable.options.maxWidth
+                              : '',
+                        }">
+                          <template v-if="fillable.type === CrudListDataType.TEXT">
+                            <template v-if="
+                              fillable.options && fillable.options.toolTip
+                            ">
                               <span>
                                 {{
                                   fillable.column
@@ -480,153 +315,99 @@
                               }}
                             </template>
                           </template>
-                          <template
-                            v-else-if="
-                              fillable.type === CrudListDataType.FUNCTION &&
-                              fillable.options &&
-                              fillable.options.func
-                            "
-                          >
-                            <template
-                              v-if="
-                                fillable.column &&
-                                getValueByColunm(fillable.column, index) !=
-                                  undefined
-                              "
-                            >
+                          <template v-else-if="
+                            fillable.type === CrudListDataType.FUNCTION &&
+                            fillable.options &&
+                            fillable.options.func
+                          ">
+                            <template v-if="
+                              fillable.column &&
+                              getValueByColunm(fillable.column, index) !=
+                              undefined
+                            ">
                               {{
                                 fillable.options.func(
-                                  getValueByColunm(fillable.column, index),
+                                  getValueByColunm(fillable.column, index)
                                 )
                               }}
                             </template>
                           </template>
-                          <template
-                            v-else-if="
-                              fillable.type === CrudListDataType.NUMBER_FORMAT
-                            "
-                          >
+                          <template v-else-if="
+                            fillable.type === CrudListDataType.NUMBER_FORMAT
+                          ">
                             {{
                               fillable.column
                                 ? getValueByColunm(
-                                    fillable.column,
-                                    index,
-                                  ).toLocaleString()
+                                  fillable.column,
+                                  index
+                                ).toLocaleString()
                                 : ''
                             }}
                           </template>
-                          <template
-                            v-else-if="fillable.type === CrudListDataType.DATE"
-                          >
+                          <template v-else-if="fillable.type === CrudListDataType.DATE">
                             {{
                               fillable.column
                                 ? dateForMat(
-                                    getValueByColunm(fillable.column, index),
-                                  )
+                                  getValueByColunm(fillable.column, index)
+                                )
                                 : ''
                             }}
                           </template>
-                          <template
-                            v-else-if="
-                              fillable.type === CrudListDataType.DATE_TIME
-                            "
-                          >
+                          <template v-else-if="
+                            fillable.type === CrudListDataType.DATE_TIME
+                          ">
                             {{
                               fillable.column
                                 ? datetimeForMat(
-                                    getValueByColunm(fillable.column, index),
-                                  )
+                                  getValueByColunm(fillable.column, index)
+                                )
                                 : ''
                             }}
                           </template>
-                          <template
-                            v-else-if="
-                              fillable.type === CrudListDataType.STATUS
-                            "
-                          >
-                            <q-icon
-                              size="sm"
-                              :color="
-                                fillable.column &&
-                                getValueBoolean(fillable.column, index)
-                                  ? 'positive'
-                                  : 'grey-4'
-                              "
-                              :name="biCheckCircle"
-                            ></q-icon>
+                          <template v-else-if="
+                            fillable.type === CrudListDataType.STATUS
+                          ">
+                            <q-icon size="sm" :color="fillable.column &&
+                              getValueBoolean(fillable.column, index)
+                              ? 'positive'
+                              : 'grey-4'
+                              " :name="biCheckCircle"></q-icon>
                           </template>
-                          <template
-                            v-else-if="
-                              fillable.type === CrudListDataType.AVATAR
-                            "
-                          >
-                            <q-avatar
-                              v-if="
+                          <template v-else-if="
+                            fillable.type === CrudListDataType.AVATAR
+                          ">
+                            <q-avatar v-if="
+                              fillable.column &&
+                              getValueByColunm(fillable.column, index)
+                            " :rounded="fillable.options.rounded" :square="fillable.options.square" :size="fillable.options.size
+                              ? fillable.options.size
+                              : '36px'
+                              ">
+                              <q-img v-if="
                                 fillable.column &&
                                 getValueByColunm(fillable.column, index)
-                              "
-                              :rounded="fillable.options.rounded"
-                              :square="fillable.options.square"
-                              :size="
-                                fillable.options.size
-                                  ? fillable.options.size
-                                  : '36px'
-                              "
-                            >
-                              <q-img
-                                v-if="
-                                  fillable.column &&
-                                  getValueByColunm(fillable.column, index)
-                                "
-                                :src="getValueByColunm(fillable.column, index)"
-                                :alt="'item-img-' + bodyIndex"
-                                :ratio="1"
-                              />
-                              <img
-                                v-else
-                                src="/avatar_default.png"
-                                :alt="'item-img-' + bodyIndex"
-                              />
+                              " :src="getValueByColunm(fillable.column, index)" :alt="'item-img-' + bodyIndex"
+                                :ratio="1" />
+                              <img v-else src="/avatar_default.png" :alt="'item-img-' + bodyIndex" />
                             </q-avatar>
                           </template>
-                          <template
-                            v-else-if="fillable.type === CrudListDataType.IMAGE"
-                          >
-                            <q-img
-                              v-if="
-                                fillable.column &&
-                                getValueByColunm(fillable.column, index)
-                              "
-                              :src="getValueByColunm(fillable.column, index)"
-                              spinner-color="white"
-                              class="bg-grey-8"
-                              :ratio="4 / 3"
-                              :style="
-                                fillable.options.size
-                                  ? `width: ${fillable.options.size}; height: ${fillable.options.size}`
-                                  : 'width:55px;height:55px'
-                              "
-                            />
-                            <q-img
-                              v-else
-                              src="/images/no_picture_thumb.jpg"
-                              spinner-color="white"
-                              class="bg-grey-8"
-                              :ratio="4 / 3"
-                              :style="
-                                fillable.options.size
-                                  ? `width: ${fillable.options.size}; height: ${fillable.options.size}`
-                                  : 'width:55px;height:55px'
-                              "
-                            />
+                          <template v-else-if="fillable.type === CrudListDataType.IMAGE">
+                            <q-img v-if="
+                              fillable.column &&
+                              getValueByColunm(fillable.column, index)
+                            " :src="getValueByColunm(fillable.column, index)" spinner-color="white" class="bg-grey-8"
+                              :ratio="4 / 3" :style="fillable.options.size
+                                ? `width: ${fillable.options.size}; height: ${fillable.options.size}`
+                                : 'width:55px;height:55px'
+                                " />
+                            <q-img v-else src="/images/no_picture_thumb.jpg" spinner-color="white" class="bg-grey-8"
+                              :ratio="4 / 3" :style="fillable.options.size
+                                ? `width: ${fillable.options.size}; height: ${fillable.options.size}`
+                                : 'width:55px;height:55px'
+                                " />
                           </template>
-                          <template
-                            v-else-if="fillable.type === CrudListDataType.ICON"
-                          >
-                            <q-icon
-                              v-if="fillable.column"
-                              :name="getValueByColunm(fillable.column, index)"
-                            ></q-icon>
+                          <template v-else-if="fillable.type === CrudListDataType.ICON">
+                            <q-icon v-if="fillable.column" :name="getValueByColunm(fillable.column, index)"></q-icon>
                           </template>
                         </td>
                       </template>
@@ -636,21 +417,13 @@
               </tbody>
             </q-markup-table>
             <q-card-section v-else class="text-center">
-              <app-result
-                status="empty"
-                :description="t('error.dataNotfound')"
-              />
+              <app-result status="empty" :description="t('error.dataNotfound')" />
             </q-card-section>
           </slot>
         </template>
         <slot name="paging">
-          <app-paging
-            v-if="showPaging"
-            :model-value="pages"
-            :boundary-numbers="false"
-            @update:current="onPageChange"
-            @update:per-page="onPerPageChange"
-          ></app-paging>
+          <app-paging v-if="pages && showPaging && pages.totalPages > 0" :model-value="pages" :boundary-numbers="false"
+            @update:current="onPageChange" @update:per-page="onPerPageChange"></app-paging>
         </slot>
       </q-card>
     </div>
@@ -658,32 +431,26 @@
 </template>
 
 <script setup lang="ts">
-import { PropType, defineAsyncComponent, watch, ref, computed } from 'vue';
+import { computed, defineAsyncComponent, PropType, ref, watch } from 'vue';
 import { useLang } from '@/composables/useLang';
+import { CrudListDataType, ICrudListHeader, ICrudListHeaderOptionSearchType, IPagination, ISort } from '@/types/common';
 import {
-  ISort,
-  IPagination,
-  ICrudListHeader,
-  CrudListDataType,
-  ICrudListHeaderOptionSearchType,
-} from '@/types/common';
-import {
+  biArrowClockwise,
+  biCheckCircle, biChevronExpand,
+  biClipboard,
+  biEraser,
+  biEye,
   biFile,
+  biPencil,
+  biPlus,
   biSearch,
   biSortAlphaDown,
   biSortAlphaUpAlt,
-  biTrash,
-  biPencil,
-  biClipboard,
-  biCheckCircle,
-  biArrowClockwise,
-  biPlus,
-  biX,
-  biEye,
   biThreeDotsVertical,
-  biEraser,
+  biTrash,
+  biX
 } from '@quasar/extras/bootstrap-icons';
-import { DEFULT_ITEM_PER_PAGET } from '@/utils/constant';
+import { DEFULT_ITEM_PER_PAGET, SearchMinCharactor } from '@/utils/constant';
 import { isEmpty } from '@/utils/appUtil';
 import { getValFromObjectByPath } from '@/utils/appUtilJs';
 import SkeletonTable from '@/components/skeleton/SkeletonTable.vue';
@@ -691,93 +458,104 @@ import AppSort from '@/components/base/AppSort.vue';
 import AppPaging from '@/components/base/Paging.vue';
 import { useBase } from '@/composables/useBase';
 import { usePermissionStore } from '@/stores/permissionStore';
-import {
-  formatDate,
-  FORMAT_DATE1,
-  FORMAT_DATETIME,
-  formatDateTime,
-} from '@/utils/dateUtil';
+import { FORMAT_DATE1, FORMAT_DATETIME, formatDate, formatDateTime } from '@/utils/dateUtil';
 
 const AppResult = defineAsyncComponent(
-  () => import('@/components/base/AppResult.vue'),
+  () => import('@/components/base/AppResult.vue')
 );
 const DatePicker = defineAsyncComponent(
-  () => import('@/components/form/DatePicker.vue'),
+  () => import('@/components/form/DatePicker.vue')
 );
 const FormTogle = defineAsyncComponent(
-  () => import('@/components/form/FormTogle.vue'),
+  () => import('@/components/form/FormTogle.vue')
 );
 const CrudApiListHeaderFilter = defineAsyncComponent(
-  () => import('@/components/base/CrudApiListHeaderFilter.vue'),
+  () => import('@/components/base/CrudApiListHeaderFilter.vue')
 );
 const props = defineProps({
   crudName: {
     type: String,
-    default: '',
+    default: ''
   },
   viewPermission: {
     type: String,
-    default: '',
+    default: ''
   },
   managePermission: {
     type: String,
-    default: '',
+    default: ''
   },
   title: {
     type: String,
-    default: '',
+    default: ''
   },
   icon: {
     type: String,
-    default: biFile,
+    default: biFile
   },
   list: {
     type: Array as PropType<any[]>,
-    default: () => [],
+    default: () => []
   },
   headers: {
     type: Array as PropType<ICrudListHeader[]>,
-    default: () => [],
+    default: () => []
   },
   sort: {
     type: Object as PropType<ISort>,
-    default: null,
+    default: null
   },
   pages: {
-    type: Object as PropType<IPagination>,
+    type: Object as PropType<IPagination>
   },
   fristLoad: {
     type: Boolean,
-    default: false,
+    default: false
   },
   loading: {
     type: Boolean,
-    default: false,
+    default: false
   },
   showPaging: {
     type: Boolean,
-    default: true,
+    default: true
   },
   isFrontend: {
     type: Boolean,
-    default: false,
+    default: false
   },
   showCheckbox: {
     type: Boolean,
-    default: true,
+    default: true
   },
   showNewBtn: {
     type: Boolean,
-    default: true,
+    default: true
   },
   showSearchBtn: {
     type: Boolean,
-    default: true,
+    default: true
+  },
+  showSearchTextBox: {
+    type: Boolean,
+    default: false
+  },
+  showThreeDot: {
+    type: Boolean,
+    default: true
+  },
+  showFilter: {
+    type: Boolean,
+    default: true
+  },
+  showSort: {
+    type: Boolean,
+    default: true
   },
   fullWidth: {
     type: Boolean,
-    default: false,
-  },
+    default: false
+  }
 });
 const emit = defineEmits([
   'on-page-no-change',
@@ -791,9 +569,10 @@ const emit = defineEmits([
   'on-new-form',
   'on-reload',
   'on-advance-search',
+  'on-keyword-search'
 ]);
 const { t, locale } = useLang();
-const { searchOperations } = useBase();
+const { searchOperations, inputSanitizeHtml } = useBase();
 const permissionStore = usePermissionStore();
 const currentPage = ref(props.pages ? props.pages.current : 1);
 const itemPerPage = ref(DEFULT_ITEM_PER_PAGET);
@@ -858,13 +637,13 @@ const getValueBoolean = (column: string, index: number) => {
 const sortableHeaders = computed(() => {
   const headers = props.headers;
   const filters = headers.filter(
-    (c) => c.options && c.options.sortable === true,
+    (c) => c.options && c.options.sortable === true
   );
   const list = [];
   for (const item of filters) {
     list.push({
       value: item.options.sortColunm ? item.options.sortColunm : item.column,
-      label: t(item.label),
+      label: t(item.label)
     });
   }
   return list;
@@ -897,6 +676,7 @@ const onClearSearch = () => {
   emit('on-reload');
 };
 const onAdvanceSearch = () => {
+  filterText.value = '';
   let q = '';
   if (searchableHeaders.value.length > 0) {
     for (const col of searchableHeaders.value) {
@@ -908,7 +688,7 @@ const onAdvanceSearch = () => {
           : col.column;
         if (operation != undefined && searchVal != undefined) {
           let canAdd = true;
-          if (typeof searchVal != 'boolean' && searchVal.length == 0) {
+          if (typeof searchVal != 'boolean' && searchVal.toString().trim().length == 0) {
             canAdd = false;
           }
 
@@ -916,7 +696,7 @@ const onAdvanceSearch = () => {
             if (q) {
               q += ',';
             }
-            q += colunm + operation + searchVal;
+            q += colunm + operation + inputSanitizeHtml(searchVal);
           }
         }
       }
@@ -924,7 +704,11 @@ const onAdvanceSearch = () => {
   }
   emit('on-advance-search', q);
 };
-
+const onKeywordSearch = () => {
+  if (filterText.value?.trim().length >= SearchMinCharactor) {
+    emit('on-keyword-search', inputSanitizeHtml(filterText.value));
+  }
+};
 const isHaveViewPermission = computed(() => {
   if (!props.isFrontend) {
     return props.viewPermission
@@ -973,6 +757,7 @@ const onPerPageChange = async (v: number | undefined) => {
     itemPerPage.value = v;
   }
 };
+
 //wathcer
 watch(
   () => props.pages,
@@ -980,7 +765,7 @@ watch(
     if (pages) {
       currentPage.value = pages.current;
     }
-  },
+  }
 );
 watch(currentPage, (newPage) => {
   if (props.fristLoad) {

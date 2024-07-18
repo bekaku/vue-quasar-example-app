@@ -343,6 +343,15 @@ export default {
         'months': 'January_February_March_April_May_June_July_August_September_October_November_December',
         'monthShorts': 'Jan._Feb._Mar._Apr._May_Jun._Jul._Aug._Sep._Oct._Nov._Dec.'
     },
+    'chats': {
+        'chats': 'Chats',
+        'media': 'Media',
+        'files': 'Files',
+        'all': 'All',
+        'groups': 'Groups',
+        'favorite': 'Favorite',
+        'typeMessage': 'Type your message',
+    },
     'authen': {
         'login': 'Login',
         'helper1': 'Enter the verification code we just sent you on email address.',

@@ -82,25 +82,32 @@ export const useAxios = () => {
     return await validateServerResponse<T>(res);
   };
   const callAxiosFile = async <T>(req: RequestType): Promise<any> => {
-    return new Promise(async (resolve, /*reject*/) => {
+    return new Promise(async (resolve /*reject*/) => {
       const response = await callAxiosProcess<T>(req, false);
-      if (response.data) {
-        const blob = new Blob([response.data as BlobPart], { type: response.headers['content-type'] });
-        const imageUrlObject = URL.createObjectURL(blob);
-        resolve(imageUrlObject);
-      }
-      resolve(null);
+      resolve(response);
     });
   };
-  const callAxios = async <T>(req: RequestType): Promise<T> => {
-    return new Promise(async (resolve, /*reject*/) => {
+  const exeptionNotify = <T>(response: AxiosResponse<T>) => {
+    if (response && response.data) {
+      if (isAppException(response.data)) {
+        notifyMessage(response.data);
+      } else if (isServerResponseMessage(response.data)) {
+        notifyServerMessage(response.data);
+      }
+    }
+  };
+  const callAxios = async <T>(req: RequestType): Promise<any> => {
+    return new Promise(async (resolve /*reject*/) => {
       const response = await callAxiosProcess<T>(req);
-      if (response.data) {
-        if (isAppException(response.data)) {
-          notifyMessage(response.data);
-        } else if (isServerResponseMessage(response.data)) {
-          notifyServerMessage(response.data);
-        }
+      if (response.status != 401 && response.status != 403) {
+        exeptionNotify(response);
+        // if (response.data) {
+        //   if (isAppException(response.data)) {
+        //     notifyMessage(response.data);
+        //   } else if (isServerResponseMessage(response.data)) {
+        //     notifyServerMessage(response.data);
+        //   }
+        // }
       }
       resolve(response.data as T);
     });
@@ -150,26 +157,35 @@ export const useAxios = () => {
           resolve(response as AxiosResponse<T>);
         })
         .catch((error) => {
-          if (isDevMode() && devLog) {
+
+          if (isDevMode()) {
             console.log(`api ${api.defaults.baseURL}${req.API}`, error);
           }
-          resolve(error.message);
           WeeLoader(false);
-          const errResponse = error?.response;
-          if (errResponse && errResponse.status) {
-            if (errResponse.status != 401 && errResponse.status != 403) {
-              WeeToast(`<strong>${error.code}</strong><br> ${error.message}`, {
-                multiLine: true,
-                html: true,
-                type: 'negative',
-                color: 'white',
-                textColor: 'negative',
-                timeout: 10 * 1000,
-                position: 'bottom',
-                actions: [{ icon: biX, color: 'negative' }],
-              });
+          if (error.response.status != 401 && error.response.status != 403) {
+            const responseData = error?.response?.data;
+            if (responseData) {
+              exeptionNotify(error?.response);
             }
+            // const message = responseData?.message;
+            // const errors = responseData?.errors && responseData?.errors.length > 0 ? responseData?.errors.toString() : undefined;
+            // WeeToast(`<strong>${message || error.code}</strong><br> ${errors || error.message}`, {
+            //   multiLine: true,
+            //   html: true,
+            //   type: 'negative',
+            //   color: 'white',
+            //   textColor: 'negative',
+            //   timeout: 10 * 1000,
+            //   position: 'bottom',
+            //   actions: [{ icon: biX, color: 'negative' }]
+            // });
           }
+          const exeption: any = {
+            status: error.response.status,
+            message: error.message,
+            errors: 'Error'
+          };
+          resolve(exeption);
         });
     });
   };

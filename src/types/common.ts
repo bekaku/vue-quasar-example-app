@@ -203,6 +203,14 @@ export interface ILabelValue {
   label: string;
   value: string | number | boolean;
 }
+export interface LabelValue<Type> {
+  label: string;
+  description?: string;
+  avatar?: string;
+  icon?: string;
+  fetch?: boolean;
+  value: Type;
+}
 export interface ITextValue {
   text: string;
   value: number | string;
@@ -247,8 +255,10 @@ export interface CrudFormApiOptions {
   requestEntityName?: string;
   methodPutIncludeId?: boolean;
 }
-
+export type ResponseDataType = 'arraybuffer' | 'blob' | 'json' | 'download' | 'axiosresponse';
+export type FileType = 'pdf' | 'msexcel' | 'msword' | 'mspowerpoint' | 'image' | 'zip' | 'unknown';
 export type IAlign = 'center' | 'left' | 'right';
+export type ChatHistoryTab = 'ALL' | 'GROUP' | 'FAVORITE';
 export enum ICrudListHeaderOptionSearchType {
   TEXT,
   NUMBER,
@@ -274,6 +284,7 @@ export interface ICrudListHeaderOption {
   searchColunm?: string;
   sortColunm?: string;
   searchOperation?: SearchOperation;
+  noChangeSearchOperation?: boolean;
   searchOperationReadonly?: boolean;
   maxWidth?: string;//250px
   toolTip?: boolean;
@@ -284,12 +295,6 @@ export interface ICrudListHeader {
   label: string;
   type: CrudListDataType;
   options: ICrudListHeaderOption;
-}
-export interface IApiListResponse {
-  dataList: [];
-  totalPages: number;
-  totalElements: number;
-  last: boolean;
 }
 export interface UseMetaOptions {
   additionalTitle?: string;

@@ -12,6 +12,8 @@ export const AppAuthTokenCreatedKey = PrefixKey + '05';
 export const ExpireCookieDays = 365;
 export const autoRefeshTokenDays = 30;
 export const SearchParamiter = '_q';
+export const KeywordParamiter = '_keyword';
+export const SearchMinCharactor = 4;
 export const PageActionParamiter = 'crud';
 export const PageIdParamiter = 'id';
 export const BackendRootPath = undefined;
@@ -26,6 +28,7 @@ export const NotifyKey = PrefixKey + '_mb_notify';
 export const SearchHistoryKey = PrefixKey + '_searchs';
 export const SucureDeviceIdAtt = '_device_jid';
 export const AppDomain = 'your-domain.com';
+export const FileNamePrefix = 'app_file';
 export const CacheKey = {
   YEAR_AVAILABLE: PrefixKey + 'year_available',
   REPORT_CURRENT_STATS: PrefixKey + 'cache_1',

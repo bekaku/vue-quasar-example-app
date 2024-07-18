@@ -1,38 +1,30 @@
-import {
-  CrudListApiOptions,
-  ICrudListHeader,
-  IApiListResponse,
-  ISortModeType,
-  ResponseMessage,
-} from '@/types/common';
-import {
-  SearchParamiter,
-  SearchOperation,
-  CrudAction,
-} from '@/utils/constant';
+import { CrudListApiOptions, ICrudListHeader, ISortModeType, ResponseMessage } from '@/types/common';
+import { CrudAction, KeywordParamiter, SearchOperation, SearchParamiter } from '@/utils/constant';
 import { useSort } from './useSort';
 import { useAxios } from '@/composables/useAxios';
 import { useBase } from './useBase';
 import { useLang } from './useLang';
-import { ref, computed, onMounted, Ref, onBeforeUnmount } from 'vue';
+import { computed, onBeforeUnmount, onMounted, Ref, ref } from 'vue';
 import {
   isAppException,
   isArray,
   isEmpty,
   isListResponse,
   isServerResponseMessage,
-  snakeToCamel,
+  snakeToCamel
 } from '@/utils/appUtil';
+import { IApiListResponse } from '@/types/models';
+
 export const useCrudList = <T>(
   options: CrudListApiOptions,
-  listHeader?: Ref<ICrudListHeader[]>
+  listHeaderInit?: Ref<ICrudListHeader[]>
 ) => {
   const { pages, sort, resetSort } = useSort(
     options ? options.defaultSort : undefined,
     options ? options.itemsPerPage : 10
   );
   const { t } = useLang();
-  const { WeeGoTo, getCurrentPath, WeeGetQuery, WeeConfirm, WeeLoader, isDevMode } =
+  const { WeeGoTo, getCurrentPath, WeeGetQuery, WeeConfirm, WeeLoader, isDevMode, inputSanitizeHtml } =
     useBase();
   const { callAxios } = useAxios();
   const dataList = ref<T[]>([]);
@@ -40,14 +32,16 @@ export const useCrudList = <T>(
   const loading = ref(false);
   const manualActionList = ref<string>();
   const advanceSearchUri = ref('');
+  const keywordSearchText = ref('');
   const filterText = ref('');
   const additionalUri = ref(options.additionalUri);
   const actionList = ref(options.actionList);
-
+  const actionDelete = ref(options.actionDelete);
+  const listHeader = ref(listHeaderInit != undefined ? listHeaderInit.value : []);
   const searchableHeaders = computed(() => {
     const headers: ICrudListHeader[] = [];
 
-    if (!listHeader) {
+    if (!listHeader.value) {
       return headers;
     }
 
@@ -103,8 +97,8 @@ export const useCrudList = <T>(
         : '';
   });
   const deleteApiEndpoint = computed(() => {
-    return options.actionDelete
-      ? options.actionDelete
+    return actionDelete.value
+      ? actionDelete.value
       : options.apiEndpoint && options.crudName
         ? options.apiEndpoint + '/' + snakeToCamel(options.crudName)
         : '';
@@ -112,12 +106,12 @@ export const useCrudList = <T>(
   const queryParam = computed((): string | undefined => {
     let haveParam = false;
     let q = '';
-    if (options.pageAble == undefined || options.pageAble == true) {
-      q += `page=${(options.pageStartZero == undefined || options.pageStartZero == true) ? (pages.value.current > 0 ? pages.value.current - 1 : 0) : pages.value.current}`;
+    if (options.pageAble == undefined || options.pageAble) {
+      q += `page=${(options.pageStartZero == undefined || options.pageStartZero) ? (pages.value.current > 0 ? pages.value.current - 1 : 0) : pages.value.current}`;
       q += `&size=${pages.value.itemsPerPage}`;
       haveParam = true;
     }
-    if (options.sortAble == undefined || options.sortAble == true) {
+    if (options.sortAble == undefined || options.sortAble) {
       if (haveParam) {
         q += '&';
       }
@@ -131,6 +125,15 @@ export const useCrudList = <T>(
       q += `${advanceSearchUri.value}`;
       haveParam = true;
     }
+    if (keywordSearchText.value) {
+      if (haveParam) {
+        q += '&';
+      }
+      q += `${KeywordParamiter}=${keywordSearchText.value}`;
+      haveParam = true;
+    }
+
+
     if (additionalUri.value) {
       if (haveParam) {
         q += '&';
@@ -138,18 +141,11 @@ export const useCrudList = <T>(
       q += `${additionalUri.value}`;
       haveParam = true;
     }
-
-
-
     return !isEmpty(q) ? q : undefined;
-  })
+  });
   const pageParam = computed(() => {
     return `${listApiEndpoint.value}${queryParam.value ? '?' + queryParam.value : ''}`;
   });
-  // const pageParam = computed(() => {
-  //   return `${listApiEndpoint.value}?page=${pages.value.current > 0 ? pages.value.current - 1 : 0
-  //     }&size=${pages.value.itemsPerPage}${sort.value.column && sort.value.mode ? '&sort=' + sort.value.column + ',' + sort.value.mode : ''}${advanceSearchUri.value ? advanceSearchUri.value : ''}${additionalUri.value ? '&' + additionalUri.value : ''}`;
-  // });
   const pathParam = computed(() => {
     if (!options) {
       return;
@@ -163,25 +159,12 @@ export const useCrudList = <T>(
         resolve(false);
       });
     }
-    // loading.value = false;
-    // fristLoad.value = true;
-    // console.log('useCrudList > fetchList : ' + pageParam.value);
-    // return new Promise((resolve) => {
-    //   resolve(true);
-    // });
-
     loading.value = true;
-    const response = await callAxios<IApiListResponse>({
+    const response = await callAxios<IApiListResponse<T>>({
       API: pageParam.value,
-      method: 'GET',
+      method: 'GET'
     });
-    if (isDevMode()) {
-      console.log('useCrudList > fetchList : ' + pageParam.value, response);
-    }
-
-
     return new Promise((resolve) => {
-
       if (!isAppException(response) && !isServerResponseMessage(response)) {
         if (isListResponse(response)) {
           dataList.value = response.dataList;
@@ -269,7 +252,13 @@ export const useCrudList = <T>(
     await fetchList();
   };
   const onAdvanceSearch = (q: string) => {
+    keywordSearchText.value = '';
     advanceSearchUri.value = `${SearchParamiter}=${q}`;
+    onPasteUrlPathParamAndFetchData();
+  };
+  const onKeywordSearch = (keyword: string) => {
+    console.log('onKeywordSearch', keyword);
+    keywordSearchText.value = inputSanitizeHtml(keyword);
     onPasteUrlPathParamAndFetchData();
   };
   const onReload = () => {
@@ -322,12 +311,12 @@ export const useCrudList = <T>(
     const apiEndpoint = `${deleteApiEndpoint.value}/${id}`;
     const response = await callAxios<ResponseMessage>({
       API: apiEndpoint,
-      method: 'DELETE',
+      method: 'DELETE'
     });
     // console.log('onDeleteItemSingle', response);
-    if (isDevMode()) {
-      console.log('useCrudList > onDeleteItemSingle : ', apiEndpoint, response);
-    }
+    // if (isDevMode()) {
+    //   console.log('useCrudList > onDeleteItemSingle : ', apiEndpoint, response);
+    // }
     return new Promise((resolve) => {
       resolve(response.status == 'OK');
     });
@@ -364,10 +353,12 @@ export const useCrudList = <T>(
   onBeforeUnmount(() => {
     dataList.value = [];
     advanceSearchUri.value = '';
+    keywordSearchText.value = '';
     filterText.value = '';
     manualActionList.value = undefined;
     additionalUri.value = undefined;
     actionList.value = undefined;
+    actionDelete.value = undefined;
   });
 
   const methods = {
@@ -379,11 +370,12 @@ export const useCrudList = <T>(
     onReload,
     filteredList,
     onAdvanceSearch,
+    onKeywordSearch,
     onItemDelete,
     onNewForm,
     onItemClick,
     onItemCopy,
-    getItemByIndex,
+    getItemByIndex
   };
   return {
     pages,
@@ -393,10 +385,13 @@ export const useCrudList = <T>(
     fristLoad,
     dataList,
     filterText,
+    keywordSearchText,
     crudName: options.crudName,
     manualActionList,
     additionalUri,
     actionList,
-    ...methods,
+    actionDelete,
+    listHeader,
+    ...methods
   };
 };

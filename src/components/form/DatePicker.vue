@@ -1,5 +1,5 @@
 <template>
-  <!-- :readonly="!dateRequired" 
+  <!-- :readonly="!dateRequired"
   :rules="dateRequired ? [required] : undefined"
   -->
   <q-field outlined bottom-slots :label="title" stack-label>
@@ -9,48 +9,21 @@
       </div>
     </template>
     <template v-slot:append>
-      <q-btn
-        flat
-        round
-        :icon="biCalendarWeek"
-        :disable="disable"
-        color="primary"
-        dense
-      >
+      <q-btn flat round :icon="biCalendarWeek" :disable="disable" color="primary" dense>
         <q-tooltip>{{ t('base.chooseDate') }}</q-tooltip>
-        <q-popup-proxy
-          ref="q-date-search"
-          transition-show="scale"
-          transition-hide="scale"
-        >
-          <q-date
-            :model-value="modelValue"
-            mask="YYYY-MM-DD"
-            :locale="datePickerLocale"
-            @update:model-value="(value: any) => (modelValue = value)"
-            :options="dateList.length > 0 ? limitDates : options"
-          >
+        <q-popup-proxy ref="dateProxy" transition-show="scale" transition-hide="scale">
+          <!--          @update:model-value="(value: any) => (dateProxy.hide())"-->
+          <q-date v-model="modelValue" mask="YYYY-MM-DD" :first-day-of-week="0" :locale="datePickerLocale"
+            @update:model-value="onClosePicker" :options="dateList.length > 0 ? limitDates : options">
             <div class="row items-center justify-end">
-              <q-btn
-                v-close-popup
-                :label="t('base.close')"
-                color="primary"
-                flat
-              />
+              <q-btn v-close-popup :label="t('base.close')" color="primary" flat />
             </div>
           </q-date>
         </q-popup-proxy>
       </q-btn>
     </template>
     <template v-slot:after>
-      <q-btn
-        v-if="modelValue"
-        flat
-        round
-        :icon="biX"
-        size="xs"
-        @click="clear"
-      />
+      <q-btn v-if="modelValue" flat round :icon="biX" size="xs" @click="clear" />
     </template>
     <template v-slot:hint v-if="dateRequired && !modelValue">
       <span class="text-negative">
@@ -119,7 +92,7 @@
 </template>
 
 <script setup lang="ts">
-import { PropType, computed } from 'vue';
+import { PropType, ref } from 'vue';
 import { useLang } from '@/composables/useLang';
 import { biCalendarWeek, biX } from '@quasar/extras/bootstrap-icons';
 import { useBase } from '@/composables/useBase';
@@ -129,41 +102,42 @@ const props = defineProps({
   // modelValue: String as PropType<string | undefined | null>,
   title: {
     type: String,
-    default: '',
+    default: ''
   },
   minDate: {
     type: String, //yyy-mm-dd 2022-06-16
-    default: undefined,
+    default: undefined
   },
   maxDate: {
     type: String, //yyy-mm-dd 2022-06-16
-    default: undefined,
+    default: undefined
   },
 
   dateList: {
     type: Array as PropType<string[]>, //['2022-06-01','2022-06-16','2022-06-20','2022-06-30']
-    default: () => [],
+    default: () => []
   },
   dense: {
     type: Boolean,
-    default: false,
+    default: false
   },
   disable: {
     type: Boolean,
-    default: false,
+    default: false
   },
   dateRequired: {
     type: Boolean,
-    default: false,
-  },
+    default: false
+  }
 });
 const modelValue = defineModel<string | undefined | null>();
 // const dateModel = computed({
 //   get: () => props.modelValue,
 //   set: (val) => emit('update:modelValue', val),
 // });
+const dateProxy = ref<any>(null);
 const emit = defineEmits(['update:modelValue']);
-const limitDates = props.dateList.map((item: any) => {
+const limitDates = props.dateList?.map((item: any) => {
   return item.replaceAll('-', '/');
 });
 
@@ -188,5 +162,10 @@ const options = (date: string) => {
   }
 
   return true;
+};
+const onClosePicker = (value: any) => {
+  if (dateProxy.value) {
+    dateProxy.value.hide();
+  }
 };
 </script>

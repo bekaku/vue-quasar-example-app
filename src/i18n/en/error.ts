@@ -17,6 +17,7 @@ export default {
         'loginWrong': 'Login failed, please verify that your username and password are correct.',
         'seletedDataDelFrist': 'Please select at least 1 information.',
         'validateRequire': '{0} must be filled in',
+        'validateRequireChoose': 'Please select this information.',
         'validateRequireField': 'Field is required',
         'validateRequirePwd': 'This field must be filled in and must be mixed with numbers and letters.',
         'validateUnique': 'This value is already in use',

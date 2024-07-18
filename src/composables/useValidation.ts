@@ -6,7 +6,8 @@ export const useValidation = () => {
 
   const required = (val: any) =>
     (val && val.length > 0) || t('error.validateRequireField');
-
+  const requiredSelect = (val: any) =>
+    !!val || t('error.validateRequireChoose');
   const requiredNumber = (val: string) =>
     isNumber(val) || t('error.validateNumber');
 
@@ -103,6 +104,7 @@ export const useValidation = () => {
     requiredPositiveFloatNumber,
     requireUsername,
     validatePasswordStrongV2,
-    validatePercentage
+    validatePercentage,
+    requiredSelect
   };
 };

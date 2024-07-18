@@ -29,10 +29,10 @@ USER node
 WORKDIR /app
 COPY --chown=node:node --from=build /app/node_modules /app/node_modules
 COPY --chown=node:node --from=build /app/dist/ssr /app
-COPY --chown=node:node --from=build /app/ecosystem.config.js /app
+COPY --chown=node:node --from=build /app/ecosystem.config.cjs /app
 
 # CMD ["pm2-runtime", "index.js"]
-CMD ["pm2-runtime", "ecosystem.config.js"]
+CMD ["pm2-runtime", "ecosystem.config.cjs"]
 # CMD ["dumb-init", "node", "index.js"]
 
 # dev stage

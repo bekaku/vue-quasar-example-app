@@ -102,6 +102,17 @@ const routes: RouteRecordRaw[] = [
     ],
   },
   {
+    path: '/chats',
+    meta: { requireAuth: true },
+    component: () => import('layouts/ChatsLayout.vue'),
+    children: [
+      {
+        path: '',
+        component: () => import('@/pages/chats/Index.vue')
+      },
+    ]
+  },
+  {
     path: '/settings',
     meta: { requireAuth: true },
     component: () => import('layouts/UserSettingLayout.vue'),
