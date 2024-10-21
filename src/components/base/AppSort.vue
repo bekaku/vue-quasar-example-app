@@ -44,11 +44,11 @@
 </template>
 
 <script setup lang="ts">
-import { PropType } from 'vue';
 import { useLang } from '@/composables/useLang';
-import { ISort, ISortModeType } from '@/types/common';
 import { useSort } from '@/composables/useSort';
-import { biSortDown, biCheck } from '@quasar/extras/bootstrap-icons';
+import { ISort, ISortModeType } from '@/types/common';
+import { biCheck, biSortDown } from '@quasar/extras/bootstrap-icons';
+import { PropType } from 'vue';
 const props = defineProps({
   fields: {
     type: Array as PropType<any[]>,

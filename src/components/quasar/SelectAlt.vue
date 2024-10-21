@@ -1,6 +1,6 @@
 <template>
-    <q-select :label="label" dense outlined v-model="modelValue" :options="items" option-value="value"
-        option-label="label" emit-value map-options :dropdown-icon="biChevronExpand">
+    <q-select v-bind="$attrs" :label="label" :dense :outlined v-model="modelValue" :options="items" :option-value="optionValue"
+        :option-label="optionLabel" emit-value map-options :dropdown-icon="biChevronExpand" :multiple>
         <template v-slot:no-option>
             <q-item>
                 <q-item-section class="text-italic text-grey">
@@ -13,19 +13,25 @@
 
 <script setup lang="ts" generic="T">
 import { useLang } from '@/composables/useLang';
-import { LabelValue } from '@/types/common';
 import { biChevronExpand } from '@quasar/extras/bootstrap-icons';
 
-interface Props {
+withDefaults(defineProps<{
     items: T[];
     label?: string;
     optionValue?: string;
     optionLabel?: string;
-}
-withDefaults(defineProps<Props>(), {
+    dense?: boolean;
+    outlined?: boolean;
+    multiple?: boolean;
+}>(), {
     optionValue: 'value',
     optionLabel: 'label',
+    dense: true,
+    outlined: true,
+    multiple: false,
 });
+
+
 const { t } = useLang();
 const modelValue = defineModel<T>();
 </script>

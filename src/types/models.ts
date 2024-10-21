@@ -114,7 +114,10 @@ export interface FileManagerDto extends Id {
   filePath: string;
   fileThumbnailPath: string;
   fileSize: string;
-  functionId: number;
+  functionId?: number;
+  isImage?: boolean;
+  image?: boolean;
+  file?: any;
 }
 export interface AccessTokenDto extends Id {
   ipAddredd: string;
@@ -132,20 +135,24 @@ export interface IMenuPageItem {
   icon?: string;
   to?: string;
   title?: string;
+  caption?: string;
   titleI18n?: boolean;
   permission?: string;
   border?: boolean;
   header?: string;
   headerI18n?: boolean;
   noActiveLink?: boolean;
+  userAcl?: boolean;
   canShow?: boolean;
   image?: string;
   imageSize?: number;
+  fetchImage?: boolean;
   isSsIcon?: boolean;
   iconSsColor?: IconColor;
   iconSize?: number;
   iconColor?: string;
   ssIcon?: ISsIcons;
+  translate?: boolean;
 }
 export interface IMenuPage extends IMenuPageItem {
   items?: IMenuPageItem[];
@@ -154,6 +161,7 @@ export interface IMenu {
   pages?: IMenuPage[];
   header?: string;
   border?: boolean;
+  translate?: boolean;
 }
 export interface IAcl {
   menus: IMenu[];

@@ -1,7 +1,7 @@
 <template>
   <div v-if="breadcrumbs || tabs" class="row q-mt-lg content-limit">
     <div class="col">
-      <q-card flat>
+      <q-card flat class="bg-transparent">
         <q-toolbar
           v-if="breadcrumbs && breadcrumbs.length > 0"
           flat

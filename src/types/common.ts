@@ -233,11 +233,19 @@ export interface CrudListApiOptions {
   actionGetOne?: string;
   additionalUri?: string;
   defaultSort?: ISort;
+  defaultSorts?: ISort[];
   itemsPerPage?: number;
   fetchListOnload?: boolean;
   pageAble?: boolean;
   pageStartZero?: boolean;
   sortAble?: boolean;
+  concatList?: boolean;
+}
+export interface ICrudListApiOptions extends CrudListApiOptions {
+  urlEndpoint: string;
+  reverseList?: boolean;
+  addUnshift?: boolean;
+  preventResetListReload?: boolean;
 }
 export interface CrudFormApiOptions {
   apiEndpoint?: string;
@@ -277,21 +285,28 @@ export interface ICrudListHeaderOption {
   square?: boolean; //AVATAR,
   rounded?: boolean; //AVATAR,
   size?: string; //AVATAR 45px,
+  // body td
   style?: string; //'height: auto; width: 100px' for IMAGE,
+  classes?: string;
+  // header th:
+  headerStyle?: string;
+  headerClasses?: string;
   align?: IAlign; //'center', center left right
   searchType?: ICrudListHeaderOptionSearchType;
   searchModel?: any;
   searchColunm?: string;
   sortColunm?: string;
   searchOperation?: SearchOperation;
-  noChangeSearchOperation?: boolean;
   searchOperationReadonly?: boolean;
   maxWidth?: string;//250px
   toolTip?: boolean;
   func?: any;
+  trueIcon?: string;
+  falseIcon?: string;
 }
 export interface ICrudListHeader {
   column?: string;
+  field?: any;
   label: string;
   type: CrudListDataType;
   options: ICrudListHeaderOption;
@@ -346,22 +361,51 @@ export interface CacheDateAndKey {
   key: string;
   date: string | number;
 }
+export interface SlideAutoplay {
+  delay: number;
+}
+
+export interface SlideZoom {
+  maxRatio: number;
+}
+
+export interface SlidePaginationy {
+  hideOnClick?: boolean;
+  enabled?: boolean;
+  dynamicBullets?: boolean;
+}
+
+export type SlidePaginationType = 'progressbar' | 'bullets' | 'fraction' | 'custom';
+export type SlideDirectionType = 'horizontal' | 'vertical';
+export type SlideEffectType = 'slide' | 'fade' | 'cube' | 'coverflow' | 'flip' | 'creative' | 'cards';
 export interface SlideOptions {
-  keyboard?: boolean;
-  pagination?: boolean;
-  navigation?: boolean;
-  scrollbar?: boolean;
-  zoom?: boolean;
-  initialSlide?: number;
-  lazy?: boolean;
+  autoplay?: boolean | SlideAutoplay;
+  breakpoints?: any;
+  centeredSlides?: boolean;
+  allowTouchMove?: boolean;
+  direction?: SlideDirectionType;
+  effect?: SlideEffectType;
   freeMode?: boolean;
-  style?: string;
+  initialSlide?: number;
+  keyboard?: boolean;
+  lazy?: boolean;
+  loop?: boolean;
+  modules?: SlideModule[];
+  navigation?: boolean;
+  navigationType?: boolean;
+  navigationCustom?: boolean;
+  pagination?: boolean | SlidePaginationy;
+  paginationType?: SlidePaginationType;
+  paginationDynamic?: boolean;
+  scrollbar?: boolean;
+  style?: object;
   speed?: number;
   slidesPerView?: number | 'auto';
   spaceBetween?: number;
-  centeredSlides?: boolean;
-  autoplay?: boolean;
-  modules?: SlideModule[];
+  slidesPerGroup?: number;
+  thumbs?: boolean;
+  updateOnWindowResize?: boolean;
+  zoom?: boolean | SlideZoom;
 }
 export type SlideModule =
   | 'Autoplay'
@@ -392,6 +436,13 @@ export interface ForgotPasswordRequest {
   token?: string;
   newPassword?: string;
   confirmPassword?: string;
+}
+
+export interface VirtualScrollerUpdate {
+  viewStartIndex: number;
+  viewEndIndex: number;
+  visibleStartIndex: number;
+  visibleEndIndex: number;
 }
 export type CountryCode =
   | 'AC'

@@ -1,53 +1,48 @@
 <template>
-  <q-dialog
-    :model-value="show"
-    @hide="onClose"
-    @before-hide="$emit('on-before-hide')"
-    full-width
-    full-height
-  >
-    <q-card class="text-white" dark style="width: 960px; max-width: 80vw">
+  <!-- :maximized="!$q.screen.gt.xs" -->
+  <q-dialog :model-value="show" @hide="onClose" @before-hide="$emit('on-before-hide')" :maximized="maximized" full-width
+    full-height>
+    <q-card class="text-white" dark>
       <q-toolbar>
         <template v-if="user">
-          <q-avatar size="32px">
+          <!-- <q-avatar size="32px">
             <q-img
               class="bg-gray-8"
               :src="user.avatar?.thumbnail"
               spinner-color="white"
               no-native-menu
             />
-          </q-avatar>
+          </q-avatar> -->
+          <base-avatar :src="user.avatar?.thumbnail" fetch-image :size="32" />
         </template>
 
-        <q-toolbar-title>
+        <q-toolbar-title v-if="$q.screen.gt.xs">
           {{
-            `${t('base.photo')} ${slide + 1}/${
-              files.length > 0
-                ? files.length
-                : images.length > 0
+            `${t('base.photo')} ${slide + 1}/${files.length > 0
+              ? files.length
+              : images.length > 0
                 ? images.length
                 : 0
             }`
           }}
         </q-toolbar-title>
+        <span v-else class="q-ml-xs text-caption">
+          {{
+            `${slide + 1}/${files.length > 0
+              ? files.length
+              : images.length > 0
+                ? images.length
+                : 0
+            }`
+          }}
+        </span>
 
-        <q-btn flat round :icon="biPlus" @click="zoomIn" />
-        <q-btn flat round :icon="biDash" @click="zoomOut" />
-        <q-btn
-          flat
-          round
-          :icon="biArrowLeft"
-          :disable="slide == 0"
-          @click="slide = slide - 1"
-        />
-        <q-btn
-          flat
-          round
-          :icon="biArrowRight"
-          :disable="slide == fileZise - 1"
-          @click="slide = slide + 1"
-        />
-
+        <q-btn dense flat round :icon="biPlus" @click="zoomIn" />
+        <q-btn dense flat round :icon="biDash" @click="zoomOut" />
+        <template v-if="showArrow">
+          <q-btn dense flat round :icon="biArrowLeft" :disable="slide == 0" @click="slide = slide - 1" />
+          <q-btn dense flat round :icon="biArrowRight" :disable="slide == fileZise - 1" @click="slide = slide + 1" />
+        </template>
         <q-space />
         <q-btn flat round :icon="biThreeDotsVertical">
           <q-menu>
@@ -58,14 +53,11 @@
                 </q-item-section>
                 <q-item-section> {{ t('base.download') }}</q-item-section>
               </q-item>
-              <template
-                v-if="
-                  showDeleteImage &&
-                  authenStore &&
-                  authenStore.auth &&
-                  (post || comment)
-                "
-              >
+              <template v-if="
+                showDeleteImage &&
+                authenStore &&
+                authenStore.auth
+              ">
                 <q-item clickable v-close-popup @click="deletePhoto">
                   <q-item-section avatar>
                     <q-icon :name="biTrash" />
@@ -80,132 +72,109 @@
       </q-toolbar>
 
       <div class="row items-center">
-        <!-- <q-carousel
-            swipeable
-            animated
-            arrows
-            v-model="slide"
-            v-model:fullscreen="fullscreen"
-            dark
-            style="height: 80vh"
-          >
-            <template v-if="files.length > 0">
-              <q-carousel-slide
-                v-for="(item, index) in files"
-                :key="index"
-                :name="index"
-                class="column no-wrap flex-center"
-              >
-                 <q-img :src="item.filePath" fit="contain" class="slide-img" /> 
-              </q-carousel-slide>
-            </template>
-            <template v-else-if="images.length > 0">
-              <q-carousel-slide
-                v-for="(img, index) in images"
-                :key="index"
-                :name="index"
-                class="column no-wrap flex-center"
-              >
-                <q-img :src="img.image" fit="contain" class="slide-img" />
-              </q-carousel-slide>
-            </template>
-          </q-carousel> -->
-        <v-zoomer-gallery
-          style="
+        <v-zoomer-gallery style="
             width: 100%;
-            height: 85vh;
+            height: 90vh;
             background-color: black;
             cursor: pointer;
-          "
-          ref="vZoomerRef"
-          :list="items"
-          v-model="slide"
-        >
+          " ref="vZoomerRef" :list="items" v-model="slide">
         </v-zoomer-gallery>
+        <q-inner-loading :showing="loading" label-class="text-white" />
       </div>
     </q-card>
   </q-dialog>
 </template>
 <script setup lang="ts">
-import { PropType, computed, ref, onMounted } from 'vue';
+import FileManagerService from '@/api/FileManagerService';
+import BaseAvatar from '@/components/base/BaseAvatar.vue';
+import { useBase } from '@/composables/useBase';
 import { useLang } from '@/composables/useLang';
+import { useAuthenStore } from '@/stores/authenStore';
 import {
   FileManagerDto,
   ImageDto,
   UserProfileDto,
-  PostDataDto,
-  CommentDataDto,
 } from '@/types/models';
+import { downloadURI, generateimageFileName } from '@/utils/fileUtils';
 import {
-  biX,
-  biThreeDotsVertical,
-  biDownload,
-  biTrash,
-  biPlus,
-  biDash,
   biArrowLeft,
   biArrowRight,
+  biDash,
+  biDownload,
+  biPlus,
+  biThreeDotsVertical,
+  biTrash,
+  biX
 } from '@quasar/extras/bootstrap-icons';
-import { useAuthenStore } from '@/stores/authenStore';
-import { useBase } from '@/composables/useBase';
-import { downloadURI, generateimageFileName } from '@/utils/appUtil';
+import { useQuasar } from 'quasar';
+import { PropType, computed, onMounted, ref } from 'vue';
+
 const props = defineProps({
   showDialog: {
     type: Boolean,
-    default: false,
+    default: false
   },
   showDeleteImage: {
     type: Boolean,
-    default: false,
+    default: false
+  },
+  maximized: {
+    type: Boolean,
+    default: true
+  },
+  fetch: {
+    type: Boolean,
+    default: true
+  },
+  showArrow: {
+    type: Boolean,
+    default: true
   },
   user: {
     type: Object as PropType<UserProfileDto>,
-    default: () => null,
+    default: () => null
   },
   files: {
     type: Array as PropType<FileManagerDto[]>,
-    default: () => [],
+    default: () => []
   },
   images: {
     type: Array as PropType<ImageDto[]>,
-    default: () => [],
+    default: () => []
   },
   selectedIndex: {
     type: Number,
-    default: 0,
-  },
-  post: {
-    type: Object as PropType<PostDataDto>,
-    default: () => null,
-  },
-  comment: {
-    type: Object as PropType<CommentDataDto>,
-    default: () => null,
+    default: 0
   },
 });
+const { fethCdnData } = FileManagerService();
 const vZoomerRef = ref();
 const authenStore = useAuthenStore();
 const emit = defineEmits([
   'on-close',
   'update:showDialog',
   'on-before-hide',
-  'on:delete',
+  'on:delete'
 ]);
+const $q = useQuasar();
 const { t } = useLang();
 const { WeeConfirm } = useBase();
 // const fullscreen = ref(false);
 const slide = ref(0);
-const items = ref<string[]>([]);
+// const items = ref<string[]>([]);
+const items = ref<any[]>([]);
 const leftArrowPressed = ref(false);
 const rightArrowPressed = ref(false);
-onMounted(() => {
+const loading = ref(true);
+onMounted(async () => {
   slide.value = props.selectedIndex;
-  setList();
+  await setList();
+  loading.value = false;
   document.addEventListener('keydown', handleKeyDown);
 });
 const show = computed({
   get: () => props.showDialog,
-  set: (val) => emit('update:showDialog', val),
+  set: (val) => emit('update:showDialog', val)
 });
 const handleKeyDown = (event: any) => {
   if (event.key === 'ArrowLeft') {
@@ -230,20 +199,50 @@ const fileZise = computed(() =>
   props.files && props.files.length
     ? props.files.length
     : props.images && props.images.length
-    ? props.images.length
-    : 0,
+      ? props.images.length
+      : 0
 );
-const setList = () => {
+const setList = async () => {
   const list = props.files;
   const images = props.images;
   if (list && list.length > 0) {
     for (const f of list) {
-      items.value.push(f.filePath);
+      if (props.fetch) {
+        const src = await fetchImage(f.filePath);
+        if (src) {
+          items.value.push(src);
+        }
+      } else {
+        items.value.push(f.filePath);
+      }
     }
   } else if (images && images.length > 0) {
     for (const img of images) {
-      items.value.push(img.image);
+      if (props.fetch) {
+        const src = await fetchImage(img.image);
+        if (src) {
+          items.value.push(src);
+        }
+      } else {
+        items.value.push(img.image);
+      }
     }
+  }
+
+  return new Promise((resolve) => {
+    resolve(true);
+  });
+};
+const fetchImage = async (src: string) => {
+  const res = await fethCdnData(src);
+  if (res) {
+    return new Promise((resolve) => {
+      resolve(res);
+    });
+  } else {
+    return new Promise((resolve) => {
+      resolve(null);
+    });
   }
 };
 const download = async () => {
@@ -257,7 +256,7 @@ const download = async () => {
 const deletePhoto = async () => {
   const confirm = await WeeConfirm(
     t('app.monogram'),
-    t('base.deletePhotoConfirm'),
+    t('base.deletePhotoConfirm')
   );
   if (!confirm) {
     return;

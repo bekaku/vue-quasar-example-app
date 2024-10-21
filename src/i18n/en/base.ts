@@ -27,6 +27,7 @@ export default {
         'list': 'List',
         'search': 'Search',
         'searchAdvance': 'Advance search',
+        searchHelp3: 'Type the word you want to search for and press Enter.',
         'view': 'View',
         'form': 'Form',
         'home': 'Home',
@@ -271,6 +272,7 @@ export default {
         'remark': 'Note',
         'view2': 'View',
         'filter': 'Filter',
+        'canChooseMoreThen1': 'You can select more than 1 option.',
     },
     'theme': {
         'light': 'Light',

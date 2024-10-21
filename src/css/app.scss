@@ -1,49 +1,52 @@
 // @import url('https://fonts.googleapis.com/css2?family=Prompt:wght@100;200;400;600&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Prompt:wght@100;200;400;600&family=Fugaz+One&display=swap');
-
+//@import url('https://fonts.googleapis.com/css2?family=Prompt:wght@100;200;400;600&family=Fugaz+One&display=swap');
+//@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@100..900&family=Sarabun:wght@100;200;400;600&display=swap');
 @font-face {
-  font-family: "TwemojiMozilla", ;
+  font-family: "TwemojiMozilla";
   src: local("TwemojiMozilla"), url("@/assets/font/TwemojiMozilla.ttf") format("truetype");
   font-weight: normal;
 }
 
 /* Your Input Div*/
 .input-emoji {
-  // font-family: "TwemojiMozilla";
-  // font-family: Helvetica Neue, apple color emoji, "TwemojiMozilla", sans-serif;
-  // font-family: 'Segoe UI Emoji', 'Segoe UI Symbol', 'Open-Sans', "Apple Color Emoji", "TwemojiMozilla", "Noto Color Emoji", "Android Emoji", sans-serif;
-  font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', 'Prompt', Arial, "TwemojiMozilla";
+  //font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', 'Prompt', Arial, "TwemojiMozilla";
+  font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, "TwemojiMozilla";
 }
 
 // app global css in SCSS form
 :root {
-  --wee-main-bg-color: #fafbfc;
+  // --wee-main-bg-color: #fafbfc;
   // --wee-main-bg-color: #f0f2f5;
   // --wee-main-bg-color: #f8f9fc;
-  // --wee-main-bg-color: #f6f7f9;
+  --wee-main-bg-color: #f6f7f9;
   // --wee-main-bg-color: #f3f2ef;
-
   // --wee-main-bg-color: #f9f9f9;
-  // --wee-main-bg-color-theme-dark: #171717;
-  // --wee-second-bg-color-theme-dark: #1c1c1d;
-  --wee-main-bg-color-theme-dark: #1d232a;
-  --wee-second-bg-color-theme-dark: #242b34;
+  // --wee-main-bg-color: #f7f9f9;
+  // --wee-main-bg-color: #f7f8fa;
+  //--wee-main-bg-color: #fff;
+
+  --wee-main-bg-color-theme-dark: #1d1e22; //#1d232a
+  --wee-second-bg-color-theme-dark: #272a32; //#242b34
+  --third-bg-color-theme-dark: #18191d;
+
   --main-bg-color: var(--wee-main-bg-color);
   --second-bg-color: #fff;
 
   --wee-main-border-color: #dcdcdc;
-  --wee-main-border-color-theme-dark: #282829;
+  --wee-main-border-color-theme-dark: #687782;
+
 
   --wee-main-border-light-color: #ededed;
   --wee-main-border-lighter-color: #f8f8f8;
   --border-lighter-color: #f8f8f8;
-  --wee-main-border-light-color-theme-dark: #282829;
+  --wee-main-border-light-color-theme-dark: var(--wee-main-border-color-theme-dark);
 
   --wee-color-white: #fff;
-
-  --wee-text-muted: #848d92;
+  //twitter
+  --wee-text-muted: #536471;
+  //--wee-text-muted: #666666;
   --wee-text-muted2: #6b7982;
-  --v-main-text-muted-theme-dark: #8e8e93;
+  --v-main-text-muted-theme-dark: #8b99a3;
 
   --v-main-text-icon: #797f8f;
   --v-main-text-icon-theme-dark: #8e8e93;
@@ -55,13 +58,27 @@
   --v-main-text-title-theme-dark: #8e8e93;
 
   // --v-main-text-body: #303336;
-  --v-main-text-body: #000000;
+  --v-main-text-body: #000;
   --v-main-text-body-theme-dark: #fff;
 
   --v-text-black: #000;
   --emoji-icon-bg: #f7f7f7;
   --emoji-icon-bg-black: #000;
-  --wee-default-font: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', 'Prompt', sans-serif;
+  //--wee-default-font: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', 'Prompt', sans-serif;
+  --wee-default-font: -apple-system, BlinkMacSystemFont, "Helvetica Neue", "Segoe UI", Arial, sans-serif;
+
+  //scroll bar
+  ::-webkit-scrollbar {
+    width: 10px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: #f1f1f1;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, .2);
+  }
 }
 
 .font-open-sans {
@@ -77,10 +94,19 @@
 // }
 
 body {
-  font-family: var(--wee-default-font) !important;
-  font-weight: normal !important;
+  font-family: "Helvetica Neue", "Segoe UI", Arial, sans-serif;
+  //font-family: var(--wee-default-font) !important;
   color: var(--v-main-text-body);
   --v-main-text-head: #1a2d39;
+  font-size: 14px;
+  line-height: 1.5;
+  /* or 21px if you prefer setting in pixels */
+  font-weight: 400;
+
+  ::selection {
+    background-color: var(--color-primary-600);
+    color: #fff;
+  }
 }
 
 body.body--dark {
@@ -89,17 +115,30 @@ body.body--dark {
   --main-bg-color: var(--wee-main-bg-color-theme-dark);
   --second-bg-color: var(--wee-second-bg-color-theme-dark);
   --v-text-black: #fff;
-  --wee-text-muted: #8e8e93;
+  --wee-text-muted: var(--v-main-text-muted-theme-dark);
   --wee-text-muted2: #6b7982;
   --wee-main-border-color: var(--wee-main-border-color-theme-dark);
   --wee-main-border-light-color: var(--wee-main-border-light-color-theme-dark);
   --border-lighter-color: var(--wee-main-border-light-color-theme-dark);
   --emoji-icon-bg: var(--emoji-icon-bg-black);
+
+  .chip-color {
+    background-color: var(--color-dark-900);
+  }
+
+  ::-webkit-scrollbar-track {
+    background: var(--color-dark-500);
+  }
 }
 
 body.body--light {
   // color: #2d2e30;
   background-color: var(--wee-main-bg-color) !important;
+
+  .chip-color {
+    background-color: var(--color-dark-100);
+  }
+
 }
 
 // .body--dark {
@@ -206,6 +245,11 @@ body.body--light {
   color: rgba(0, 0, 0, 0.7);
 }
 
+body.body--dark .wee-notification.is-light {
+  background-color: var(--wee-main-bg-color-theme-dark);
+  color: white;
+}
+
 .wee-notification.is-dark {
   background-color: #363636;
   color: #fff;
@@ -279,19 +323,26 @@ body.body--light {
 }
 
 .content-limit720 {
-  max-width: 720px;
+  max-width: 720px !important;
   margin-left: auto;
   margin-right: auto;
 }
 
-.app-feed-container {
+.content-limit896 {
+  max-width: 896px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.app-feed-container,
+.report-container {
   max-width: 1380px;
   margin-left: auto;
   margin-right: auto;
 }
 
 .app-feed-page {
-  max-width: 600px !important;
+  max-width: 756px !important;
   margin-left: auto;
   margin-right: auto;
 }
@@ -379,7 +430,7 @@ body.body--dark .emoji-mart-bar {
 }
 
 body.body--dark .emoji-mart-anchor {
-  color: $grey-5;
+  color: var(--gray-400);
 }
 
 .theme-name {
@@ -388,7 +439,7 @@ body.body--dark .emoji-mart-anchor {
   // background-color: $blue-1;
   // border: 1px solid $blue;
   width: fit-content;
-  color: $primary;
+  color: var(--color-primary-600);
   display: inline-block;
   font-size: 0.95em;
 }
@@ -396,4 +447,40 @@ body.body--dark .emoji-mart-anchor {
 .border-radius-bottom-no {
   border-bottom-left-radius: 0;
   border-bottom-right-radius: 0;
+}
+
+.app-border-radius {
+  border-radius: 10px;
+}
+
+.app-border-radius5 {
+  border-radius: 5px;
+}
+
+.td-top {
+  vertical-align: top;
+}
+
+.limited-autogrow.q-field--labeled .q-field__native {
+  min-height: 125px;
+}
+
+.user-notify-toast {
+  max-width: 450px;
+}
+
+.bg-opacity {
+  background-color: rgba(0, 0, 0, .5);
+}
+
+.bg-black-chade {
+  background: #000000;
+  background: -webkit-linear-gradient(to bottom, #434343, #000000);
+  background: linear-gradient(to bottom, #434343, #000000);
+}
+
+.bg-black-chade2 {
+  background: #000000;
+  background: -webkit-linear-gradient(to right, #434343, #000000);
+  background: linear-gradient(to right, #434343, #000000);
 }

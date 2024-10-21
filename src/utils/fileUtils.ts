@@ -1,15 +1,16 @@
-import { FileType } from '@/types/common';
 import { FileNamePrefix } from '@/utils/constant';
 import { getCurrentTimestamp } from '@/utils/dateUtil';
 import {
+    biFileEarmark,
     biFileEarmarkImage,
-    biFileEarmarkPpt,
-    biFileEarmarkZip,
+    biFileEarmarkPpt, biFileEarmarkZip,
     biFiletypePdf,
     biFiletypeXlsx,
-    biFileWord,
-    biPaperclip
+    biFileWord
 } from '@quasar/extras/bootstrap-icons';
+import JSZip from 'jszip';
+import { FileType } from 'types/common';
+
 export const fileToBlob = (file: File): Promise<any> => {
     return new Promise((resolve) => {
         const blob = new Blob([file as BlobPart], {
@@ -81,11 +82,61 @@ export const generateFileNameByExtesnsion = (extension: string | undefined, down
             return `${fileName}${extension}`;
         }
     }
-
-
     return `${FileNamePrefix}_${getCurrentTimestamp()}${extension}`;
 };
+export const zipFile = async (file: File): Promise<File> => {
+    const zip = new JSZip();
+    zip.file(file.name, file);
+    const blob = await zip.generateAsync({ type: 'blob' });
+    const zippedFile = new File([blob], `${file.name}.zip`, { type: 'application/zip' });
+    return new Promise((resolve) => {
+        resolve(zippedFile);
+    });
+};
 
+export const getImgUrlFromFile = (f: any): Promise<string | undefined> => {
+    if (!f) {
+        return new Promise((resolve) => {
+            resolve(undefined);
+        });
+    }
+    return new Promise((resolve) => {
+        // originalimagFile.value = files[0];
+        if (/^image\/\w+/.test(f.type)) {
+            const url = URL.createObjectURL(f);
+            resolve(url);
+        }
+    });
+};
+export const generateimageFileName = (prefix: string | undefined = undefined) => {
+    return `${prefix ? prefix : 'gd5'}_${getCurrentTimestamp()}.jpg`;
+};
+export const downloadURI = async (url: string, fileName: string) => {
+    const image = await fetch(url);
+    const imageBlog = await image.blob();
+    const imageURL = URL.createObjectURL(imageBlog);
+
+    const link = document.createElement('a');
+    link.href = imageURL;
+    link.download = fileName;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+};
+export const getFileNameFromResponse = (axiosResponse: any) => {
+    if (!axiosResponse) {
+        return undefined;
+    }
+    const contentDisposition = axiosResponse.headers['content-disposition'];
+    let fileName = contentDisposition;
+    if (contentDisposition) {
+        const match = contentDisposition.match(/filename="(.+)"/);
+        if (match && match[1]) {
+            fileName = match[1];
+        }
+    }
+    return fileName;
+};
 export const getFileExtension = (t: string): string | undefined => {
 
     if (!t) {
@@ -192,6 +243,7 @@ export const getFileType = (t: string): FileType | undefined => {
         case 'image/png':
         case 'image/jpeg':
         case 'image/gif':
+        case 'image/webp':
             type = 'image';
             break;
         case 'application/zip':
@@ -208,6 +260,9 @@ export const getFileType = (t: string): FileType | undefined => {
     return type;
 };
 export const getFileTypeIcon = (t: string) => {
+    if (!t) {
+        return '';
+    }
     const type = t.toLowerCase();
     let icon = '';
     switch (type) {
@@ -243,6 +298,7 @@ export const getFileTypeIcon = (t: string) => {
         case 'image/png':
         case 'image/jpeg':
         case 'image/gif':
+        case 'image/webp':
             icon = biFileEarmarkImage;
             break;
         case 'application/zip':
@@ -253,8 +309,25 @@ export const getFileTypeIcon = (t: string) => {
             icon = biFileEarmarkZip;
             break;
         default:
-            icon = biPaperclip;
+            icon = biFileEarmark;
             break;
     }
     return icon;
+};
+export const blobToFile = (
+    b: Blob,
+    originalFileName: string
+): Promise<File> => {
+    return new Promise((resolve) => {
+        const file = new File([b as any], originalFileName, {
+            type: b.type
+        });
+        resolve(file);
+    });
+};
+export const isImageFile = (f: File) => {
+    if (!f) {
+        return false;
+    }
+    return /^image\/\w+/.test(f.type);
 };

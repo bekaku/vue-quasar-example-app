@@ -2,6 +2,7 @@
   <q-page padding>
     <q-card elavated>
       <q-card-section>
+        Test Admin dashboard
         <p><q-icon :name="biHouseDoor" /> {{ pageName }}</p>
       </q-card-section>
     </q-card>

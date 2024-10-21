@@ -1,5 +1,5 @@
-import VueApexCharts from 'vue3-apexcharts';
 import { boot } from 'quasar/wrappers';
+import { register } from 'swiper/element/bundle';
 export default boot(({ app }) => {
-  app.use(VueApexCharts);
+  register();
 });

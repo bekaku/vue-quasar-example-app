@@ -7,7 +7,8 @@ import {
   generateFileNameByExtesnsion,
   getBlobFromAxiosResponse,
   getFileNameFromAxiosResponse,
-  getFileExtension
+  getFileExtension,
+  getFileNameFromResponse
 } from '@/utils/fileUtils';
 
 export default () => {
@@ -86,6 +87,12 @@ export default () => {
           resolve(imageUrlObject);
         } else if (responseDataType == 'arraybuffer') {
           resolve(response.data);
+        } else if (responseDataType == 'download') {
+          const contentType = response.headers['content-type'];
+          const fileName = getFileNameFromResponse(response);
+          downloadFromArrayBuffer(response.data, fileName, contentType);
+          // const name = 'Test.'
+          resolve(response.data);
         } else if (responseDataType == 'axiosresponse') {
           resolve(response);
         }
@@ -102,6 +109,7 @@ export default () => {
         const contentType = response.headers['content-type'];
         // const contentDisposition = response.headers['content-disposition'];
         let fileName = await getFileNameFromAxiosResponse(response);
+
         if (!fileName) {
           const fileExtension = getFileExtension(contentType);
           fileName = generateFileNameByExtesnsion(fileExtension, downloadFileName);

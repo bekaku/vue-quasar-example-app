@@ -16,7 +16,7 @@ const AppResult = defineAsyncComponent(
   () => import('@/components/base/AppResult.vue')
 );
 const BaseLoadmore = defineAsyncComponent(
-  () => import('@/components/BaseLoadmore.vue')
+  () => import('@/components/base/BaseLoadmore.vue')
 );
 const BaseSpinner = defineAsyncComponent(
   () => import('@/components/base/BaseSpinner.vue')

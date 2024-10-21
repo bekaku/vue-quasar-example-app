@@ -4,6 +4,8 @@
     "useUnknownInCatchVariables": false,
     "baseUrl": ".",
     "resolveJsonModule": true,
+    "noImplicitAny": false,
+    "allowJs": true,
     "paths": {
       "@/*": ["src/*"],
       "src/*": ["src/*"],

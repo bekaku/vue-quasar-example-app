@@ -224,13 +224,13 @@ import {
   biInfoCircle,
 } from '@quasar/extras/bootstrap-icons';
 const ChangePasswordForm = defineAsyncComponent(
-  () => import('@/components/ChangePasswordForm.vue'),
+  () => import('@/components/form/ChangePasswordForm.vue'),
 );
 const AppResult = defineAsyncComponent(
   () => import('@/components/base/AppResult.vue'),
 );
 const FormTogle = defineAsyncComponent(
-  () => import('@/components/form/FormTogle.vue'),
+  () => import('@/components/quasar/Togle.vue'),
 );
 const { t } = useLang();
 const { required, requireEmail, requireUsername } = useValidation();

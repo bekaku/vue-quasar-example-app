@@ -4,7 +4,10 @@ import {
     biPencil,
     biShieldCheck,
     biPeople,
-    biPerson
+    biPerson,
+    biHouseDoor,
+    biFile,
+    biChevronExpand
 } from '@quasar/extras/bootstrap-icons';
 export const detailItemFn = (crud: string): Breadcrumb[] => {
     return [{
@@ -15,7 +18,7 @@ export const detailItemFn = (crud: string): Breadcrumb[] => {
         params: [PageIdParamiter],
     }];
 }
-export const BC_PERMISSION_FROM: Breadcrumb[] = [
+export const PermissionFormBreadcrumb: Breadcrumb[] = [
     {
         label: 'model_permission',
         to: '/permission',
@@ -27,7 +30,7 @@ export const BC_PERMISSION_FROM: Breadcrumb[] = [
     },
     ...detailItemFn('permission')
 ];
-export const BC_ROLE_FROM: Breadcrumb[] = [
+export const RoleFormBreadcrumb: Breadcrumb[] = [
     {
         label: 'model_role',
         to: '/role',
@@ -36,7 +39,7 @@ export const BC_ROLE_FROM: Breadcrumb[] = [
     },
     ...detailItemFn('role')
 ];
-// export const BC_USER_FROM: Breadcrumb[] = [
+// export const UserFormBreadcrumb: Breadcrumb[] = [
 //     {
 //         label: 'model_user',
 //         to: '/user',
@@ -52,7 +55,7 @@ export const BC_ROLE_FROM: Breadcrumb[] = [
 //     },
 // ];
 
-export const BC_USER_FROM: Breadcrumb[] = [
+export const UserFormBreadcrumb: Breadcrumb[] = [
     {
         label: 'model_user',
         to: '/user',
@@ -61,4 +64,32 @@ export const BC_USER_FROM: Breadcrumb[] = [
         translateLabel: true,
     },
     ...detailItemFn('user')
+];
+export const ExampleBtnBreadcrumb: Breadcrumb[] = [
+    {
+        label: 'Home',
+        to: '/',
+        icon: biHouseDoor,
+        translateLabel: false,
+    },
+    {
+        label: 'Button',
+        to: '/example/ui/button',
+        icon: biFile,
+        translateLabel: false,
+    },
+];
+export const ExampleSelectBreadcrumb: Breadcrumb[] = [
+    {
+        label: 'Home',
+        to: '/',
+        icon: biHouseDoor,
+        translateLabel: false,
+    },
+    {
+        label: 'Select',
+        to: '/example/ui/select',
+        icon: biChevronExpand,
+        translateLabel: false,
+    },
 ];

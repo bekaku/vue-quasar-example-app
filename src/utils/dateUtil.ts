@@ -8,7 +8,7 @@ import {
   parseISO,
   isEqual,
   isAfter,
-  isBefore
+  isBefore, differenceInMinutes
 } from 'date-fns';
 import { th, enUS } from 'date-fns/locale';
 
@@ -31,6 +31,9 @@ export const FORMAT_DATE14 = 'yyyy-MM-dd';
 export const FORMAT_DATE15 = 'aaa'; //am, pm
 export const FORMAT_DATE16 = 'dd/MM/yy'; //25/05/22
 export const FORMAT_DATE17 = 'dd/MM/yyyy HH:mm'; //25/05/2022 17:26
+export const FORMAT_DATE18 = 'HH:mm'; //17:26
+export const FORMAT_DATE19 = 'dd/MM'; //25/05
+export const FORMAT_DATE20 = 'dd/MM HH:mm'; //25/05
 
 export const addDateByDays = (days: number) => {
   const date = new Date();
@@ -60,26 +63,95 @@ export const convertStringToDate = (
   return parse(dateString, format, new Date());
   // return new Date(dateString);
 };
-export const convertDateFormatToThai = (dateString?: string | null) => {//convert YYYY-MM-DD to DD/MM/YYYY
+export const convertDateFormatToThai = (dateString?: string | null) => {
+  //convert YYYY-MM-DD to DD/MM/YYYY
   if (!dateString) {
-    return undefined
+    return undefined;
   }
   const parts = dateString.split('-');
   return parts[2] + '/' + parts[1] + '/' + parts[0];
-}
-export const convertThaiDateFormatToEng = (dateString?: string | null) => {//convert DD/MM/YYYY to YYYY-MM-DD
+};
+export const convertThaiDateFormatToEng = (dateString?: string | null) => {
+  //convert DD/MM/YYYY to YYYY-MM-DD
   if (!dateString) {
-    return undefined
+    return undefined;
   }
   const parts = dateString.split('/');
   return parts[2] + '-' + parts[1] + '-' + parts[0];
-}
+};
 
 export const isDate2GreaterThan = (d1: Date, d2: Date) => {
   return d2.getTime() > d1.getTime();
 };
-export const getDateDiff = (dateLeft: Date, dateRight: Date) => {
+export const isDate2GreaterOrEqualThanOnlyDate = (d1: Date, d2: Date) => {
+  const tempDate2 = new Date(
+    d2.getFullYear(),
+    d2.getMonth(),
+    d2.getDate(),
+    0,
+    0,
+    0,
+    0
+  );
+  const tempDate1 = new Date(
+    d1.getFullYear(),
+    d1.getMonth(),
+    d1.getDate(),
+    0,
+    0,
+    0,
+    0
+  );
+  return tempDate2.getTime() >= tempDate1.getTime();
+};
+export const getDateDiff = (dateLeft: Date | number, dateRight: Date | number) => {
   return differenceInDays(dateRight, dateLeft);
+};
+export const getDateDiffNow = (dateString: string) => {
+  const d = removeTime(dateString);
+  const currentDate = removeTime(getCurrentDateByFormat());
+  // return getDateDiff(Date.parse(d), new Date());
+  return getDateDiff(Date.parse(d), Date.parse(currentDate));
+};
+
+export const getDateAutoFormatBy = (dateString: string | undefined, locale: string = 'th') => {
+  if (!dateString) {
+    return '';
+  }
+
+  const difDays = getDateDiffNow(dateString);
+  if (difDays > 0 && difDays < 365) {
+    return formatDateTime(dateString, FORMAT_DATE19, locale);
+  } else if (difDays > 365) {
+    return formatDateTime(dateString, FORMAT_DATE16, locale);
+  }
+  return formatDateTime(dateString, FORMAT_DATE18, locale);
+};
+export const getDateTimeAutoFormatBy = (dateString: string | undefined, locale: string = 'th') => {
+  if (!dateString) {
+    return '';
+  }
+  const difDays = getDateDiffNow(dateString);
+  if (difDays >= 0 && difDays < 1) {
+    return formatDateTime(dateString, FORMAT_DATE18, locale);
+  } else if (difDays >= 1 && difDays < 365) {
+    return formatDateTime(dateString, FORMAT_DATE20, locale);
+  } else {
+    return formatDateTime(dateString, FORMAT_DATE17, locale);
+  }
+};
+export const getDateDistanceAutoFormatBy = (dateString: string | undefined, locale: string = 'th') => {
+  if (!dateString) {
+    return '';
+  }
+  const difDays = getDateDiffNow(dateString);
+  if (difDays >= 0 && difDays < 1) {
+    return formatDistanceFromNow(dateString, locale);
+  } else if (difDays >= 1 && difDays < 365) {
+    return formatDateTime(dateString, FORMAT_DATE20, locale);
+  } else {
+    return formatDateTime(dateString, FORMAT_DATE17, locale);
+  }
 };
 
 /**
@@ -90,29 +162,30 @@ export const getDateDiff = (dateLeft: Date, dateRight: Date) => {
  */
 export const formatRelativeFromNow = (
   dateString: string | undefined,
-  locale: string
+  locale: string = 'th'
 ) => {
   if (!dateString) {
     return;
   }
   return formatRelative(Date.parse(dateString), new Date(), {
-    locale: locale == 'th' ? th : enUS,
+    locale: locale == 'th' ? th : enUS
   });
 };
 /**
  * formatDistanceFromNow('2022-05-25 17:26:31', locale.value)
  * @param dateString
  * @param locale
+ * @param suffix
  * @returns
  */
 export const formatDistanceFromNow = (
   dateString: string,
   locale: string | unknown,
-  suffix = false
+  suffix: boolean = false
 ) => {
   return formatDistanceToNow(convertStringToDate(dateString), {
     locale: locale == 'th' ? th : enUS,
-    addSuffix: suffix,
+    addSuffix: suffix
   });
 };
 export const formatDistanceFrom = (
@@ -125,9 +198,12 @@ export const formatDistanceFrom = (
     fromDateString ? convertStringToDate(fromDateString) : new Date(),
     {
       locale: locale == 'th' ? th : enUS,
-      addSuffix: true,
+      addSuffix: true
     }
   );
+};
+export const removeTime = (datetimeString: string) => {
+  return datetimeString ? datetimeString.split(' ')[0] : '';
 };
 /**
  * formatDate('2022-05-25 17:26:31', 'dd MMMM yyyy', locale.value)
@@ -142,17 +218,35 @@ export const formatDateTime = (
   locale: string | unknown
 ) => {
   return format(convertStringToDate(dateString), forMatString, {
-    locale: locale == 'th' ? th : enUS,
+    locale: locale == 'th' ? th : enUS
   });
 };
+/**
+ *
+ * @param dateLeft the later date
+ * @param dateRight the earlier date
+ * @returns
+ */
+export const getDateDiffMinutes = (
+  dateLeft: Date | number,
+  dateRight: Date | number
+) => {
+  return differenceInMinutes(dateRight, dateLeft);
+};
 export const formatDate = (
-  dateString: string,
+  dateString: string | undefined,
   forMatString: string,
   locale: string | unknown
 ) => {
-  return dateString ? format(convertStringToDate(dateString, FORMAT_DATE14), forMatString, {
-    locale: locale == 'th' ? th : enUS,
-  }) : undefined;
+  if (!dateString) {
+    return undefined;
+  }
+  const d = removeTime(dateString);
+  return d
+    ? format(convertStringToDate(d, FORMAT_DATE14), forMatString, {
+      locale: locale == 'th' ? th : enUS
+    })
+    : undefined;
 };
 export const formatDateBy = (d: Date, forMatString: string) => {
   return format(d, forMatString);
@@ -160,21 +254,26 @@ export const formatDateBy = (d: Date, forMatString: string) => {
 export const formatIos = (d: string, forMatString: string) => {
   return format(parseISO(d), forMatString);
 };
-export const getCurrentDateByFormat = (forMatString: string | undefined = undefined) => {
-  return formatDateBy(getDateNow(), forMatString ? forMatString : FORMAT_DATE14);
+export const getCurrentDateByFormat = (
+  forMatString: string | undefined = undefined
+) => {
+  return formatDateBy(
+    getDateNow(),
+    forMatString ? forMatString : FORMAT_DATE14
+  );
 };
 export const isDateEqua = (dateLeft: string, dateRight: string) => {
   const d1 = convertStringToDate(dateLeft, FORMAT_DATE14);
   const d2 = convertStringToDate(dateRight, FORMAT_DATE14);
-  return isEqual(d1, d2)
-}
+  return isEqual(d1, d2);
+};
 export const isDateAfter = (dateLeft: string, dateRight: string) => {
   const d1 = convertStringToDate(dateLeft, FORMAT_DATE14);
   const d2 = convertStringToDate(dateRight, FORMAT_DATE14);
-  return isAfter(d1, d2)
-}
+  return isAfter(d1, d2);
+};
 export const isDateBefore = (dateLeft: string, dateRight: string) => {
   const d1 = convertStringToDate(dateLeft, FORMAT_DATE14);
   const d2 = convertStringToDate(dateRight, FORMAT_DATE14);
-  return isBefore(d1, d2)
-}
+  return isBefore(d1, d2);
+};

@@ -32,9 +32,12 @@ export default configure((ctx) => {
             'requireAuth',
             // { path: 'swiper', server: false },
             // { path: 'emojiMart', server: false },
+            { path: 'dompurify', server: false },
+            // { path: 'emojiMart', server: false },
             { path: 'vueSlicksort', server: false },
             { path: 'vueZoomer', server: false },
-            { path: 'VueApexchartsTs', server: false },
+            { path: 'VueApexcharts', server: false },
+            { path: 'swiper', server: false },
             // { path: ctx.dev ? 'VueApexcharts' : 'VueApexchartsTs', server: false },
         ],
 
@@ -83,10 +86,26 @@ export default configure((ctx) => {
             // extendViteConf (viteConf) {},
             // viteVuePluginOptions: {},
             extendViteConf(viteConf, { isServer, isClient }) {
+                viteConf.esbuild = {
+                    supported: {
+                        'top-level-await': true
+                    }
+                };
+                viteConf.optimizeDeps = {
+                    // include: ['pdfjs-dist'], // optionally specify dependency name
+                    esbuildOptions: {
+                        supported: {
+                            'top-level-await': true
+                        }
+                    }
+                };
+
                 viteConf.server.hmr = {
                     port: 3005,
                 };
+
             },
+
             viteVuePluginOptions: {
                 // script: {
                 //   defineModel: true,

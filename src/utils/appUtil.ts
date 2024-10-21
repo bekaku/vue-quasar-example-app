@@ -1,34 +1,24 @@
 import {
   AppException,
-  ResponseMessage,
   IHrefTarget,
+  ISortModeType,
+  ResponseMessage,
   ServerException,
 } from '@/types/common';
 import {
-  RefreshTokenResponse,
-  IMenuPageItem,
-  FeedType,
   EmojiType,
+  FeedType,
   IListResponse,
+  IMenuPageItem
 } from '@/types/models';
-import { addDateByDays, getCurrentTimestamp } from '@/utils/dateUtil';
 import {
-  biFiletypePdf,
-  biFiletypeXlsx,
-  biFileWord,
-  biFileEarmarkPpt,
-  biFileEarmarkImage,
-  biFileEarmarkZip,
-  biPaperclip,
-} from '@quasar/extras/bootstrap-icons';
-import {
-  AppAuthTokenKey,
-  AppAuthTokenCreatedKey,
-  ExpireCookieDays,
   AppAuthRefeshTokenKey,
+  AppAuthTokenCreatedKey,
   AppAuthTokenExpireKey,
-  SucureDeviceIdAtt,
+  AppAuthTokenKey,
+  SucureDeviceIdAtt
 } from '@/utils/constant';
+import { getCurrentTimestamp } from '@/utils/dateUtil';
 export const isNumber = (value: string | number): boolean => {
   return value != null && value !== '' && !isNaN(Number(value.toString()));
 };
@@ -149,61 +139,6 @@ export const snakeToCamel = (str: string) =>
         group.toUpperCase().replace('-', '').replace('_', '')
       )
     : '';
-export const isImageFile = (f: File) => {
-  if (!f) {
-    return false;
-  }
-  return /^image\/\w+/.test(f.type);
-};
-export const getFileTypeIcon = (t: string) => {
-  const type = t.toLowerCase();
-  let icon = '';
-  switch (type) {
-    case 'pdf':
-    case 'application/pdf':
-      icon = biFiletypePdf;
-      break;
-    case 'xls':
-    case 'xlsx':
-    case 'application/vnd.ms-excel':
-    case 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet':
-    case 'vnd.openxmlformats-officedocument.spreadsheetml.sheet':
-      icon = biFiletypeXlsx;
-      break;
-    case 'doc':
-    case 'docx':
-    case 'application/msword':
-    case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
-    case 'vnd.openxmlformats-officedocument.wordprocessingml.document':
-      icon = biFileWord;
-      break;
-    case 'ppt':
-    case 'pptx':
-    case 'application/vnd.ms-powerpoint':
-    case 'application/vnd.openxmlformats-officedocument.presentationml.presentation':
-    case 'vnd.openxmlformats-officedocument.presentationml.presentation':
-      icon = biFileEarmarkPpt;
-      break;
-    case 'jpg':
-    case 'jpeg':
-    case 'gif':
-    case 'png':
-    case 'image/png':
-    case 'image/jpeg':
-    case 'image/gif':
-      icon = biFileEarmarkImage;
-      break;
-    case 'application/x-zip-compressed':
-    case 'application/x-rar':
-    case 'x-rar':
-      icon = biFileEarmarkZip;
-      break;
-    default:
-      icon = biPaperclip;
-      break;
-  }
-  return icon;
-};
 export const catchUrlFromText = (inputText: string) => {
   return inputText.match(/\bhttps?:\/\/\S+/gi);
 };
@@ -233,7 +168,17 @@ export const blobToFile = (
     resolve(file);
   });
 };
+export const formatBytes = (bytes: any, decimals = 2) => {
+  if (bytes === 0) return '0 Bytes';
 
+  const k = 1024;
+  const dm = decimals < 0 ? 0 : decimals;
+  const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+
+  const i = Math.floor(Math.log(bytes) / Math.log(k));
+
+  return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
+};
 export const readableNumber = (num: number, digits: number) => {
   if (num < 1000) {
     return num;
@@ -310,7 +255,25 @@ export const extractHashtagsFromString = (val: string): string[] => {
   if (!val) {
     return [];
   }
-  return val.split(/[\s\n\r]/gim).filter((v) => v.startsWith('#'));
+  // return val.split(/[\s\n\r]/gim).filter((v) => v.startsWith('#'));
+  // return extractHashtagsStartingWithLetter(val)
+  return val.split(/[\s\n\r]/gim).filter((v) => {
+    if (v.startsWith('#')) {
+      // Check if the character following '#' is not a digit (0-9)
+      return !(/^\#\d/.test(v));
+    }
+    return false;
+  });
+};
+export const extractHashtagsStartingWithLetter = (str: string): string[] => {
+  // Regular expression to match hashtags starting with a letter
+  // const regex = /#[a-zA-Z]\w*/g;
+  const regex = /(^|\s)(#[^0-9]\w*)/g;
+
+  // Use match() to find all matches in the string
+  const hashtags = str.match(regex);
+
+  return hashtags || []; // Return an empty array if no hashtags are found
 };
 export const extractHashtagsFromStringV2 = (val: string): string[] => {
   if (!val) {
@@ -428,6 +391,47 @@ export const detroyAuthCookie = (cookies: any) => {
     // cookies.remove(AppAuthTokenCreatedKey, { path: '/', domain: !devMode ? AppDomain : undefined, });
   }
 }
+export const sortedArray = <T>(list: any[], filedName: string, mode: ISortModeType): Promise<T> => {
+  return new Promise((resolve) => {
+    let finalList: any[] = [];
+    if (list && list.length > 0) {
+      if (mode === 'asc') {
+        finalList = list.sort((a, b) => a[filedName] - b[filedName]);
+      } else {
+        finalList = list.sort((a, b) => b[filedName] - a[filedName]);
+      }
+    }
+    resolve(finalList as T);
+  });
+};
 export const isEmptyVal = (val: any) => {
   return !val || val == 'null' || val == null || val == '' || val == undefined || val == 'undefined';
+};
+
+export const escapeHtml = (unsafe: string | undefined) => {
+  if (!unsafe) {
+    return '';
+  }
+  const map: { [key: string]: string } = {
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    '\'': '&#039;'
+  };
+
+  return unsafe.replace(/[&<>"']/g, (char) => map[char]);
+};
+export const unescapeHtml = (safe: string | undefined) => {
+  if (!safe) {
+    return '';
+  }
+  const map: { [key: string]: string } = {
+    '&amp;': '&',
+    '&lt;': '<',
+    '&gt;': '>',
+    '&quot;': '"',
+    '&#039;': '\''
+  };
+  return safe.replace(/&(amp|lt|gt|quot|#039);/g, (entity) => map[entity]);
 };

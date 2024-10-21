@@ -13,3 +13,4 @@ declare namespace NodeJS {
 declare module 'vue-zoomer';
 declare module 'd3-org-chart';
 declare module 'vue3-apexcharts/src/vue3-apexcharts';
+declare module 'vue-virtual-scroller';

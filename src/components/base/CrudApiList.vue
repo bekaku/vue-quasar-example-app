@@ -18,7 +18,7 @@
             <div class="row items-center">
               <q-form v-if="showSearchTextBox && !showSearch" @submit="onKeywordSearch">
                 <q-input dense outlined rounded clearable style="width: 350px" v-model="filterText"
-                  :placeholder="t('searchHelp3')">
+                  :placeholder="t('base.searchHelp3')">
                   <!-- @update:model-value="updateSearchText" -->
                   <template v-slot:prepend>
                     <q-icon :name="biSearch" />
@@ -86,30 +86,32 @@
               </div>
             </q-card-section>
             <q-form @submit="onAdvanceSearch" class="q-pa-md">
-
-              <slot name="topSearchExtra">
-              </slot>
+              <slot name="topSearchExtra"> </slot>
               <template v-if="searchableHeaders.length > 0">
                 <div class="row">
-                  <slot name="topInnerSearchExtra">
-                  </slot>
+                  <slot name="topInnerSearchExtra"> </slot>
                   <template v-for="(searchCol, searchIndex) in searchableHeaders"
                     :key="`advance-search-${searchIndex}`">
                     <div v-if="searchCol.options" class="col-12 col-md-4 q-pa-sm">
                       <div class="q-gutter-md row items-center">
                         <template v-if="
-                          searchCol.options?.searchType == ICrudListHeaderOptionSearchType.TEXT ||
-                          searchCol.options?.searchType == ICrudListHeaderOptionSearchType.NUMBER
+                          searchCol.options?.searchType ==
+                          ICrudListHeaderOptionSearchType.TEXT ||
+                          searchCol.options?.searchType ==
+                          ICrudListHeaderOptionSearchType.NUMBER
                         ">
-                          <q-input outlined dense v-model="searchCol.options.searchModel"
-                            :type="searchCol.options?.searchType == ICrudListHeaderOptionSearchType.TEXT ? 'text' : 'number'"
-                            :label="t(searchCol.label)" clearable style="width: 100%">
+                          <q-input outlined dense v-model="searchCol.options.searchModel" :type="searchCol.options?.searchType ==
+                            ICrudListHeaderOptionSearchType.TEXT
+                            ? 'text'
+                            : 'number'
+                            " :label="t(searchCol.label)" clearable style="width: 100%">
                             <template v-slot:before>
-                              <q-select v-if="!searchCol.options.searchOperationReadonly" dense filled
-                                :label="t(searchCol.label)" class="q-mx-lg" v-model="searchCol.options.searchOperation"
-                                :options="searchOperations" option-value="value" option-label="text" emit-value
-                                map-options :readonly="searchCol.options.searchOperationReadonly"
-                                style="min-width: 150px" :dropdown-icon="biChevronExpand" />
+                              <q-select v-if="
+                                !searchCol.options.searchOperationReadonly
+                              " dense filled :label="t(searchCol.label)" class="q-mx-lg"
+                                v-model="searchCol.options.searchOperation" :options="searchOperations"
+                                option-value="value" option-label="text" emit-value map-options :readonly="searchCol.options.searchOperationReadonly
+                                  " style="min-width: 150px" :dropdown-icon="biChevronExpand" />
                             </template>
                           </q-input>
                         </template>
@@ -131,12 +133,10 @@
                     </div>
                   </template>
 
-                  <slot name="belowInnerSearchExtra">
-                  </slot>
+                  <slot name="belowInnerSearchExtra"> </slot>
                 </div>
 
-                <slot name="belowSearchExtra">
-                </slot>
+                <slot name="belowSearchExtra"> </slot>
                 <q-separator />
                 <q-card-actions align="center">
                   <q-btn type="submit" flat :icon="biSearch" :label="t('base.okay')">
@@ -327,7 +327,7 @@
                             ">
                               {{
                                 fillable.options.func(
-                                  getValueByColunm(fillable.column, index)
+                                  getValueByColunm(fillable.column, index),
                                 )
                               }}
                             </template>
@@ -339,7 +339,7 @@
                               fillable.column
                                 ? getValueByColunm(
                                   fillable.column,
-                                  index
+                                  index,
                                 ).toLocaleString()
                                 : ''
                             }}
@@ -348,7 +348,7 @@
                             {{
                               fillable.column
                                 ? dateForMat(
-                                  getValueByColunm(fillable.column, index)
+                                  getValueByColunm(fillable.column, index),
                                 )
                                 : ''
                             }}
@@ -359,7 +359,7 @@
                             {{
                               fillable.column
                                 ? datetimeForMat(
-                                  getValueByColunm(fillable.column, index)
+                                  getValueByColunm(fillable.column, index),
                                 )
                                 : ''
                             }}
@@ -422,8 +422,8 @@
           </slot>
         </template>
         <slot name="paging">
-          <app-paging v-if="pages && showPaging && pages.totalPages > 0" :model-value="pages" :boundary-numbers="false"
-            @update:current="onPageChange" @update:per-page="onPerPageChange"></app-paging>
+          <app-paging v-if="crudPages && showPaging && crudPages.totalPages > 0" v-model="crudPages"
+            :boundary-numbers="false" @update:current="onPageChange" @update:per-page="onPerPageChange"></app-paging>
         </slot>
       </q-card>
     </div>
@@ -431,12 +431,32 @@
 </template>
 
 <script setup lang="ts">
-import { computed, defineAsyncComponent, PropType, ref, watch } from 'vue';
+import AppSort from '@/components/base/AppSort.vue';
+import AppPaging from '@/components/base/Paging.vue';
+import SkeletonTable from '@/components/skeleton/SkeletonTable.vue';
+import { useBase } from '@/composables/useBase';
 import { useLang } from '@/composables/useLang';
-import { CrudListDataType, ICrudListHeader, ICrudListHeaderOptionSearchType, IPagination, ISort } from '@/types/common';
+import { usePermissionStore } from '@/stores/permissionStore';
+import {
+  CrudListDataType,
+  ICrudListHeader,
+  ICrudListHeaderOptionSearchType,
+  IPagination,
+  ISort,
+} from '@/types/common';
+import { isEmpty } from '@/utils/appUtil';
+import { getValFromObjectByPath } from '@/utils/AppUtilJs';
+import { SearchMinCharactor } from '@/utils/constant';
+import {
+  FORMAT_DATE1,
+  FORMAT_DATETIME,
+  formatDate,
+  formatDateTime,
+} from '@/utils/dateUtil';
 import {
   biArrowClockwise,
-  biCheckCircle, biChevronExpand,
+  biCheckCircle,
+  biChevronExpand,
   biClipboard,
   biEraser,
   biEye,
@@ -448,114 +468,106 @@ import {
   biSortAlphaUpAlt,
   biThreeDotsVertical,
   biTrash,
-  biX
+  biX,
 } from '@quasar/extras/bootstrap-icons';
-import { DEFULT_ITEM_PER_PAGET, SearchMinCharactor } from '@/utils/constant';
-import { isEmpty } from '@/utils/appUtil';
-import { getValFromObjectByPath } from '@/utils/appUtilJs';
-import SkeletonTable from '@/components/skeleton/SkeletonTable.vue';
-import AppSort from '@/components/base/AppSort.vue';
-import AppPaging from '@/components/base/Paging.vue';
-import { useBase } from '@/composables/useBase';
-import { usePermissionStore } from '@/stores/permissionStore';
-import { FORMAT_DATE1, FORMAT_DATETIME, formatDate, formatDateTime } from '@/utils/dateUtil';
+import { computed, defineAsyncComponent, PropType, ref } from 'vue';
 
 const AppResult = defineAsyncComponent(
-  () => import('@/components/base/AppResult.vue')
+  () => import('@/components/base/AppResult.vue'),
 );
 const DatePicker = defineAsyncComponent(
-  () => import('@/components/form/DatePicker.vue')
+  () => import('@/components/quasar/DatePicker.vue'),
 );
 const FormTogle = defineAsyncComponent(
-  () => import('@/components/form/FormTogle.vue')
+  () => import('@/components/quasar/Togle.vue'),
 );
 const CrudApiListHeaderFilter = defineAsyncComponent(
-  () => import('@/components/base/CrudApiListHeaderFilter.vue')
+  () => import('@/components/base/CrudApiListHeaderFilter.vue'),
 );
 const props = defineProps({
   crudName: {
     type: String,
-    default: ''
+    default: '',
   },
   viewPermission: {
     type: String,
-    default: ''
+    default: '',
   },
   managePermission: {
     type: String,
-    default: ''
+    default: '',
   },
   title: {
     type: String,
-    default: ''
+    default: '',
   },
   icon: {
     type: String,
-    default: biFile
+    default: biFile,
   },
   list: {
     type: Array as PropType<any[]>,
-    default: () => []
+    default: () => [],
   },
   headers: {
     type: Array as PropType<ICrudListHeader[]>,
-    default: () => []
+    default: () => [],
   },
   sort: {
     type: Object as PropType<ISort>,
-    default: null
+    default: null,
   },
   pages: {
-    type: Object as PropType<IPagination>
+    type: Object as PropType<IPagination>,
   },
   fristLoad: {
     type: Boolean,
-    default: false
+    default: false,
   },
   loading: {
     type: Boolean,
-    default: false
+    default: false,
   },
   showPaging: {
     type: Boolean,
-    default: true
+    default: true,
   },
   isFrontend: {
     type: Boolean,
-    default: false
+    default: false,
   },
   showCheckbox: {
     type: Boolean,
-    default: true
+    default: true,
   },
   showNewBtn: {
     type: Boolean,
-    default: true
+    default: true,
   },
   showSearchBtn: {
     type: Boolean,
-    default: true
+    default: true,
   },
   showSearchTextBox: {
     type: Boolean,
-    default: false
+    default: true,
   },
   showThreeDot: {
     type: Boolean,
-    default: true
+    default: true,
   },
   showFilter: {
     type: Boolean,
-    default: true
+    default: true,
   },
   showSort: {
     type: Boolean,
-    default: true
+    default: true,
   },
   fullWidth: {
     type: Boolean,
-    default: false
-  }
+    default: false,
+  },
 });
 const emit = defineEmits([
   'on-page-no-change',
@@ -569,13 +581,14 @@ const emit = defineEmits([
   'on-new-form',
   'on-reload',
   'on-advance-search',
-  'on-keyword-search'
+  'on-keyword-search',
 ]);
 const { t, locale } = useLang();
 const { searchOperations, inputSanitizeHtml } = useBase();
 const permissionStore = usePermissionStore();
-const currentPage = ref(props.pages ? props.pages.current : 1);
-const itemPerPage = ref(DEFULT_ITEM_PER_PAGET);
+
+const crudPages = ref<IPagination | undefined>(props.pages);
+
 const filterText = ref('');
 const selectedAll = ref(false);
 const showSearch = ref(false);
@@ -637,13 +650,13 @@ const getValueBoolean = (column: string, index: number) => {
 const sortableHeaders = computed(() => {
   const headers = props.headers;
   const filters = headers.filter(
-    (c) => c.options && c.options.sortable === true
+    (c) => c.options && c.options.sortable === true,
   );
   const list = [];
   for (const item of filters) {
     list.push({
       value: item.options.sortColunm ? item.options.sortColunm : item.column,
-      label: t(item.label)
+      label: t(item.label),
     });
   }
   return list;
@@ -672,9 +685,23 @@ const searchableHeaders = computed(() => {
     : headers;
 });
 const onClearSearch = () => {
-  showSearch.value = false;
+  // showSearch.value = false;
+  onClearSearchModel();
   emit('on-reload');
 };
+const onClearSearchModel = () => {
+  if (searchableHeaders.value.length > 0) {
+    for (const col of searchableHeaders.value) {
+      if (col.options) {
+        if (col.type == CrudListDataType.STATUS) {
+          col.options.searchModel = true;
+        } else {
+          col.options.searchModel = null;
+        }
+      }
+    }
+  }
+}
 const onAdvanceSearch = () => {
   filterText.value = '';
   let q = '';
@@ -687,17 +714,14 @@ const onAdvanceSearch = () => {
           ? col.options.searchColunm
           : col.column;
         if (operation != undefined && searchVal != undefined) {
-          let canAdd = true;
-          if (typeof searchVal != 'boolean' && searchVal.toString().trim().length == 0) {
-            canAdd = false;
+          let val = inputSanitizeHtml(searchVal);
+          if (col.type == CrudListDataType.STATUS) {
+            val = searchVal;
           }
-
-          if (canAdd) {
-            if (q) {
-              q += ',';
-            }
-            q += colunm + operation + inputSanitizeHtml(searchVal);
+          if (q) {
+            q += ',';
           }
+          q += `${colunm}${operation}${val}`;
         }
       }
     }
@@ -748,33 +772,16 @@ const datetimeForMat = (d: string, format: string | undefined = undefined) => {
     : undefined;
 };
 const onPageChange = async (v: number | undefined) => {
-  if (v) {
-    currentPage.value = v;
+  if (v && crudPages.value) {
+    crudPages.value.current = v;
+    emit('on-page-no-change', v);
   }
 };
 const onPerPageChange = async (v: number | undefined) => {
-  if (v) {
-    itemPerPage.value = v;
+  if (v && crudPages.value) {
+    crudPages.value.itemsPerPage = v;
+    emit('on-items-perpage-change', v);
   }
 };
 
-//wathcer
-watch(
-  () => props.pages,
-  (pages) => {
-    if (pages) {
-      currentPage.value = pages.current;
-    }
-  }
-);
-watch(currentPage, (newPage) => {
-  if (props.fristLoad) {
-    emit('on-page-no-change', newPage);
-  }
-});
-watch(itemPerPage, (newItemPerPage) => {
-  if (props.fristLoad) {
-    emit('on-items-perpage-change', newItemPerPage);
-  }
-});
 </script>

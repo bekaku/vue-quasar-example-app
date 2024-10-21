@@ -39,14 +39,14 @@ const AppResult = defineAsyncComponent(
 );
 const { t } = useLang();
 const { findAll } = PermissionService();
-const item = ref<IApiListResponse<Permission>[]>();
+const item = ref<Permission[]>();
 const { setTitle } = useAppMeta();
 setTitle(`${t('post')} | ${t('app.name')}`);
 onMounted(async () => {
   console.log('onMounted');
   const res = await findAll('');
   if (res) {
-    item.value = res;
+    item.value = res.dataList;
   }
 });
 </script>

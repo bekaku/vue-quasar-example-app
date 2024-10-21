@@ -1,7 +1,10 @@
 import { Device } from '@capacitor/device';
 import { ref } from 'vue';
+import { useCache } from './useCache';
+import { getCurrentTimestamp, getDateDiffMinutes } from '@/utils/dateUtil';
 export const useDevice = () => {
   const deviceId = ref();
+  const { latestSyncActiveStatus } = useCache();
   const getDeviceInfo = async (): Promise<any> => {
     const info = await Device.getInfo();
     return new Promise((resolve) => {
@@ -21,10 +24,35 @@ export const useDevice = () => {
       resolve(info.platform == 'web');
     });
   };
+  const canSyncActiveStatusToServer = (): Promise<boolean> => {
+    return new Promise(resolve => {
+      const currentTimeTamp = getCurrentTimestamp();
+      let diffminutes;
+      if (latestSyncActiveStatus.value > 0) {
+        diffminutes = getDateDiffMinutes(
+          latestSyncActiveStatus.value,
+          currentTimeTamp
+        );
+      } else {
+        latestSyncActiveStatus.value = currentTimeTamp;
+        resolve(true);
+      }
+      if (diffminutes != undefined && diffminutes >= 5) {
+        latestSyncActiveStatus.value = currentTimeTamp;
+        resolve(true);
+      }
+      resolve(false);
+    });
+  };
+  const setSysncActiveStatus = () => {
+    latestSyncActiveStatus.value = getCurrentTimestamp();
+  };
   return {
     getDeviceInfo,
     isWeb,
     getDeviceId,
-    deviceId
+    deviceId,
+    canSyncActiveStatusToServer,
+    setSysncActiveStatus
   };
 };

@@ -95,13 +95,13 @@
       <div class="col-12 col-md-9 q-pt-md q-pl-md">
         <skeleton-item v-if="!fristLoaded" :items="3" show></skeleton-item>
         <template v-else-if="items.length > 0">
-          <SearchItem
+          <SearchItemComp
             v-for="(item, index) in items"
             :key="index"
             :item="item"
             :q="searchItem.q"
           >
-          </SearchItem>
+          </SearchItemComp>
 
           <base-loadmore
             v-if="!isInfiniteDisabled"
@@ -144,12 +144,12 @@ const AppResult = defineAsyncComponent(
   () => import('@/components/base/AppResult.vue'),
 );
 const BaseLoadmore = defineAsyncComponent(
-  () => import('@/components/BaseLoadmore.vue'),
+  () => import('@/components/base/BaseLoadmore.vue'),
 );
 const SkeletonItem = defineAsyncComponent(
   () => import('@/components/skeleton/SkeletonItem.vue'),
 );
-const SearchItem = defineAsyncComponent(
+const SearchItemComp = defineAsyncComponent(
   () => import('@/components/search/SearchItem.vue'),
 );
 const { searchApi } = SearchService();

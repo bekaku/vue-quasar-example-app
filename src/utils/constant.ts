@@ -29,6 +29,8 @@ export const SearchHistoryKey = PrefixKey + '_searchs';
 export const SucureDeviceIdAtt = '_device_jid';
 export const AppDomain = 'your-domain.com';
 export const FileNamePrefix = 'app_file';
+export const LatestSyncActiveStatusKey = PrefixKey + 'web_latest_sync_active_status';
+export const MaxSelectFiles = 10;
 export const CacheKey = {
   YEAR_AVAILABLE: PrefixKey + 'year_available',
   REPORT_CURRENT_STATS: PrefixKey + 'cache_1',
@@ -60,18 +62,26 @@ export const CacheKey = {
   LOGIN_LOG: PrefixKey + 'login_log',
 };
 export const FileExtensionAccept =
-  '.png,.jpg,.jpeg,.gif,.doc,.docx,.pdf,.xls,.xlsx,.ppt,.pptx,.pps';
+  '.jpg,.png,.gif,.doc,.docx,.pdf,.xls,.xlsx,.ppt,.pptx,.txt,.csv,.zip,.rar';
 
 export const FileTypeAcceptList = [
-  'application/pdf',
+  'application/msword',
   'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+  'application/vnd.ms-excel',
   'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+  'application/vnd.ms-powerpoint',
   'application/vnd.openxmlformats-officedocument.presentationml.presentation',
-  'image/png',
+  'application/pdf',
+  'application/vnd.rar',
+  'application/zip',
   'image/jpeg',
+  'image/png',
   'image/gif',
+  'text/plain',
+  'text/csv'
 ];
-
+export const LIMIT_FILE_SIZE_MB = 50;
+export const LIMIT_FILE_SIZE = LIMIT_FILE_SIZE_MB * 1024 * 1024;
 export const FILES_UPLOAD_ATT = '_filesUploadName';
 export const FILES_DIRECTORY_ID_ATT = 'fileDirectoryId';
 export const OS_PLATFORM = {

@@ -9,7 +9,7 @@ import {
   isAppException,
   isArray,
   isEmpty,
-  isListResponse,
+  isListResponse, isServerException,
   isServerResponseMessage,
   snakeToCamel
 } from '@/utils/appUtil';
@@ -24,7 +24,7 @@ export const useCrudList = <T>(
     options ? options.itemsPerPage : 10
   );
   const { t } = useLang();
-  const { WeeGoTo, getCurrentPath, WeeGetQuery, WeeConfirm, WeeLoader, isDevMode, inputSanitizeHtml } =
+  const { WeeGoTo, getCurrentPath, WeeGetQuery, WeeConfirm, WeeLoader, inputSanitizeHtml } =
     useBase();
   const { callAxios } = useAxios();
   const dataList = ref<T[]>([]);
@@ -257,7 +257,6 @@ export const useCrudList = <T>(
     onPasteUrlPathParamAndFetchData();
   };
   const onKeywordSearch = (keyword: string) => {
-    console.log('onKeywordSearch', keyword);
     keywordSearchText.value = inputSanitizeHtml(keyword);
     onPasteUrlPathParamAndFetchData();
   };
@@ -317,6 +316,11 @@ export const useCrudList = <T>(
     // if (isDevMode()) {
     //   console.log('useCrudList > onDeleteItemSingle : ', apiEndpoint, response);
     // }
+    if (isAppException(response) || isServerException(response)) {
+      return new Promise((resolve) => {
+        resolve(false);
+      });
+    }
     return new Promise((resolve) => {
       resolve(response.status == 'OK');
     });

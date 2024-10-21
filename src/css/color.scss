@@ -82,19 +82,44 @@
   --gray-800: #1f2937;
   --gray-900: #111827;
   --gray-950: #030712;
+}
 
+.text-message-sent {
+  color: var(--color-primary-500) !important;
+  // color: #b2dfdb !important;
+}
 
-  .text-message-sent {
-    color: var(--color-primary-600) !important;
-  }
+.text-message-received {
+  color: var(--gray-200) !important;
+  //color: #f1f1f1 !important;
+}
 
-  .text-message-received {
-    color: var(--gray-200) !important;
-  }
+.text-message-unsend {
+  color: var(--gray-100) !important;
+}
+
+.text-message-transparent {
+  color: transparent !important;
+}
+
+.feed-page-bg {
+  background-color: #fff;
+}
+
+.feed-section-bg {
+  background-color: var(--main-bg-color);
 }
 
 body.body--dark {
   .text-message-received {
     color: var(--color-dark-900) !important;
+  }
+
+  .text-message-unsend {
+    color: var(--color-dark-500) !important;
+  }
+
+  .feed-page-bg {
+    background-color: var(--wee-second-bg-color-theme-dark);
   }
 }

@@ -2,19 +2,20 @@
     <q-img v-if="loading" :spinner-color="spinnerColor" :placeholder-src="placHolder" :ratio="ratio" v-bind="$attrs"
         loading="lazy">
         <div class="absolute-full flex flex-center">
-            <q-inner-loading showing label-class="text-white" />
+            <q-inner-loading showing color="grey-4" size="xs" />
         </div>
     </q-img>
-    <q-img v-else :src="srcUrl" :placeholder-src="placHolder" :spinner-color="spinnerColor" :ratio="ratio"
-        v-bind="$attrs" loading="lazy">
+    <q-img v-else-if="srcUrl" :src="srcUrl" :fit="fit" :placeholder-src="placHolder" :spinner-color="spinnerColor"
+        :ratio="ratio" v-bind="$attrs" loading="lazy" :class="{ 'img-bg': imageBg }">
         <template v-slot:error>
             <div class="absolute-full flex flex-center bg-primary text-white">
                 <q-icon :name="biCardImage" class="q-mr-sm" size="md" />
-                Cannot load
-                image
+                Cannot load image
             </div>
         </template>
         <slot></slot>
+    </q-img>
+    <q-img v-else :ratio="ratio" v-bind="$attrs" loading="lazy" src="/images/no_picture_thumb.jpg">
     </q-img>
 </template>
 
@@ -30,43 +31,23 @@
 import { watchEffect, onBeforeUnmount, onMounted, ref } from 'vue';
 import { biCardImage } from '@quasar/extras/bootstrap-icons';
 import FileManagerService from '@/api/FileManagerService';
-import { FileManagerDto } from '@/types/models';
-// const props = defineProps({
-//   src: {
-//     type: String as PropType<string>,
-//     default: undefined,
-//   },
-//   placHolder: {
-//     type: String as PropType<string>,
-//     default: undefined,
-//   },
-//   spinnerColor: {
-//     type: String as PropType<string>,
-//     default: 'white',
-//   },
-//   cssClass: {
-//     type: String as PropType<string>,
-//     default: 'bg-black',
-//   },
-//   ratio: {
-//     type: Number as PropType<number | undefined>,
-//     default: 4 / 3,
-//   },
-// });
-interface Props {
+
+const props = withDefaults(defineProps<{
     src: string;
     fetch?: boolean;
+    imageBg?: boolean;
     placHolder?: string;
     spinnerColor?: string;
     cssClass?: string;
     ratio?: number;//4 / 3
-}
-
-const props = withDefaults(defineProps<Props>(), {
-    spinnerColor: 'white',
+    fit?: 'cover' | 'fill' | 'contain' | 'none' | 'scale-down';//4 / 3
+}>(), {
+    spinnerColor: 'grey-5',
     cssClass: 'bg-black',
     ratio: 4 / 3,
-    fetch: true
+    fetch: false,
+    imageBg: false,
+    fit: 'cover'
 });
 const { fethCdnData } = FileManagerService();
 const loading = ref(true);
@@ -86,13 +67,24 @@ const onFetchImage = async () => {
         return;
     }
     if (props.fetch) {
-        const res = await fethCdnData(props.src);
-        if (res) {
-            srcUrl.value = res;
-        }
+        fethCdnData(props.src)
+            .then((res) => {
+                clearLoading();
+                if (res) {
+                    srcUrl.value = res;
+                }
+            })
+            .catch((error) => {
+                clearLoading();
+            });
+
     } else {
         srcUrl.value = props.src;
+        loading.value = false;
     }
+
+};
+const clearLoading = () => {
     loading.value = false;
     if (!firstLoaded.value) {
         firstLoaded.value = true;
@@ -102,3 +94,16 @@ onBeforeUnmount(() => {
     srcUrl.value = undefined;
 });
 </script>
+<style lang="scss" scoped>
+.img-bg {
+    background: #000000;
+    background: -webkit-linear-gradient(to bottom, #434343, #000000);
+    background: linear-gradient(to bottom, #434343, #000000);
+}
+
+body.body--dark {
+    .img-bg {
+        background: #000000;
+    }
+}
+</style>

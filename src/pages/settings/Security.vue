@@ -127,7 +127,7 @@ import {
   ref,
 } from 'vue';
 const BaseLoadmore = defineAsyncComponent(
-  () => import('@/components/BaseLoadmore.vue'),
+  () => import('@/components/base/BaseLoadmore.vue'),
 );
 const PasswordForm = defineAsyncComponent(
   () => import('@/components/app/PasswordForm.vue'),

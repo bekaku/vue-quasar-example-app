@@ -28,6 +28,7 @@ export default {
         'list': 'รายการ',
         'search': 'ค้นหา',
         'searchAdvance': 'ค้นหาแบบละเอียด',
+        'searchHelp3': 'พิมพ์คำที่ต้องการค้นหาและกด Enter',
         'view': 'ดูข้อมูล',
         'form': 'ฟอร์ม',
         'home': 'หน้าหลัก',
@@ -272,6 +273,7 @@ export default {
         'remark': 'หมายเหตุ',
         'view2': 'ดู',
         'filter': 'กรองข้อมูล',
+        'canChooseMoreThen1': 'เลือกได้มากกว่า 1 ตัวเลือก',
     },
     'theme': {
         'light': 'กลางวัน',

@@ -1,11 +1,11 @@
 <template>
-  <!-- <q-layout view="hHh LpR fFf"> -->
-
-  <q-layout view="lHh Lpr lff">
+  <q-layout view="hHh LpR fFf">
+  <!-- <q-layout view="lHh Lpr lff"> -->
     <app-header
       :frontend="false"
       :show-togle-drawer="true"
-      :show-logo="false"
+      :show-logo="true"
+      bordered
     />
     <backend-drawer />
 
@@ -16,23 +16,18 @@
   </q-layout>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
+import AppHeader from '@/components/base/AppHeader.vue';
+import BackendDrawer from '@/components/base/BackendDrawer.vue';
+import LayoutBreadcrumbTab from '@/components/base/LayoutBreadcrumbTab.vue';
 import { usePermissionStore } from '@/stores/permissionStore';
 import { BACKEND_LOGIN } from '@/utils/appPermissionList';
-export default {
-  async preFetch({
-    /*ssrContext, redirect*/
-    redirect,
-  }) {
+defineOptions({
+  preFetch({ /*ssrContext, redirect*/ redirect, }) {
     const permissionStore = usePermissionStore();
     if (!permissionStore.isHavePermission(BACKEND_LOGIN)) {
       redirect({ path: '/auth/login' });
     }
   },
-};
-</script>
-<script setup lang="ts">
-import BackendDrawer from '@/components/base/BackendDrawer.vue';
-import AppHeader from '@/components/base/AppHeader.vue';
-import LayoutBreadcrumbTab from '@/components/base/LayoutBreadcrumbTab.vue';
+});
 </script>

@@ -32,18 +32,33 @@ $negative: #ff3860;
 $info: #00a0dc;
 $warning: #ff9f43;
 // used by dark mode
-$dark-page: #1d232a !default;
-$dark: #242b34 !default;
+$dark-page: #1d1e22 !default;
+$dark: #272a32 !default;
 
 
 // $separator-color: #dcdcdc !default;
 // $separator-color: #f0f0f0 !default;
 // $separator-dark-color: #282829 !default;
+$separator-color: #e9e9ec !default;
+$separator-dark-color: #45464b !default; //#394552
 
-$shadow-color: #000 !default;
+// $shadow-color: #000 !default;
+$shadow-color: #1d1e22 !default;
 $elevation-umbra: rgba($shadow-color, 0.12) !default;
 $elevation-penumbra: rgba($shadow-color, 0.14) !default;
 $elevation-ambient: rgba($shadow-color, 0.12) !default;
 
-$button-font-weight: 400 !default;
+// $dark-shadow-color         : #fff !default;
+$dark-shadow-color : #bac4d0 !default;
+$elevation-dark-umbra : rgba($dark-shadow-color, 0.12) !default;
+$elevation-dark-penumbra : rgba($dark-shadow-color, 0.14) !default;
+$elevation-dark-ambient : rgba($dark-shadow-color, 0.12) !default;
+
 $generic-border-radius: 10px !default;
+$button-font-weight: 400 !default;
+$button-border-radius : 8px !default;
+
+.q-item__label--caption,
+.q-item__label--header {
+  color: var(--wee-text-muted) !important;
+}

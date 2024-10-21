@@ -55,7 +55,7 @@ import UserService from '@/api/UserService';
 import { useValidation } from '@/composables/useValidation';
 import { biPencil } from '@quasar/extras/bootstrap-icons';
 const FormTogle = defineAsyncComponent(
-  () => import('@/components/form/FormTogle.vue'),
+  () => import('@/components/quasar/Togle.vue'),
 );
 const { t } = useLang();
 const { updatePersonalData } = UserService();

@@ -1,5 +1,6 @@
 import { useLang } from './useLang';
 import { validateEmail, isNumber, validateUsername } from '@/utils/appUtil';
+
 export const useValidation = () => {
   const { t } = useLang();
   const rePwdStrong = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
@@ -8,14 +9,24 @@ export const useValidation = () => {
     (val && val.length > 0) || t('error.validateRequireField');
   const requiredSelect = (val: any) =>
     !!val || t('error.validateRequireChoose');
+
   const requiredNumber = (val: string) =>
     isNumber(val) || t('error.validateNumber');
 
   const requiredPositiveNumber = (val: string) =>
     (isNumber(val) && parseInt(val) > 0) || t('error.validatePositiveNumber');
 
+  const requiredNotMinusNumber = (val: string) =>
+    (isNumber(val) && parseInt(val) >= 0) || t('error.validateMinusNumber');
+
+  const requiredNotMinusNumberOrFloat = (val: string) =>
+    (isNumber(val) && (parseInt(val) || parseFloat(val)) >= 0) || t('error.validateMinusNumber');
+
   const requiredPositiveFloatNumber = (val: string) =>
     (isNumber(val) && parseFloat(val) > 0) || t('error.validatePositiveNumber');
+
+  const requiredNotMinusFloatNumber = (val: string) =>
+    (isNumber(val) && parseFloat(val) >= 0) || t('error.validateMinusNumber');
 
   const requireField = (val: string, fieldName: string) =>
     (val && val.length > 0) || t('error.validateRequire', [fieldName]);
@@ -35,8 +46,20 @@ export const useValidation = () => {
 
   const validateMaxValue = (val: number, max: number, fieldName: string) =>
     (val > 0 && val <= max) || t('error.validateMaxValue', [fieldName, max]);
+
   const validateMinValue = (val: number, min: number, fieldName: string) =>
     val >= min || t('error.validateMinValue', [fieldName, min]);
+
+  const validateMinMaxValue = (val: any, min: number, max: number, fieldName: string) => {
+    if (val == undefined) {
+      return true;
+    }
+    const minState = validateMinValue(val, min, fieldName);
+    if (minState != true) {
+      return minState;
+    }
+    return validateMaxValue(val, max, fieldName);
+  }
 
   const validatePasswordStrong = (pwd: string) => rePwdStrong.test(pwd);
   const validatePercentage = (val: number) => (val && val >= 0 && val <= 100) || t('error.percentageValueWrong');
@@ -75,8 +98,8 @@ export const useValidation = () => {
       tips += 'Include at least one special character. ';
     }
 
-    // Return results
     return strength > 2;
+    // Return results
     // if (strength < 2) {
     //   // return 'Easy to guess. ' + tips;
     //   return false;
@@ -93,10 +116,12 @@ export const useValidation = () => {
   };
   return {
     required,
+    requiredSelect,
     requireField,
     requireEmail,
     validateMax,
     validateMaxValue,
+    validateMinMaxValue,
     validatePasswordStrong,
     validateMinValue,
     requiredNumber,
@@ -105,6 +130,8 @@ export const useValidation = () => {
     requireUsername,
     validatePasswordStrongV2,
     validatePercentage,
-    requiredSelect
+    requiredNotMinusNumber,
+    requiredNotMinusFloatNumber,
+    requiredNotMinusNumberOrFloat,
   };
 };

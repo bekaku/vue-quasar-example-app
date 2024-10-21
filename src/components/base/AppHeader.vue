@@ -5,8 +5,8 @@
         : 'bg-white text-black'
     " -->
   <q-header :reveal="reveal" height-hint="58" :bordered="bordered" :elevated="showGotTopBtn" :class="{
-    'bg-white text-black': !$q.dark.isActive,
     'wee-second-bg-color-theme-dark text-white': $q.dark.isActive,
+    'bg-white text-black': !$q.dark.isActive,
   }">
     <q-scroll-observer @scroll="onScroll" />
     <q-toolbar class="q-py-xs">
@@ -26,7 +26,7 @@
       <q-btn v-if="$q.screen.gt.xs" flat @click="onOpenSearch" class="text-capitalize">
         <span class="q-mr-sm text-muted">{{
           t('base.search') + ' Vue Quasar'
-        }}</span>
+          }}</span>
         <q-icon :name="biSearch" />
       </q-btn>
       <q-space />
@@ -193,6 +193,7 @@ import { useLang } from '@/composables/useLang';
 import { useAuthenStore } from 'stores/authenStore';
 import { useAuth } from '@/composables/useAuth';
 import { useNotification } from '@/composables/useNotification';
+import { useQuasar } from 'quasar';
 const NotificationBarMenu = defineAsyncComponent(
   () => import('@/components/notification/NotificationBarMenu.vue'),
 );
@@ -225,6 +226,7 @@ defineProps({
     default: false,
   },
 });
+const $q = useQuasar();
 const showGotTopBtn = ref(false);
 // const { WeeGoTo } = useBase();
 const { notify, resetBadgeCount } = useNotification();

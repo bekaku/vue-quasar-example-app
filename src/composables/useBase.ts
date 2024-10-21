@@ -17,7 +17,7 @@ import {
   biExclamationCircle,
   biX,
 } from '@quasar/extras/bootstrap-icons';
-import sanitizeHtml from 'sanitize-html';
+import { DOMPurify } from 'boot/dompurify';
 import { Clipboard } from '@capacitor/clipboard';
 export const useBase = () => {
   const { t, locale } = useLang();
@@ -93,7 +93,7 @@ export const useBase = () => {
     if (!message) {
       return;
     }
-    let icon = undefined;
+    let icon :string |undefined = undefined;
     if (options && options.type) {
       const t = options.type;
       if (t === 'positive') {
@@ -227,7 +227,15 @@ export const useBase = () => {
     return process.env.NODE_ENV == 'development';
   };
   const inputSanitizeHtml = (str: string) => {
-    return sanitizeHtml(str);
+    if (!str) {
+      return '';
+    }
+    return DOMPurify.sanitize(str,
+      {
+        ALLOWED_TAGS: ['b', 'i', 'em', 'strong', 'a'],
+        ALLOWED_ATTR: ['href', 'class']
+      }
+    );
   };
   const readableNumber = (num: number, digits: number) => {
     if (num < 1000) {

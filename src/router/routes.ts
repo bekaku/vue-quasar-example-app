@@ -6,9 +6,11 @@ import {
   BACKEND_LOGIN,
 } from '@/utils/appPermissionList';
 import {
-  BC_PERMISSION_FROM,
-  BC_ROLE_FROM,
-  BC_USER_FROM
+  PermissionFormBreadcrumb,
+  RoleFormBreadcrumb,
+  UserFormBreadcrumb,
+  ExampleBtnBreadcrumb,
+  ExampleSelectBreadcrumb
 } from '@/breadcrumbs/AppBreadcrumbs';
 import {
   TAB_COMPANY_CONFIG
@@ -42,7 +44,7 @@ const routes: RouteRecordRaw[] = [
             meta: {
               pageName: 'model_permission',
               permission: [PERMISSION.view],
-              breadcrumbs: BC_PERMISSION_FROM,
+              breadcrumbs: PermissionFormBreadcrumb,
               tabs: TAB_COMPANY_CONFIG
             },
             component: () => import('@/pages/backend/permission/Form.vue'),
@@ -65,7 +67,7 @@ const routes: RouteRecordRaw[] = [
             meta: {
               pageName: 'model_role',
               permission: [ROLE.view],
-              breadcrumbs: BC_ROLE_FROM,
+              breadcrumbs: RoleFormBreadcrumb,
             },
             component: () => import('@/pages/backend/role/Form.vue'),
           },
@@ -87,17 +89,77 @@ const routes: RouteRecordRaw[] = [
             meta: {
               pageName: 'model_user',
               permission: [USER.view],
-              breadcrumbs: BC_USER_FROM,
+              breadcrumbs: UserFormBreadcrumb,
             },
             component: () => import('@/pages/backend/user/Form.vue'),
           },
         ]
       },
-
       {
         path: '/search',
         name: 'Search',
         component: () => import('@/pages/SearchPage.vue'),
+      },
+      {
+        path: '/example',
+        children: [
+          {
+            path: 'content-text',
+            meta: {
+              name: 'ExampleContentText',
+            },
+            component: () => import('@/pages/example/ContentText.vue'),
+          },
+          {
+            path: 'emoji-picker',
+            meta: {
+              name: 'ExampleEmojiPicker',
+            },
+            component: () => import('@/pages/example/EmojiPicker.vue'),
+          },
+          {
+            path: 'ui',
+            children: [
+              {
+                path: 'button',
+                meta: {
+                  name: 'ExampleUiButton',
+                  breadcrumbs: ExampleBtnBreadcrumb,
+                },
+                component: () => import('@/pages/example/ui/Button.vue'),
+              },
+              {
+                path: 'select',
+                meta: {
+                  name: 'ExampleUiSelect',
+                  breadcrumbs: ExampleSelectBreadcrumb,
+                },
+                component: () => import('@/pages/example/ui/Select.vue'),
+              },
+              {
+                path: 'date-picker',
+                meta: {
+                  name: 'ExampleUiDatePicker',
+                },
+                component: () => import('@/pages/example/ui/DatePicker.vue'),
+              },
+              {
+                path: 'toggle',
+                meta: {
+                  name: 'ExampleUitoggle',
+                },
+                component: () => import('@/pages/example/ui/FormToggle.vue'),
+              },
+              {
+                path: 'file-picker',
+                meta: {
+                  name: 'ExampleUiFilePicker',
+                },
+                component: () => import('@/pages/example/ui/FilePicker.vue'),
+              },
+            ],
+          },
+        ]
       },
     ],
   },

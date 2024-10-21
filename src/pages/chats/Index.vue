@@ -5,18 +5,19 @@ import { useAppMeta } from '@/composables/useAppMeta';
 import ChatLeft from '@/components/chats/ChatLeft.vue';
 import ChatContent from '@/components/chats/ChatContent.vue';
 import ChatRight from '@/components/chats/ChatRight.vue';
+import { useQuasar } from 'quasar';
 
 const AppResult = defineAsyncComponent(
     () => import('@/components/base/AppResult.vue')
 );
 const BaseLoadmore = defineAsyncComponent(
-    () => import('@/components/BaseLoadmore.vue')
+    () => import('@/components/base/BaseLoadmore.vue')
 );
 const BaseSpinner = defineAsyncComponent(
     () => import('@/components/base/BaseSpinner.vue')
 );
 const { t } = useLang();
-
+const $q=useQuasar();
 const { setTitle } = useAppMeta();
 setTitle(`${t('chats.chats')} | ${t('app.name')}`);
 onMounted(async () => {

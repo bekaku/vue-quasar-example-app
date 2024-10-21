@@ -6,22 +6,23 @@ import {
   PageActionParamiter,
   PageIdParamiter,
   BackendRootPath,
-  CrudAction,
+  CrudAction
 } from '@/utils/constant';
 import { ref, onMounted, onBeforeUnmount, computed } from 'vue';
 import {
   ICrudAction,
   CrudFormApiOptions,
   RequestDto,
-  ResponseMessage,
+  ResponseMessage
 } from '@/types/common';
 import {
   isAppException,
   isServerResponseMessage,
   snakeToCamel,
+  convertStringToNumber
 } from '@/utils/appUtil';
 
-import { convertStringToNumber } from '@/utils/appUtil';
+
 export const useCrudForm = <T>(options: CrudFormApiOptions, initialEntity: T) => {
   const { WeeGoTo, WeeGetParam, WeeToast, WeeConfirm, isDevMode, getPreviousPath } = useBase();
   const { callAxios } = useAxios();
@@ -37,7 +38,7 @@ export const useCrudForm = <T>(options: CrudFormApiOptions, initialEntity: T) =>
 
   const crudEntity = ref<any>(Object.assign({}, initialEntity) as T);
   const requestEntityName = ref<string | undefined>(
-    options.requestEntityName ? options.requestEntityName : undefined,
+    options.requestEntityName ? options.requestEntityName : undefined
   );
   const crudAction = ref<ICrudAction>(
     WeeGetParam(PageActionParamiter) as ICrudAction
@@ -84,11 +85,11 @@ export const useCrudForm = <T>(options: CrudFormApiOptions, initialEntity: T) =>
     const api = getFetchDataLink.value;
     const response = await callAxios<T>({
       API: api,
-      method: 'GET',
+      method: 'GET'
     });
-    if (isDevMode()) {
-      console.log('useCrudForm > fetchDataById :', api, response);
-    }
+    // if (isDevMode()) {
+    //   console.log('useCrudForm > fetchDataById :', api, response);
+    // }
     loading.value = false;
     if (!isAppException(response) && !isServerResponseMessage(response)) {
       crudEntity.value = response;
@@ -157,23 +158,23 @@ export const useCrudForm = <T>(options: CrudFormApiOptions, initialEntity: T) =>
       return;
     }
     if (isDevMode()) {
-      console.log(
-        'useCrudFrom > onSubmit',
-        crudAction.value === CrudAction.VIEW ? 'PUT' : 'POST',
-        requestItem
-      );
+      // console.log(
+      //   'useCrudFrom > onSubmit',
+      //   crudAction.value === CrudAction.VIEW ? 'PUT' : 'POST',
+      //   requestItem
+      // );
     }
 
     loading.value = true;
     const response = await callAxios<any>({
       API: api,
       method: crudAction.value === CrudAction.VIEW ? 'PUT' : 'POST',
-      body: requestItem,
+      body: requestItem
     });
     loading.value = false;
-    if (isDevMode()) {
-      console.log('useCrudFrom > onSubmit > response', response);
-    }
+    // if (isDevMode()) {
+    //   console.log('useCrudFrom > onSubmit > response', response);
+    // }
     if (isAppException(response)) {
       return;
     }
@@ -202,7 +203,7 @@ export const useCrudForm = <T>(options: CrudFormApiOptions, initialEntity: T) =>
       type: 'positive',
       timeout: 3 * 1000,
       position: 'bottom',
-      actions: [{ icon: biX, color: 'white' }],
+      actions: [{ icon: biX, color: 'white' }]
     });
   };
   const deleteApiEndpoint = computed(() => {
@@ -224,13 +225,13 @@ export const useCrudForm = <T>(options: CrudFormApiOptions, initialEntity: T) =>
     }
     const conf = await WeeConfirm(t('app.monogram'), t('base.deleteConfirm'));
     if (conf) {
-      const res = await callAxios<ResponseMessage>({
+      await callAxios<ResponseMessage>({
         API: deleteApiEndpoint.value,
-        method: 'DELETE',
+        method: 'DELETE'
       });
-      if (isDevMode()) {
-        console.log('useCrudFrom > onDelete', deleteApiEndpoint.value, res);
-      }
+      // if (isDevMode()) {
+      //   console.log('useCrudFrom > onDelete', deleteApiEndpoint.value, res);
+      // }
       onBack();
     }
   };
