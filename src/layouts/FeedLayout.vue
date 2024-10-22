@@ -1,6 +1,6 @@
 <template>
   <q-layout view="hHh LpR fFf">
-    <app-header />
+    <app-header bordered/>
     <feed-drawer overlay />
     <q-page-container class="app-feed-container q-my-lg">
       <div class="row">
@@ -23,4 +23,6 @@ import FeedDrawer from '@/components/base/FeedDrawer.vue';
 import AppHeader from '@/components/base/AppHeader.vue';
 import FeedLeft from '@/components/feed/FeedLeft.vue';
 import FeedRight from '@/components/feed/FeedRight.vue';
+import { useQuasar } from 'quasar';
+const $q = useQuasar();
 </script>

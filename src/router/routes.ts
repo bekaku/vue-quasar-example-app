@@ -118,6 +118,13 @@ const routes: RouteRecordRaw[] = [
             component: () => import('@/pages/example/EmojiPicker.vue'),
           },
           {
+            path: 'image-cropper',
+            meta: {
+              name: 'ExampleImageCropper',
+            },
+            component: () => import('@/pages/example/ImageCropper.vue'),
+          },
+          {
             path: 'ui',
             children: [
               {

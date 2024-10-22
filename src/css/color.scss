@@ -109,8 +109,13 @@
 .feed-section-bg {
   background-color: var(--main-bg-color);
 }
-
+.drawer-bg{
+  background-color: #fafbfc;
+}
 body.body--dark {
+  .drawer-bg{
+    background-color: #1d1e22;
+  }
   .text-message-received {
     color: var(--color-dark-900) !important;
   }

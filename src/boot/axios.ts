@@ -1,10 +1,16 @@
 import { boot } from 'quasar/wrappers';
 import axios, { AxiosInstance } from 'axios';
-import { AppAuthRefeshTokenKey, AppAuthTokenKey, DefaultApiCLient, LocaleKey } from '@/utils/constant';
+// import { AppAuthRefeshTokenKey, AppAuthTokenKey, DefaultApiCLient, LocaleKey } from '@/utils/constant';
+//TODO cannot use external file import in boot file >  https://github.com/quasarframework/quasar/issues/17365
 import { Cookies } from 'quasar';
 // import { canRefreshToken } from '@/utils/JwtUtil';
 import { useAuthenStore } from '@/stores/authenStore';
 import { getTokenStatus } from '@/utils/jwtUtil';
+
+const AppAuthRefeshTokenKey ='_myappkey_01';
+const AppAuthTokenKey ='_myappkey_02';
+const DefaultApiCLient ='default';
+const LocaleKey ='_myappkey_locale';
 
 declare module '@vue/runtime-core' {
   interface ComponentCustomProperties {

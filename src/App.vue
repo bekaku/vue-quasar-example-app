@@ -2,7 +2,7 @@
   <router-view />
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
 import { defineComponent, watch, onMounted, onBeforeUnmount } from 'vue';
 import { AppSetup } from './utils/app';
 import { useQuasar } from 'quasar';
@@ -19,8 +19,8 @@ import { detroyAuthCookie, isAppException } from '@/utils/appUtil';
 import { useExceptionStore } from '@/stores/exceptionStore';
 import { Cookies } from 'quasar';
 import { AppAuthTokenKey, AUTH_NO_FILTER } from '@/utils/constant';
-export default defineComponent({
-  name: 'App',
+import { useRequiredAuth } from '@/composables/useRequiredAuth';
+defineOptions({
   async preFetch({ currentRoute, ssrContext, redirect }) {
     const cookies = process.env.SERVER ? Cookies.parseSSR(ssrContext) : Cookies;
     const authenStore = useAuthenStore();
@@ -85,73 +85,69 @@ export default defineComponent({
       }
     }
   },
-  setup() {
-    const { WeeGoTo, isDevMode } = useBase();
-    const exceptionStore = useExceptionStore();
-    const router = useRouter();
-    const authenStore = useAuthenStore();
-    const $q = useQuasar();
-    const langugeAndThemeStore = useLangugeAndThemeStore();
-    AppSetup();
+});
 
-    onMounted(() => {
-      if (
-        exceptionStore.error &&
-        exceptionStore.error.status &&
-        exceptionStore.error.message
-      ) {
-        WeeGoTo('/error', true);
-      }
-      if (authenStore.auth) {
-        if (isDevMode()) {
-          console.log('App.vue > authenStore >', authenStore.auth);
-        }
-        // authenStore.startRefreshTokenTimer();
-      }
-      if (!$q.screen.gt.xs) {
-        // langugeAndThemeStore.setLeftDrawer(false);
-      }
-      window.onpopstate = () => {
-        if (
-          router.options.history.state.forward == '/auth/login' &&
-          !authenStore.auth
-        ) {
-          window.history.forward();
-        }
-        // if (
-        //   authenStore.auth !== undefined &&
-        //   this.$route.path == '/login'
-        // ) {
-        //   this.$router.push('/');
-        // }
-        // if (authenStore.auth === undefined) {
-        //   WeeGoTo('/auth/login', true);
-        // }
-      };
-    });
+const { WeeGoTo, isDevMode } = useBase();
+const exceptionStore = useExceptionStore();
+const router = useRouter();
+const authenStore = useAuthenStore();
+const $q = useQuasar();
+const langugeAndThemeStore = useLangugeAndThemeStore();
+useRequiredAuth()
+AppSetup();
 
-    const setDark = (theme: ITheme) => {
-      if (theme == 'dark') {
-        $q.dark.set(true);
-      } else {
-        $q.dark.set(false);
-      }
-    };
-    setDark(langugeAndThemeStore.theme as ITheme);
-    watch(langugeAndThemeStore, (state) => {
-      setDark(state.theme as ITheme);
-    });
-    watch(authenStore, (state) => {
-      if (state && state.sessionExpired) {
-        WeeGoTo('/auth/login', true);
-      }
-    });
-    onBeforeUnmount(() => {
-      if (authenStore && authenStore.refreshTokenTimeout) {
-        authenStore.stopRefreshTokenTimer();
-      }
-    });
-    return {};
-  },
+onMounted(() => {
+  if (
+    exceptionStore.error &&
+    exceptionStore.error.status &&
+    exceptionStore.error.message
+  ) {
+    WeeGoTo('/error', true);
+  }
+  if (authenStore.auth) {
+    if (isDevMode()) {
+      console.log('App.vue > authenStore >', authenStore.auth);
+    }
+    // authenStore.startRefreshTokenTimer();
+  }
+  if (!$q.screen.gt.xs) {
+    // langugeAndThemeStore.setLeftDrawer(false);
+  }
+  window.onpopstate = () => {
+    if (
+      router.options.history.state.forward == '/auth/login' &&
+      !authenStore.auth
+    ) {
+      window.history.forward();
+    }
+    // if (
+    //   authenStore.auth !== undefined &&
+    //   this.$route.path == '/login'
+    // ) {
+    //   this.$router.push('/');
+    // }
+    // if (authenStore.auth === undefined) {
+    //   WeeGoTo('/auth/login', true);
+    // }
+  };
+});
+
+const setDark = (theme: ITheme) => {
+  if (theme == 'dark') {
+    $q.dark.set(true);
+  } else {
+    $q.dark.set(false);
+  }
+};
+setDark(langugeAndThemeStore.theme as ITheme);
+watch(langugeAndThemeStore, (state) => {
+  setDark(state.theme as ITheme);
+});
+watch(authenStore, (state) => {
+  if (state && state.sessionExpired) {
+    WeeGoTo('/auth/login', true);
+  }
+});
+onBeforeUnmount(() => {
 });
 </script>

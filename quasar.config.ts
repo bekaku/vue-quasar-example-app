@@ -30,15 +30,11 @@ export default configure((ctx) => {
             'i18n',
             'axios',
             'requireAuth',
-            // { path: 'swiper', server: false },
-            // { path: 'emojiMart', server: false },
             { path: 'dompurify', server: false },
-            // { path: 'emojiMart', server: false },
             { path: 'vueSlicksort', server: false },
             { path: 'vueZoomer', server: false },
             { path: 'VueApexcharts', server: false },
             { path: 'swiper', server: false },
-            // { path: ctx.dev ? 'VueApexcharts' : 'VueApexchartsTs', server: false },
         ],
 
         // https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#css
@@ -119,17 +115,9 @@ export default configure((ctx) => {
                 },
             },
             vitePlugins: [
-                ['@intlify/unplugin-vue-i18n/vite', {
-                    // if you want to use Vue I18n Legacy API, you need to set `compositionOnly: false`
-                    // compositionOnly: false,
-
-                    // if you want to use named tokens in your Vue I18n messages, such as 'Hello {name}',
-                    // you need to set `runtimeOnly: false`
-                    // runtimeOnly: false,
-
-                    // you need to set i18n resource including paths !
-                    include: [fileURLToPath(new URL('./src/i18n', import.meta.url))],
-                }]
+                // ['@intlify/unplugin-vue-i18n/vite', {
+                //     include: [fileURLToPath(new URL('./src/i18n', import.meta.url))],
+                // }]
             ],
             envFolder: './env', // absolute or relative path to root project folder
             env: {

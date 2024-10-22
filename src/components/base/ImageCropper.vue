@@ -167,7 +167,7 @@ import 'cropperjs/dist/cropper.css';
 import Cropper from 'cropperjs';
 import { useLang } from '@/composables/useLang';
 import { useBase } from '@/composables/useBase';
-import { blobToFile } from '@/utils/appUtil';
+import { blobToFile } from '@/utils/fileUtils';
 import {
   biFullscreen,
   biXSquare,

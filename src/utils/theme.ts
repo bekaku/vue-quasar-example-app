@@ -22,8 +22,8 @@ export const availableThemes: {
   text: string;
   icon: string;
 }[] = [
-    { key: 'light', text: 'theme.lightTheme', icon: biSun },
-    { key: 'dark', text: 'theme.darkTheme', icon: biMoon },
+    { key: 'light', text: 'theme.light', icon: biSun },
+    { key: 'dark', text: 'theme.dark', icon: biMoon },
     // { key: 'system', text: 'theme.systemTheme', icon: biLaptop },
     // { key: 'realtime', text: 'theme.realtimeTheme', icon: biClock },
   ];

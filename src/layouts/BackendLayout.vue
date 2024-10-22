@@ -1,13 +1,8 @@
 <template>
-  <q-layout view="hHh LpR fFf">
-  <!-- <q-layout view="lHh Lpr lff"> -->
-    <app-header
-      :frontend="false"
-      :show-togle-drawer="true"
-      :show-logo="true"
-      bordered
-    />
-    <backend-drawer />
+  <!-- <q-layout view="hHh LpR fFf"> -->
+    <q-layout view="lHh Lpr lff">
+    <app-header :frontend="false" :show-togle-drawer="true" :show-logo="true" bordered />
+    <backend-drawer bordered />
 
     <q-page-container>
       <layout-breadcrumb-tab />

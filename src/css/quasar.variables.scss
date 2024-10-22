@@ -32,8 +32,10 @@ $negative: #ff3860;
 $info: #00a0dc;
 $warning: #ff9f43;
 // used by dark mode
-$dark-page: #1d1e22 !default;
+
 $dark: #272a32 !default;
+$dark-page: $dark !default;
+// $dark-page: #1d1e22 !default;
 
 
 // $separator-color: #dcdcdc !default;

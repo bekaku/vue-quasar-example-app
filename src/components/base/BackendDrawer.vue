@@ -1,8 +1,19 @@
 <template>
-  <q-drawer v-model="langugeAndThemeStore.leftDrawerOpen" show-if-above :width="width" :overlay="overlay"
-    :bordered="bordered || !miniState" :mini-to-overlay="miniToOverlay" :mini="miniState" @mouseover="miniState = false"
-    @mouseout="miniState = true">
+  <!-- <q-drawer v-model="langugeAndThemeStore.leftDrawerOpen" show-if-above :width="width" :overlay="overlay"
+    :bordered="bordered" :mini-to-overlay="miniToOverlay" :mini="miniState" @mouseover="miniState = false"
+    @mouseout="miniState = true"> -->
+    <q-drawer v-model="langugeAndThemeStore.leftDrawerOpen" show-if-above :width="width"
+    bordered class="drawer-bg">
     <q-scroll-area class="fit">
+      <user-nav-setting class="q-pt-md"/>
+      <q-input v-model="searchText" class="q-pa-md" outlined dense>
+        <template #prepend>
+          <q-icon :name="biSearch" size="xs"/>
+        </template>
+        <template #append>
+          <q-icon :name="biCommand" size="xs"/>
+        </template>
+        </q-input>
       <menu-items :menu-items="drawerStore.drawers"></menu-items>
       <menu-items :menu-items="additionalMenu">
         <template #after>
@@ -49,28 +60,31 @@ import {
   biGear,
   biNewspaper,
   biQuestionCircle,
-  biEmojiSmile
+  biSearch,
+  biCommand
 } from '@quasar/extras/bootstrap-icons';
 import { useLangugeAndThemeStore } from 'stores/langugeAndThemeStore';
 import { ref } from 'vue';
-
-const { overlay = false, bordered = false, miniToOverlay = true, width = 250 } = defineProps<{
+import UserNavSetting from '@/components/user/UserNavSetting.vue';
+const { overlay = false, bordered = false, miniToOverlay = true, width = 250, showUserSetting=true } = defineProps<{
   overlay?: boolean;
   miniToOverlay?: boolean;
   bordered?: boolean;
   width?: number;
+  showUserSetting?: boolean;
 }>();
 const drawerStore = useDrawerStore();
 const { t } = useLang();
 const langugeAndThemeStore = useLangugeAndThemeStore();
 const miniState = ref(true);
+const searchText=ref<string>('');
 const additionalMenu: IMenu[] = [
   {
     border: true,
     translate: false,
     header: 'Example',
     pages: [
-    {
+      {
         icon: 'bi-list',
         title: 'Composables',
         translate: false,
@@ -158,7 +172,7 @@ const additionalMenu: IMenu[] = [
         icon: 'bi-cursor-text',
         permission: '',
         title: 'Content text',
-        caption:'Display user input',
+        caption: 'Display user input',
         translate: false,
         to: '/example/content-text'
       },
@@ -201,7 +215,7 @@ const additionalMenu: IMenu[] = [
         icon: 'bi-file',
         permission: '',
         title: 'Result',
-        caption:'Error, Success, 404',
+        caption: 'Error, Success, 404',
         translate: false,
         to: '/example/result'
       },

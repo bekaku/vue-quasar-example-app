@@ -1,5 +1,4 @@
-export const TestMode = true;
-export const PrefixKey = TestMode ? '_test_myappkey_' : '_myappkey_';
+export const PrefixKey = '_myappkey_';
 export const DefaultLocale = 'th';
 export const LocaleKey = PrefixKey + 'locale';
 export const ThemeKey = PrefixKey + 'theme';

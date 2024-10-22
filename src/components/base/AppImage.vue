@@ -6,7 +6,7 @@
         </div>
     </q-img>
     <q-img v-else-if="srcUrl" :src="srcUrl" :fit="fit" :placeholder-src="placHolder" :spinner-color="spinnerColor"
-        :ratio="ratio" v-bind="$attrs" loading="lazy" :class="{ 'img-bg': imageBg }">
+        :ratio="ratio" v-bind="$attrs" loading="lazy" :class="{ 'img-bg': imageBg }" :alt>
         <template v-slot:error>
             <div class="absolute-full flex flex-center bg-primary text-white">
                 <q-icon :name="biCardImage" class="q-mr-sm" size="md" />
@@ -32,23 +32,16 @@ import { watchEffect, onBeforeUnmount, onMounted, ref } from 'vue';
 import { biCardImage } from '@quasar/extras/bootstrap-icons';
 import FileManagerService from '@/api/FileManagerService';
 
-const props = withDefaults(defineProps<{
+const {src, spinnerColor = 'grey-5',  ratio = 4 / 3, fetch = false, imageBg = false, fit = 'cover', alt='img' } = defineProps<{
     src: string;
     fetch?: boolean;
     imageBg?: boolean;
     placHolder?: string;
     spinnerColor?: string;
-    cssClass?: string;
-    ratio?: number;//4 / 3
-    fit?: 'cover' | 'fill' | 'contain' | 'none' | 'scale-down';//4 / 3
-}>(), {
-    spinnerColor: 'grey-5',
-    cssClass: 'bg-black',
-    ratio: 4 / 3,
-    fetch: false,
-    imageBg: false,
-    fit: 'cover'
-});
+    alt?: string;
+    ratio?: number;
+    fit?: 'cover' | 'fill' | 'contain' | 'none' | 'scale-down';
+}>()
 const { fethCdnData } = FileManagerService();
 const loading = ref(true);
 const srcUrl = ref<any>();
@@ -62,12 +55,12 @@ watchEffect(() => {
     }
 });
 const onFetchImage = async () => {
-    if (!props.src) {
+    if (!src) {
         loading.value = false;
         return;
     }
-    if (props.fetch) {
-        fethCdnData(props.src)
+    if (fetch) {
+        fethCdnData(src)
             .then((res) => {
                 clearLoading();
                 if (res) {
@@ -79,8 +72,9 @@ const onFetchImage = async () => {
             });
 
     } else {
-        srcUrl.value = props.src;
+        srcUrl.value = src;
         loading.value = false;
+        clearLoading();
     }
 
 };
