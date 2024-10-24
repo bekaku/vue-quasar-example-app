@@ -5,15 +5,7 @@
     <q-card class="text-white" dark>
       <q-toolbar>
         <template v-if="user">
-          <!-- <q-avatar size="32px">
-            <q-img
-              class="bg-gray-8"
-              :src="user.avatar?.thumbnail"
-              spinner-color="white"
-              no-native-menu
-            />
-          </q-avatar> -->
-          <base-avatar :src="user.avatar?.thumbnail" fetch-image :size="32" />
+          <base-avatar :src="user.avatar?.thumbnail" :size="32" />
         </template>
 
         <q-toolbar-title v-if="$q.screen.gt.xs">
@@ -85,29 +77,30 @@
   </q-dialog>
 </template>
 <script setup lang="ts">
-import FileManagerService from '@/api/FileManagerService';
-import BaseAvatar from '@/components/base/BaseAvatar.vue';
-import { useBase } from '@/composables/useBase';
+import { PropType, computed, ref, onMounted } from 'vue';
 import { useLang } from '@/composables/useLang';
-import { useAuthenStore } from '@/stores/authenStore';
 import {
   FileManagerDto,
   ImageDto,
   UserProfileDto,
 } from '@/types/models';
-import { downloadURI, generateimageFileName } from '@/utils/fileUtils';
 import {
-  biArrowLeft,
-  biArrowRight,
-  biDash,
-  biDownload,
-  biPlus,
+  biX,
   biThreeDotsVertical,
+  biDownload,
   biTrash,
-  biX
+  biPlus,
+  biDash,
+  biArrowLeft,
+  biArrowRight
 } from '@quasar/extras/bootstrap-icons';
+import { useAuthenStore } from '@/stores/authenStore';
+import { useBase } from '@/composables/useBase';
+import { downloadURI } from '@/utils/fileUtils';
+import { generateimageFileName } from '@/utils/fileUtils';
+import BaseAvatar from '@/components/base/BaseAvatar.vue';
+import FileManagerService from '@/api/FileManagerService';
 import { useQuasar } from 'quasar';
-import { PropType, computed, onMounted, ref } from 'vue';
 
 const props = defineProps({
   showDialog: {
@@ -124,7 +117,7 @@ const props = defineProps({
   },
   fetch: {
     type: Boolean,
-    default: true
+    default: false
   },
   showArrow: {
     type: Boolean,
@@ -147,6 +140,7 @@ const props = defineProps({
     default: 0
   },
 });
+const $q = useQuasar();
 const { fethCdnData } = FileManagerService();
 const vZoomerRef = ref();
 const authenStore = useAuthenStore();
@@ -156,7 +150,6 @@ const emit = defineEmits([
   'on-before-hide',
   'on:delete'
 ]);
-const $q = useQuasar();
 const { t } = useLang();
 const { WeeConfirm } = useBase();
 // const fullscreen = ref(false);

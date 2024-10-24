@@ -37,6 +37,7 @@ export default {
         'validateMinValue': '{0} Must be greater than or equal to {1}',
         'limitImage': 'Image size should be less than {0} MB!',
         'limitFile': 'Files size should be less than {0} MB!',
+        'limitFile2': 'File limit: {total} files',
         'limitEachFile': 'Each file size cannot exceed {0} MB!',
         'permissionNotFound': 'Menu privileges not found',
         'validate_url': 'Invalid link format',

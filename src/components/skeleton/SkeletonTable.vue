@@ -1,5 +1,5 @@
 <template>
-  <q-markup-table>
+  <q-markup-table :flat="flat">
     <thead>
       <tr>
         <th class="text-left" style="width: 150px">
@@ -53,6 +53,10 @@ defineProps({
   rows: {
     type: Number,
     default: 5,
+  },
+  flat: {
+    type: Boolean,
+    default: true,
   },
 });
 </script>

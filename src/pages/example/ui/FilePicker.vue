@@ -31,7 +31,7 @@
                             <ui-button class="q-my-md" @click="openPicker" outline :icon="biUpload"
                                 label="Open Picker" />
                         </ui-file-picker>
-                        <FilesPreview :items="customFiles" @on-remove="onCustomRemove" col="col-4 col-md-2 q-pa-md" />
+                        <FilesPreview :items="customFiles" @on-remove="onCustomRemove" format-size col="col-4 col-md-2 q-pa-md" />
                         <q-separator />
                     </div>
                     <div class="col-12 q-pa-md">
@@ -70,7 +70,7 @@
                                     <ui-scroll-area height="250px">
                                         <files-preview-item-alt v-for="(f, fileIndex) in custom2Files"
                                         :key="`f-${f.id}-${fileIndex}`" :item="f" :index="fileIndex"
-                                        @on-remove="onCustomRemove2" dense image-size="100px" show-delete>
+                                        @on-remove="onCustomRemove2" dense format-size image-size="100px" show-delete>
                                     </files-preview-item-alt>
                                     </ui-scroll-area>
                                     

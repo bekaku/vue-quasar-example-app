@@ -13,14 +13,21 @@
     </app-image>
     <q-item :dense="dense" v-bind="$attrs" v-if="showName || showSize" class="q-pa-none">
       <q-item-section>
-        <q-item-label v-if="showName" lines="1" :class="textColor">
+        <q-item-label v-if="showName" :lines="linesName" :class="textColor">
           <slot name="fileName">
             {{ item.fileName }}
           </slot>
         </q-item-label>
+        <!-- <q-item-label v-if="showSize" caption>
+          <slot name="size">
+            {{ formatSize ? formatBytes(item.fileSize) : item.fileSize }}
+          </slot>
+        </q-item-label> -->
+      </q-item-section>
+      <q-item-section side>
         <q-item-label v-if="showSize" caption>
           <slot name="size">
-            {{ formatSize ? formatBytes(item.fileSize) : item.fileSize+' b' }}
+            {{ formatSize ? formatBytes(item.fileSize) : item.fileSize }}
           </slot>
         </q-item-label>
       </q-item-section>
@@ -39,11 +46,18 @@
       </q-icon>
       <q-item :dense="dense" v-if="showName || showSize" class="q-pa-none">
         <q-item-section>
-          <q-item-label v-if="showName" lines="1" :class="textColor">
+          <q-item-label v-if="showName" :lines="linesName" :class="textColor">
             <slot name="fileName">
               {{ item.fileName }}
             </slot>
           </q-item-label>
+          <!-- <q-item-label v-if="showSize" caption :class="textColor">
+            <slot name="size">
+              {{ formatSize ? formatBytes(item.fileSize) : item.fileSize }}
+            </slot>
+          </q-item-label> -->
+        </q-item-section>
+        <q-item-section side>
           <q-item-label v-if="showSize" caption :class="textColor">
             <slot name="size">
               {{ formatSize ? formatBytes(item.fileSize) : item.fileSize }}
@@ -81,11 +95,12 @@ const props = withDefaults(defineProps<{
   dense?: boolean;
   showTooltip?: boolean;
   ratio?: number;
+  linesName?: number;
 }>(), {
   showDelete: true,
   col: 'col-3 q-pa-md',
   ratio: 4/3,
-  formatSize: true,
+  formatSize: false,
   fetch: false,
   showName: true,
   showSize: true,
@@ -93,7 +108,8 @@ const props = withDefaults(defineProps<{
   showTooltip: false,
   dense: true,
   imageSize: '125px',
-  iconSize: '4em'
+  iconSize: '4em',
+  linesName: 1,
 });
 const emit = defineEmits(['on-remove', 'on-click']);
 const getImagePath = computed(() => props.useThumbnail && props.item.fileThumbnailPath ? props.item.fileThumbnailPath : props.item.filePath);

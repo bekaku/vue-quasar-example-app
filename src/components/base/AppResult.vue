@@ -3,59 +3,27 @@
     <div class="col">
       <div class="column items-center">
         <div class="col text-center">
-          <img
-            v-if="status == 'empty'"
-            src="/icons/empty-box.png"
-            :style="`width: ${iconSize} ; height: auto`"
-          />
-          <img
-            v-else-if="status == 'error'"
-            :style="`width: ${iconSize} ; height: auto`"
-            src="/icons/sad-man.png"
-          />
+          <img v-if="status == 'empty'" src="/icons/empty-box.png" :style="`width: ${iconSize} ; height: auto`" />
+          <img v-else-if="status == 'error'" :style="`width: ${iconSize} ; height: auto`" src="/icons/sad-man.png" />
           <!-- <img
             v-else-if="status == 'warning'"
             src="/icons/warning.png"
             :style="`width: ${iconSize} ; height: auto`"
           /> -->
-          <q-icon
-            v-else-if="status == 'warning'"
-            :style="`width: ${iconSize} ; height: auto`"
-            :name="biConeStriped"
-            color="warning"
-          >
-          </q-icon>
-          <q-avatar square v-else-if="status == 'success'" :size="iconSize">
-            <img src="/icons/tick.png" />
-          </q-avatar>
-          <q-avatar
-            square
-            v-else-if="status == '404'"
-            style="width: 100%; height: auto"
-          >
+          <q-avatar square v-else-if="status == '404'" style="width: 100%; height: auto">
             <img src="/icons/404.png" />
           </q-avatar>
-          <q-avatar
-            v-else-if="showIcon"
-            :size="iconSize"
-            :color="!hideBg ? getBgColor() : undefined"
-            :icon="icon ? icon : getIcon()"
-            :class="getIconColor()"
-          />
+          <q-avatar v-else-if="showIcon" :size="iconSize" :color="!hideBg ? getBgColor() : undefined"
+            :icon="icon ? icon : getIcon()" :class="getIconColor()" />
         </div>
         <div class="col q-mt-md text-center">
           <slot name="text">
-            <div
-              v-if="title"
-              class="text-h5 text-weight-bold q-mb-sm"
-              :class="status == 'empty' ? 'text-grey-6' : ''"
-              v-html="title"
-            ></div>
-            <div
-              v-if="description"
-              class="text-grey-6"
-              v-html="description"
-            ></div>
+            <div v-if="title" class="text-h5 text-weight-bold q-mb-sm" :class="status == 'empty' ? 'text-grey-6' : ''"
+              v-html="title"></div>
+            <div v-if="description" class="text-muted text-subtitle1">
+              {{ description }}
+            </div>
+
           </slot>
         </div>
         <div class="col q-mt-sm">
@@ -74,27 +42,26 @@
             :show-icon="false"
           >
             <template #extra>
-              <ss-icon icon="comment" :size="45" color="grey"></ss-icon>
+              <q-icon :icon="mdiAlert" :size="45" color="grey"></q-icon>
             </template>
           </app-result>
 const AppResult = defineAsyncComponent(
   () => import('@/components/base/AppResult.vue')
 );
 */
-import {
-  mdiInboxRemoveOutline,
-  mdiAllergy,
-  mdiRobotConfused,
-  mdiPaperclip,
-  mdiCheckBold,
-  mdiAlertBoxOutline,
-  mdiAlert,
-  mdiPackageVariant,
-  mdiInformationVariant,
-} from '@quasar/extras/mdi-v6';
-import { biConeStriped } from '@quasar/extras/bootstrap-icons';
-import { PropType } from 'vue';
 import { IResult } from '@/types/common';
+import {
+  mdiAlert,
+  mdiAlertBoxOutline,
+  mdiAllergy,
+  mdiCheckBold,
+  mdiInboxRemoveOutline,
+  mdiInformationVariant,
+  mdiPackageVariant,
+  mdiPaperclip,
+  mdiRobotConfused,
+} from '@quasar/extras/mdi-v6';
+import { PropType } from 'vue';
 
 const props = defineProps({
   status: {
@@ -115,11 +82,11 @@ const props = defineProps({
   },
   iconSize: {
     type: String,
-    default: '128px',
+    default: '258px',
   },
   hideBg: {
     type: Boolean,
-    default: true,
+    default: false,
   },
   showIcon: {
     type: Boolean,
@@ -127,7 +94,7 @@ const props = defineProps({
   },
 });
 const getIcon = (): string => {
-  let icon = undefined;
+  let icon: string | undefined = undefined;
 
   //404, 403, 500, 418, info, success, error, warning
   switch (props.status) {

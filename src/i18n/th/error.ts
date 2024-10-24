@@ -37,6 +37,7 @@ export default {
         'validateMinValue': '{0} ต้องมากกว่าหรือเท่ากับ {1}',
         'limitImage': 'ขนาดรูปภาพควรน้อยกว่า {0} MB!',
         'limitFile': 'ขนาดไฟล์ทั้งหมดควรน้อยกว่า {0} MB!',
+        'limitFile2': 'จำกัดไฟล์ไม่เกิน {total} ไฟล์',
         'limitEachFile': 'ขนาดไฟล์แต่ละไฟล์ต้องไม่เกิน {0} MB!',
         'permissionNotFound': 'ไม่พบสิทธิ์การใช้งาน',
         'validate_url': 'รูปแบบลิงค์ไม่ถูกต้อง',
@@ -51,5 +52,6 @@ export default {
         'fileExcelError': 'กรุณาเลือกไฟล์นามสกุล .xlsx',
         'percentageValueWrong': 'ค่าเปอร์เซ็นต์ไม่ถูกต้องกรุณาตรวจสอบ',
         'validateStartDateGreterThenEndDate': 'วันที่เริ่มต้นต้องไม่มากกว่าวันที่สิ้นสุด',
+        
     }
 }

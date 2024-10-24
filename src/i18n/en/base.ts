@@ -273,6 +273,13 @@ export default {
         'view2': 'View',
         'filter': 'Filter',
         'canChooseMoreThen1': 'You can select more than 1 option.',
+        'canUseMarkdown': 'Can use Markdown',
+        'canUseMarkdownHelp': 'Click to see how to write basic Markdown.',
+        'canUseMarkdownImage': 'Inserting images can be done by attaching an image link in Markdown.',
+        'markdownCommonUse': 'Commonly used syntax',
+        'markdownSheatsheet': 'Markdown Cheatsheet',
+        'markdownMermaidSheatsheet': 'Example link for using Mermaid',
+        'markdownTitle': 'Basic syntax of Markdown',
     },
     'theme': {
         'light': 'Light',

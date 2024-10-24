@@ -193,7 +193,7 @@ const additionalMenu: IMenu[] = [
       {
         icon: 'bi-file-image',
         permission: '',
-        title: 'Image View',
+        title: 'Image/Pdf View',
         translate: false,
         to: '/example/image-view'
       },
@@ -203,13 +203,6 @@ const additionalMenu: IMenu[] = [
         title: 'Markdown editor',
         translate: false,
         to: '/example/markdown-editor'
-      },
-      {
-        icon: 'bi-filetype-pdf',
-        permission: '',
-        title: 'Pdf View',
-        translate: false,
-        to: '/example/pdf-view'
       },
       {
         icon: 'bi-file',

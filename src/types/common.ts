@@ -124,6 +124,16 @@ export type ISsIcons =
   | 'tick'
   ;
 export type JwtStatus = 'VALID' | 'EXPIRED' | 'NO_EXPIRATION_TIME' | 'INVALID';
+export type MDPreviewTheme = 'default' | 'github' | 'vuepress' | 'mk-cute' | 'smart-blue' | 'cyanosis';
+export type MDCodeTheme =
+  'atom'
+  | 'a11y'
+  | 'github'
+  | 'gradient'
+  | 'kimbie'
+  | 'paraiso'
+  | 'qtcreator'
+  | 'stackoverflow';
 // interface
 export interface ILocales {
   name: string;

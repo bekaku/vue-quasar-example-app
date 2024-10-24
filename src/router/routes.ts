@@ -125,6 +125,27 @@ const routes: RouteRecordRaw[] = [
             component: () => import('@/pages/example/ImageCropper.vue'),
           },
           {
+            path: 'image-view',
+            meta: {
+              name: 'ExampleImageView',
+            },
+            component: () => import('@/pages/example/ImageView.vue'),
+          },
+          {
+            path: 'markdown-editor',
+            meta: {
+              name: 'ExampleMarkdownEditor',
+            },
+            component: () => import('@/pages/example/MarkdownEditor.vue'),
+          },
+          {
+            path: 'result',
+            meta: {
+              name: 'ExampleResult',
+            },
+            component: () => import('@/pages/example/Result.vue'),
+          },
+          {
             path: 'ui',
             children: [
               {

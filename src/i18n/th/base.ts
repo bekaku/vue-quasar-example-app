@@ -274,6 +274,13 @@ export default {
         'view2': 'ดู',
         'filter': 'กรองข้อมูล',
         'canChooseMoreThen1': 'เลือกได้มากกว่า 1 ตัวเลือก',
+        'canUseMarkdown': 'สามารถใช้ Markdown ได้',
+        'canUseMarkdownHelp': 'คลิกเพื่อดูวิธีการเขียน Markdown เบื้องต้น',
+        'canUseMarkdownImage': 'การแทรกรูปภาพสามารถทำได้โดยการแนบ Link รูปภาพใน Markdown',
+        'markdownCommonUse': 'Syntax ที่ใช้กันทั่วไป',
+        'markdownSheatsheet': 'ลิ้งค์ตัวอย่างการใช้ Markdown',
+        'markdownMermaidSheatsheet': 'ลิ้งค์ตัวอย่างการใช้ Mermaid',
+        'markdownTitle': 'Syntax เบื้องต้นของ Markdown',
     },
     'theme': {
         'light': 'กลางวัน',

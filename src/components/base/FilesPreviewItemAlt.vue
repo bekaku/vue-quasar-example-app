@@ -20,14 +20,17 @@
             </q-item-label>
             <q-item-label v-if="showSize" caption :class="textColor">
                 <slot name="size">
-                    {{ formatSize ? formatBytes(item.fileSize) : item.fileSize+' B' }}
+                    {{ formatSize ? formatBytes(item.fileSize) : item.fileSize }}
                 </slot>
             </q-item-label>
         </q-item-section>
         <q-item-section side>
             <slot name="end">
-                <q-btn v-if="showDelete" @click="onRemove($event, index)" round size="sm" :icon="biTrashFill"
+                <q-btn v-if="showDelete" @click="onRemove($event, index)" unelevated round size="sm" :icon="biTrashFill"
                     color="negative">
+                    <q-tooltip class="bg-negative">
+                        {{ t('base.delete') }}
+                    </q-tooltip>
                 </q-btn>
             </slot>
         </q-item-section>
@@ -40,6 +43,7 @@ import { getFileTypeIcon } from '@/utils/fileUtils';
 import { FileManagerDto } from '@/types/models';
 import AppImage from '@/components/base/AppImage.vue';
 import { biTrashFill } from '@quasar/extras/bootstrap-icons';
+import { useLang } from '@/composables/useLang';
 
 withDefaults(defineProps<{
     showDelete?: boolean;
@@ -56,15 +60,16 @@ withDefaults(defineProps<{
     showSize?: boolean;
 }>(), {
     showDelete: true,
-    formatSize: true,
+    formatSize: false,
     showSize: true,
     fetch: false,
     dense: false,
     clickable: false,
-    imageSize: '125px',
+    imageSize: '75px',
     textColor: 'q-text-black',
     iconSize: '4em'
 });
+const {t}=useLang();
 const emit = defineEmits(['on-remove', 'on-click']);
 const onRemove = (event: any, index: number) => {
     emit('on-remove', index);

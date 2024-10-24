@@ -20,6 +20,14 @@ export const fileToBlob = (file: File): Promise<any> => {
         resolve(fileUrlObject);
     });
 };
+export const fileUrlToBlob = async(url: string): Promise<any> => {
+    const response = await fetch(url);
+    const blob = await response.blob();
+    const urlBlob = URL.createObjectURL(blob);
+    return new Promise((resolve) => {
+        resolve(urlBlob);
+    });
+};
 export const downloadFromArrayBuffer = (
     arrayBuffer: any,
     fileName: string,
@@ -32,7 +40,7 @@ export const downloadFromArrayBuffer = (
 export const downloadFromBlob = (
     blob: any,
     fileName: string,
-    fileType: string
+    fileType: string | undefined = undefined
 ) => {
     // Create a URL for the Blob
     const url = URL.createObjectURL(blob);
@@ -48,7 +56,22 @@ export const downloadFromBlob = (
     document.body.removeChild(link);
     URL.revokeObjectURL(url);
 };
+export const downloadFileFromUrl = async (url: string, filename: string) => {
+    try {
+        const urlBlob = await fileUrlToBlob(url);
+        const anchor = document.createElement('a');
+        anchor.href = urlBlob;
+        anchor.download = filename;
+        document.body.appendChild(anchor);
+        anchor.click();
+        document.body.removeChild(anchor);
 
+        // Cleanup
+        URL.revokeObjectURL(urlBlob);
+    } catch (error) {
+        console.error('Download failed:', error);
+    }
+};
 export const getBlobFromAxiosResponse = (response: any) => {
     return new Promise((resolve) => {
         const blob = new Blob([response.data as BlobPart], {

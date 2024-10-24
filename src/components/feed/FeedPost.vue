@@ -145,6 +145,7 @@ import { useBase } from '@/composables/useBase';
 import { FORMAT_DATE12 } from '@/utils/dateUtil';
 import { catchUrlFromText } from '@/utils/appUtil';
 import { biBoxArrowUpRight } from '@quasar/extras/bootstrap-icons';
+import { useQuasar } from 'quasar';
 const props = defineProps({
   post: {
     type: Object as PropType<PostData>,
@@ -155,6 +156,7 @@ const props = defineProps({
     type: Number,
   },
 });
+const $q=useQuasar();
 //   const { getOgMeta } = UtilService();
 const { AppFormatDateTime } = useBase();
 const opengraphItem = ref<OgMeta>();
@@ -167,10 +169,10 @@ const checkOgLink = async () => {
     //   opengraphItem.value = await getOgMeta(matches[0]);
     opengraphItem.value = {
       domain: 'youtube.com',
-      url: 'https://www.youtube.com/watch?v=2qeueW4YavM',
+      url: 'https://www.youtube.com/watch?v=2wMRYQPj7iU',
       title: 'Solo wild camping in the rain [ASMR]',
       desc: '#ASMR #wildcamping #rainsounds  Back with another ASMR style wild camp. I had a few people ask for longer videos like this, so here you have it :) I love mak...',
-      image: 'https://i.ytimg.com/vi/2qeueW4YavM/maxresdefault.jpg',
+      image: 'https://i.ytimg.com/vi/2wMRYQPj7iU/maxresdefault.jpg',
       imageAlt: '',
     };
   }

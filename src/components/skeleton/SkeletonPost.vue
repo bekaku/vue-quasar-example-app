@@ -1,11 +1,11 @@
 <template>
-  <div class="row" v-if="show">
+  <div class="row" v-bind="$attrs" v-if="show">
     <div class="col-12">
       <q-card
         v-for="(item, index) in items"
         :key="index"
-        flat
-        bordered
+        :flat="flat"
+        :bordered="bordered"
         class="q-mb-md"
       >
         <q-item>
@@ -23,7 +23,7 @@
           </q-item-section>
         </q-item>
 
-        <q-skeleton height="200px" square animation="fade" />
+        <q-skeleton :height="`${cardHeight}px`" square animation="fade" />
 
         <q-card-section>
           <q-skeleton type="text" class="text-subtitle2" animation="fade" />
@@ -34,6 +34,14 @@
             animation="fade"
           />
         </q-card-section>
+        <q-card-actions align="around">
+          <q-skeleton
+            type="text"
+            style="width: 125px; height: 45px"
+            v-for="t in 4"
+            :key="t"
+          />
+        </q-card-actions>
       </q-card>
     </div>
   </div>
@@ -44,9 +52,21 @@ defineProps({
     type: Boolean,
     default: false,
   },
+  flat: {
+    type: Boolean,
+    default: false,
+  },
+  bordered: {
+    type: Boolean,
+    default: false,
+  },
   items: {
     type: Number,
     default: 3,
+  },
+  cardHeight: {
+    type: Number,
+    default: 200,
   },
 });
 </script>

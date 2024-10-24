@@ -40,16 +40,18 @@ import FeedPost from '@/components/feed/FeedPost.vue';
 import ProfileCard from '@/components/feed/ProfileCard.vue';
 import { PostData } from '@/types/models';
 import { useAuthenStore } from '@/stores/authenStore';
+import { useQuasar } from 'quasar';
 
 const authenStore = useAuthenStore();
 useAppMeta();
+const $q=useQuasar();
 const initialPost: PostData[] = [
   {
     id: 1,
     pin: false,
     postDatetime: '2022-01-05 11:30:30',
     content:
-      'Solo wild camping in the rain [ASMR] https://www.youtube.com/watch?v=2qeueW4YavM',
+      'Solo wild camping in the rain [ASMR] https://www.youtube.com/watch?v=2wMRYQPj7iU',
     gallery: [],
     hashtag: [
       { id: 1, name: 'DesperateHours' },

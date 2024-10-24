@@ -21,7 +21,7 @@
                 </div>
                 <div v-if="showPreview" class="col-12 col-md-8 q-pa-md">
                     <template v-if="fileItems.length > 0 && modelValue && modelValue.length > 0">
-                        <FilesPreview :items="fileItems" @on-remove="onRemoveNewImage"></FilesPreview>
+                        <FilesPreview :items="fileItems" @on-remove="onRemoveNewImage" format-size></FilesPreview>
                     </template>
                 </div>
             </div>
@@ -56,7 +56,7 @@ const props = withDefaults(defineProps<{
     label?: string;
     accept?: string;//* = wildcard all extension
     wildcard?: boolean;
-    maxFiles?: number;
+    maxFiles?: number;//0 = unlimited pick
 }>(), {
     multiple: false,
     showPreview: true,
@@ -74,6 +74,14 @@ const appFileInputRef = ref();
 //file upload
 
 const openFilePicker = () => {
+
+    if (props.maxFiles > 0 && modelValue.value && modelValue.value.length == props.maxFiles) {
+        WeeToast(t('error.limitFile2', { total: props.maxFiles }), {
+            type: 'negative'
+        });
+        return;
+    }
+
     if (!appFileInputRef.value) {
         return;
     }

@@ -31,6 +31,7 @@ export default configure((ctx) => {
             'axios',
             'requireAuth',
             { path: 'dompurify', server: false },
+            { path: 'pdfVue', server: false },
             { path: 'vueSlicksort', server: false },
             { path: 'vueZoomer', server: false },
             { path: 'VueApexcharts', server: false },
