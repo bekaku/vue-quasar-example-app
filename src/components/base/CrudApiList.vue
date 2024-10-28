@@ -119,7 +119,7 @@
                           searchCol.options?.searchType ==
                           ICrudListHeaderOptionSearchType.BOOLEAN
                         ">
-                          <form-togle :title="t(searchCol.label)" v-model="searchCol.options.searchModel" />
+                          <form-togle use-checkbox useLabelTitle :label="t(searchCol.label)" v-model="searchCol.options.searchModel" />
                         </template>
                         <template v-else-if="
                           searchCol.options?.searchType ==
@@ -550,7 +550,7 @@ const props = defineProps({
   },
   showSearchTextBox: {
     type: Boolean,
-    default: true,
+    default: false,
   },
   showThreeDot: {
     type: Boolean,
@@ -652,7 +652,7 @@ const sortableHeaders = computed(() => {
   const filters = headers.filter(
     (c) => c.options && c.options.sortable === true,
   );
-  const list = [];
+  const list:any = [];
   for (const item of filters) {
     list.push({
       value: item.options.sortColunm ? item.options.sortColunm : item.column,

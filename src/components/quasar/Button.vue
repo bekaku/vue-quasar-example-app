@@ -7,7 +7,7 @@
 </template>
 
 <script setup lang="ts">
-const { outline = false, noCaps = true, unelevated = false, glossy = false, color = 'primary', flat = false, stack = false, round = false, push = false, rounded = false, loading = false, disable=false } = defineProps<{
+const { outline = false, noCaps = true, unelevated = false, glossy = false, flat = false, stack = false, round = false, push = false, rounded = false, loading = false, disable=false } = defineProps<{
     align?: 'left' | 'right' | 'center' | 'around' | 'between' | 'evenly';
     color?: string;
     count?: number;

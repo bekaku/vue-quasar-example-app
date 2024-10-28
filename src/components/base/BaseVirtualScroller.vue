@@ -1,8 +1,7 @@
 <script setup lang="ts" generic="T">
 /*
 <base-virtual-scroller
-            id="scroll-chat-target-id"
-            ref="scrollerChatRef"
+            ref="scrollerTestRef"
             class="q-pa-sm"
             key-field="id"
             :items="dataList"
@@ -23,6 +22,17 @@
             <template #slotAfter>
             </template>
           </base-virtual-scroller>
+
+const onScrollTo = (index: number) => {
+    if (scrollerTestRef.value) {
+        scrollerTestRef.value.onScrollToItem(index);
+    }
+}
+const scrollToBottom = () => {
+    if (scrollerTestRef.value) {
+        scrollerTestRef.value.onScrollToBottom();
+    }
+};
 */
 import { DynamicScroller, DynamicScrollerItem } from 'vue-virtual-scroller';
 import 'vue-virtual-scroller/dist/vue-virtual-scroller.css';
@@ -65,8 +75,9 @@ const onUpdate = (viewStartIndex: number, viewEndIndex: number, visibleStartInde
   // } else {
   //   console.log('scrolling');
   // }
+  const isScrollingToTop = !(visibleEndIndex == viewEndIndex);
   emit('on-update', {
-    viewStartIndex, viewEndIndex, visibleStartIndex, visibleEndIndex
+    viewStartIndex, viewEndIndex, visibleStartIndex, visibleEndIndex, isScrollingToTop
   });
 };
 const onResize = () => {

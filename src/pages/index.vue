@@ -1,8 +1,7 @@
 <template>
   <q-page padding>
-    <q-card elavated>
+    <q-card bordered flat>
       <q-card-section>
-        Test Admin dashboard
         <p><q-icon :name="biHouseDoor" /> {{ pageName }}</p>
       </q-card-section>
     </q-card>
@@ -16,5 +15,5 @@ import { biHouseDoor } from '@quasar/extras/bootstrap-icons';
 useMeta({
   title: 'Index Page',
 });
-const pageName = ref('Backend Dashboard');
+const pageName = ref('Home');
 </script>

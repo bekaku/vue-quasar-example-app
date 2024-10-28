@@ -11,7 +11,7 @@
             <q-card-section>
                 <div class="row">
                     <div class="col-4 q-pa-md">
-                        <ui-togle title="Toggle" v-model="toggle" :use-checkbox="toggle" color="negative" size="md" true-label="Use Checkbox" false-label="Use toggle" />
+                        <ui-togle label="Toggle" v-model="toggle" :use-checkbox="toggle" color="negative" size="md" true-label="Use Checkbox" false-label="Use toggle" />
                     </div>
 
                 </div>

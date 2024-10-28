@@ -74,6 +74,7 @@
         <q-card
           square
           flat
+          bordered
           class="q-pa-lg"
           :style="`max-width: 480px; height: ${cardHeight};min-width:350px`"
         >
@@ -225,7 +226,7 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted, defineAsyncComponent } from 'vue';
-import { Cookies, useMeta } from 'quasar';
+import { Cookies, useMeta, useQuasar } from 'quasar';
 import { getYearNow } from '@/utils/dateUtil';
 import { useLang } from '@/composables/useLang';
 import { useValidation } from '@/composables/useValidation';
@@ -309,6 +310,7 @@ const metaData = {
   },
 };
 useMeta(metaData);
+const $q=useQuasar();
 onMounted(async () => {
   destroyAuthDataAndRedirect(false);
   deviceId.value = await getDeviceId();

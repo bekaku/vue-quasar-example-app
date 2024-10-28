@@ -1,23 +1,24 @@
 <template>
-  <div v-if="title">
-    {{ title }}
+  <div v-if="!label && showTitle" class="text-muted">
+    {{ label }}
   </div>
-  <q-toggle v-if="!useCheckbox" v-model="modelValue" :checked-icon="biCheck" :color="color" :size="size" keep-color :label="modelValue
+  <q-toggle v-if="!useCheckbox" v-model="modelValue" :checked-icon="biCheck" :color="color" :size="size" keep-color
+    :label="useLabelTitle ? (label ? label : t('base.enable')) :modelValue
       ? trueLabel
         ? trueLabel
         : t('base.enable')
       : falseLabel
         ? falseLabel
         : t('base.disable')
-    " :unchecked-icon="biX" />
+      " :unchecked-icon="biX" />
 
-  <q-checkbox v-else v-model="modelValue" :color="color" :size="size" :label="modelValue 
+  <q-checkbox v-else v-model="modelValue" :color="color" :size="size" :label="useLabelTitle ? (label ? label : t('base.enable')) : modelValue
+    ? trueLabel
       ? trueLabel
-        ? trueLabel
-        : t('base.enable')
-      : falseLabel
-        ? falseLabel
-        : t('base.disable')
+      : t('base.enable')
+    : falseLabel
+      ? falseLabel
+      : t('base.disable')
     " />
 </template>
 
@@ -27,7 +28,7 @@ import { biCheck, biX } from '@quasar/extras/bootstrap-icons';
 import { useLang } from '@/composables/useLang';
 defineProps({
   // modelValue: Boolean,
-  title: {
+  label: {
     type: String as PropType<string | undefined>,
     default: undefined,
   },
@@ -45,9 +46,17 @@ defineProps({
   },
   size: {
     type: String,
-    default: 'xl',
+    default: 'md',
   },
   useCheckbox: {
+    type: Boolean,
+    default: true,
+  },
+  useLabelTitle: {
+    type: Boolean,
+    default: true,
+  },
+  showTitle: {
     type: Boolean,
     default: false,
   },

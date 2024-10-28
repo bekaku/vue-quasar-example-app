@@ -11,14 +11,15 @@
           <template v-else> <span class="text-muted">/</span></template>
         </template>
       </template>
+      <template v-for="(item, index) in breadcrumbs" 
+      :key="`breadcrumb-${index}-${item.to}`">
       <q-breadcrumbs-el
-        v-for="(item, index) in breadcrumbs"
-        :key="index"
         :label="item.translateLabel ? t(item.label) : item.label"
         :icon="item.icon"
         :to="getLink(item)"
         exact
       />
+      </template>
       <!-- <app-breadcrumb-item
         v-for="(item, index) in breadcrumbs"
         :key="index"
@@ -31,13 +32,13 @@
 </template>
 
 <script setup lang="ts">
-import { PropType } from 'vue';
 import { Breadcrumb } from '@/types/common';
+import { PropType } from 'vue';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { biDot, biSlashLg } from '@quasar/extras/bootstrap-icons';
-import { useLang } from '@/composables/useLang';
 import { useBase } from '@/composables/useBase';
+import { useLang } from '@/composables/useLang';
 // import AppBreadcrumbItem from '@/components/base/AppBreadcrumbItem.vue';
+import { usePermissionStore } from '@/stores/permissionStore';
 defineProps({
   breadcrumbs: {
     type: Array as PropType<Breadcrumb[]>,
@@ -51,6 +52,7 @@ defineProps({
     type: String,
   },
 });
+const permisisonStore = usePermissionStore();
 const { t } = useLang();
 const { WeeGetParam, WeeGetQuery } = useBase();
 const getLink = (item: Breadcrumb) => {
@@ -76,5 +78,14 @@ const getLink = (item: Breadcrumb) => {
     }
   }
   return link;
+};
+const canShow = (item: Breadcrumb) => {
+  if (item.permissions == undefined) {
+    return true;
+  }
+  if (item.frontend == true) {
+    return permisisonStore.isHaveFrontendMultiPermission(item.permissions);
+  }
+  return permisisonStore.isHaveMultiPermission(item.permissions);
 };
 </script>

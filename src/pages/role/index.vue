@@ -1,10 +1,10 @@
 <template>
   <q-page padding>
     <crud-api-list
-      :icon="biShieldCheck"
-      :title="t('model_permission')"
-      :crud-name="crudName"
+      :icon="biPeople"
+      :title="t('model_role')"
       :loading="loading"
+      :crud-name="crudName"
       :frist-load="fristLoad"
       :pages="pages"
       :headers="headers"
@@ -26,10 +26,10 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
+import { ref } from 'vue';
 import { useLang } from '@/composables/useLang';
 import { useCrudList } from '@/composables/useCrudList';
-import { Permission } from '@/types/models';
+import { Role } from '@/types/models';
 import { useAppMeta } from '@/composables/useAppMeta';
 import {
   ICrudListHeader,
@@ -37,12 +37,12 @@ import {
   ICrudListHeaderOptionSearchType,
 } from '@/types/common';
 import CrudApiList from '@/components/base/CrudApiList.vue';
-import { biShieldCheck } from '@quasar/extras/bootstrap-icons';
+import { biPeople } from '@quasar/extras/bootstrap-icons';
 useAppMeta();
 const { t } = useLang();
 const headers = ref<ICrudListHeader[]>([
   {
-    label: 'model_permission_id',
+    label: 'model_role_id',
     column: 'id',
     type: CrudListDataType.NUMBER_FORMAT,
     options: {
@@ -54,8 +54,8 @@ const headers = ref<ICrudListHeader[]>([
     },
   },
   {
-    label: 'model_permission_name',
-    column: 'code',
+    label: 'model_role_name',
+    column: 'name',
     type: CrudListDataType.TEXT,
     options: {
       fillable: true,
@@ -66,17 +66,36 @@ const headers = ref<ICrudListHeader[]>([
       searchOperation: ':',
     },
   },
-  {
-    label: 'model_permission_description',
-    column: 'description',
-    type: CrudListDataType.TEXT,
-    options: {
-      fillable: true,
-    },
-  },
+  // {
+  //   label: 'model_role_name_en',
+  //   column: 'nameEn',
+  //   type: CrudListDataType.TEXT,
+  //   options: {
+  //     fillable: true,
+  //     searchable: true,
+  //     sortable: true,
+  //     searchType: ICrudListHeaderOptionSearchType.TEXT,
+  //     searchModel: '',
+  //     searchOperation: ':',
+  //   },
+  // },
   {
     label: 'model_permission_frontEnd',
     column: 'frontEnd',
+    type: CrudListDataType.STATUS,
+    options: {
+      fillable: true,
+      sortable: true,
+      searchable: true,
+      align: 'center',
+      searchType: ICrudListHeaderOptionSearchType.BOOLEAN,
+      searchModel: false,
+      searchOperation: '=',
+    },
+  },
+  {
+    label: 'base.enable',
+    column: 'active',
     type: CrudListDataType.STATUS,
     options: {
       fillable: true,
@@ -102,48 +121,32 @@ const headers = ref<ICrudListHeader[]>([
 ]);
 const {
   loading,
+  crudName,
   fristLoad,
   pages,
   sort,
+  filteredList,
+  onItemClick,
+  onItemCopy,
   onPageNoChange,
   onItemPerPageChange,
   onSort,
   onSortMode,
   onReload,
-  filteredList,
   filterText,
   onAdvanceSearch,
   onItemDelete,
   onNewForm,
-  onItemClick,
-  onItemCopy,
-  crudName,
-} = useCrudList<Permission>(
+} = useCrudList<Role>(
   {
-    crudName: 'permission',
+    crudName: 'role',
     apiEndpoint: '/api',
     fetchListOnload: true,
     defaultSort: {
-      column: 'code',
+      column: 'name',
       mode: 'asc',
     },
   },
   headers,
 );
-// const crud = reactive(
-//   useCrudApi<Permission>(
-//     {
-//       actionList: '/api/permission',
-//       fetchListOnload: true,
-//       defaultSort: {
-//         column: 'code',
-//         mode: 'asc',
-//       },
-//     },
-//     headers
-//   )
-// );
-onMounted(async () => {
-  console.log('PermissionList onMounted');
-});
 </script>

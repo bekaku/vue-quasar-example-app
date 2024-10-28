@@ -87,8 +87,8 @@ const initSlides = () => {
       freeMode: params?.freeMode || false,
       lazy: params?.lazy || true,
       style: params?.style || {
-        '--swiper-navigation-color': '#00aba9',
-        '--swiper-pagination-color': '#00aba9',
+        '--swiper-navigation-color': '#2e86de',
+        '--swiper-pagination-color': '#2e86de',
         '--swiper-navigation-size': '20px',
         '--swiper-navigation-top-offset': '50%',
         '--swiper-navigation-sides-offset': '5px',

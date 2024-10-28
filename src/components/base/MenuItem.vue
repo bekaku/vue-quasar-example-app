@@ -1,9 +1,9 @@
 <template>
-  <q-item  v-bind="$attrs" :to="item.to" v-ripple clickable
+  <q-item  v-bind="$attrs" :to="item.to" v-ripple clickable :dense
     :active-class="item.noActiveLink ? 'q-item-no-link-highlighting' : 'active-menu-link'"
     :class="item.to == getCurrentPath(false) ? 'text-primary' : $q.dark.isActive ? darkText : lightText">
     <q-item-section side>
-      <q-icon :name="item.icon" :class="item.to ==getCurrentPath(false) ? 'text-primary' :'q-text-black'" />
+      <q-icon :name="item.icon" :class="item.to ==getCurrentPath(false) ? 'text-primary' :'q-text-black'" :size="iconSize" />
     </q-item-section>
     <q-item-section>
       <q-item-label>
@@ -21,10 +21,12 @@ import { useLang } from '@/composables/useLang';
 import { IMenuPageItem } from '@/types/models';
 import { useQuasar } from 'quasar';
 
-const { item, darkText = 'text-white', lightText = 'text-black' } = defineProps<{
+const { item, darkText = 'text-white', lightText = 'text-black', dense=false, iconSize='sm' } = defineProps<{
   item: IMenuPageItem;
   darkText?: string;
   lightText?: string;
+  iconSize?: string;
+  dense?: boolean;
 }>();
 const $q = useQuasar();
 const { t } = useLang();

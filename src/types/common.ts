@@ -267,6 +267,7 @@ export interface CrudFormApiOptions {
   actionPost?: string;
   actionPut?: string;
   actionDelete?: string;
+  basePath?: string;
   fectchDataOnLoad?: boolean;
   autoPageTitle?: boolean;
   preventRedirectToList?: boolean;
@@ -435,6 +436,8 @@ export interface Breadcrumb {
   to?: string;
   params?: string[];
   queries?: string[];
+  permissions?: string[];
+  frontend?: boolean;
 }
 export interface RefeshTokenStatus {
   status: boolean;
@@ -453,6 +456,7 @@ export interface VirtualScrollerUpdate {
   viewEndIndex: number;
   visibleStartIndex: number;
   visibleEndIndex: number;
+  isScrollingToTop: boolean;
 }
 export type CountryCode =
   | 'AC'

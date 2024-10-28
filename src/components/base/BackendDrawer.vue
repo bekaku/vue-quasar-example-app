@@ -2,18 +2,23 @@
   <!-- <q-drawer v-model="langugeAndThemeStore.leftDrawerOpen" show-if-above :width="width" :overlay="overlay"
     :bordered="bordered" :mini-to-overlay="miniToOverlay" :mini="miniState" @mouseover="miniState = false"
     @mouseout="miniState = true"> -->
-    <q-drawer v-model="langugeAndThemeStore.leftDrawerOpen" show-if-above :width="width"
-    bordered class="drawer-bg">
+  <!-- <q-drawer v-model="langugeAndThemeStore.leftDrawerOpen" show-if-above :width="width" bordered class="drawer-bg"> -->
+
+  <q-drawer v-model="drawerModel" show-if-above :width="width" :overlay="overlay"
+    :bordered="bordered" :mini-to-overlay="miniToOverlay&&!langugeAndThemeStore.leftDrawerOpen" :mini="miniState&&!langugeAndThemeStore.leftDrawerOpen" @mouseover="miniState = false"
+    @mouseout="miniState = true" class="drawer-bg">
     <q-scroll-area class="fit">
-      <user-nav-setting class="q-pt-md"/>
-      <q-input v-model="searchText" class="q-pa-md" outlined dense>
-        <template #prepend>
-          <q-icon :name="biSearch" size="xs"/>
-        </template>
-        <template #append>
-          <q-icon :name="biCommand" size="xs"/>
-        </template>
+      <div v-show="!miniState || langugeAndThemeStore.leftDrawerOpen">
+        <user-nav-setting class="q-pt-md" />
+        <q-input v-model="searchText" class="q-pa-md" outlined dense>
+          <template #prepend>
+            <q-icon :name="biSearch" size="xs" />
+          </template>
+          <template #append>
+            <q-icon :name="biCommand" size="xs" />
+          </template>
         </q-input>
+      </div>
       <menu-items :menu-items="drawerStore.drawers"></menu-items>
       <menu-items :menu-items="additionalMenu">
         <template #after>
@@ -66,18 +71,19 @@ import {
 import { useLangugeAndThemeStore } from 'stores/langugeAndThemeStore';
 import { ref } from 'vue';
 import UserNavSetting from '@/components/user/UserNavSetting.vue';
-const { overlay = false, bordered = false, miniToOverlay = true, width = 250, showUserSetting=true } = defineProps<{
+const { overlay = false, bordered = false, miniToOverlay = true, width = 250, showUserSetting = true } = defineProps<{
   overlay?: boolean;
   miniToOverlay?: boolean;
   bordered?: boolean;
   width?: number;
   showUserSetting?: boolean;
 }>();
+const drawerModel=ref(true);
 const drawerStore = useDrawerStore();
 const { t } = useLang();
 const langugeAndThemeStore = useLangugeAndThemeStore();
-const miniState = ref(true);
-const searchText=ref<string>('');
+const miniState = ref(false);
+const searchText = ref<string>('');
 const additionalMenu: IMenu[] = [
   {
     border: true,

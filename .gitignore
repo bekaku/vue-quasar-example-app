@@ -37,3 +37,4 @@ yarn.lock
 
 .DS_Store
 *.zip
+pnpm-lock.yaml

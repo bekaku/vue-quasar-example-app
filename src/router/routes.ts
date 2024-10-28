@@ -1,9 +1,9 @@
 import { RouteRecordRaw } from 'vue-router';
 import {
-  PERMISSION,
-  USER,
-  ROLE,
-  BACKEND_LOGIN,
+  Permission,
+  User,
+  Role,
+  BackendLogin,
 } from '@/utils/appPermissionList';
 import {
   PermissionFormBreadcrumb,
@@ -13,20 +13,20 @@ import {
   ExampleSelectBreadcrumb
 } from '@/breadcrumbs/AppBreadcrumbs';
 import {
-  TAB_COMPANY_CONFIG
+  TabCompanyConfig
 } from '@/breadcrumbs/AppTabs';
 const routes: RouteRecordRaw[] = [
   {
     path: '/',
-    component: () => import('@/layouts/BackendLayout.vue'),
+    component: () => import('@/layouts/DefultLayout.vue'),
     meta: {
       requireAuth: true,
-      permission: [BACKEND_LOGIN]
+      permission: [BackendLogin]
     },
     children: [
       {
         path: '',
-        component: () => import('@/pages/backend/IndexPage.vue'),
+        component: () => import('@/pages/index.vue'),
       },
       {
         path: 'permission',
@@ -35,19 +35,19 @@ const routes: RouteRecordRaw[] = [
             path: '',
             meta: {
               pageName: 'model_permission',
-              permission: [PERMISSION.list]
+              permission: [Permission.list]
             },
-            component: () => import('@/pages/backend/permission/List.vue'),
+            component: () => import('@/pages/permission/index.vue'),
           },
           {
             path: ':crud/:id/',
             meta: {
               pageName: 'model_permission',
-              permission: [PERMISSION.view],
+              permission: [Permission.view],
               breadcrumbs: PermissionFormBreadcrumb,
-              tabs: TAB_COMPANY_CONFIG
+              tabs: TabCompanyConfig
             },
-            component: () => import('@/pages/backend/permission/Form.vue'),
+            component: () => import('@/pages/permission/view.vue'),
           },
         ]
       },
@@ -58,18 +58,18 @@ const routes: RouteRecordRaw[] = [
             path: '',
             meta: {
               pageName: 'model_role',
-              permission: [ROLE.list]
+              permission: [Role.list]
             },
-            component: () => import('@/pages/backend/role/List.vue'),
+            component: () => import('@/pages/role/index.vue'),
           },
           {
             path: ':crud/:id/',
             meta: {
               pageName: 'model_role',
-              permission: [ROLE.view],
+              permission: [Role.view],
               breadcrumbs: RoleFormBreadcrumb,
             },
-            component: () => import('@/pages/backend/role/Form.vue'),
+            component: () => import('@/pages/role/view.vue'),
           },
         ]
       },
@@ -80,18 +80,18 @@ const routes: RouteRecordRaw[] = [
             path: '',
             meta: {
               pageName: 'model_user',
-              permission: [USER.list],
+              permission: [User.list],
             },
-            component: () => import('@/pages/backend/user/List.vue'),
+            component: () => import('@/pages/user/index.vue'),
           },
           {
             path: ':crud/:id/',
             meta: {
               pageName: 'model_user',
-              permission: [USER.view],
+              permission: [User.view],
               breadcrumbs: UserFormBreadcrumb,
             },
-            component: () => import('@/pages/backend/user/Form.vue'),
+            component: () => import('@/pages/user/view.vue'),
           },
         ]
       },
@@ -108,42 +108,63 @@ const routes: RouteRecordRaw[] = [
             meta: {
               name: 'ExampleContentText',
             },
-            component: () => import('@/pages/example/ContentText.vue'),
+            component: () => import('@/pages/example/content-text.vue'),
           },
           {
             path: 'emoji-picker',
             meta: {
               name: 'ExampleEmojiPicker',
             },
-            component: () => import('@/pages/example/EmojiPicker.vue'),
+            component: () => import('@/pages/example/emoji-picker.vue'),
           },
           {
             path: 'image-cropper',
             meta: {
               name: 'ExampleImageCropper',
             },
-            component: () => import('@/pages/example/ImageCropper.vue'),
+            component: () => import('@/pages/example/image-cropper.vue'),
           },
           {
             path: 'image-view',
             meta: {
               name: 'ExampleImageView',
             },
-            component: () => import('@/pages/example/ImageView.vue'),
+            component: () => import('@/pages/example/image-view.vue'),
           },
           {
             path: 'markdown-editor',
             meta: {
               name: 'ExampleMarkdownEditor',
             },
-            component: () => import('@/pages/example/MarkdownEditor.vue'),
+            component: () => import('@/pages/example/markdown-editor.vue'),
           },
           {
             path: 'result',
             meta: {
               name: 'ExampleResult',
             },
-            component: () => import('@/pages/example/Result.vue'),
+            component: () => import('@/pages/example/result.vue'),
+          },
+          {
+            path: 'swiper',
+            meta: {
+              name: 'ExampleSwipper',
+            },
+            component: () => import('@/pages/example/swipper.vue'),
+          },
+          {
+            path: 'sort-items',
+            meta: {
+              name: 'ExampleSortItems',
+            },
+            component: () => import('@/pages/example/sort-items.vue'),
+          },
+          {
+            path: 'virtual-scroller',
+            meta: {
+              name: 'ExampleVirtualScroller',
+            },
+            component: () => import('@/pages/example/virtual-scroller.vue'),
           },
           {
             path: 'ui',
@@ -154,7 +175,7 @@ const routes: RouteRecordRaw[] = [
                   name: 'ExampleUiButton',
                   breadcrumbs: ExampleBtnBreadcrumb,
                 },
-                component: () => import('@/pages/example/ui/Button.vue'),
+                component: () => import('@/pages/example/ui/button.vue'),
               },
               {
                 path: 'select',
@@ -162,28 +183,28 @@ const routes: RouteRecordRaw[] = [
                   name: 'ExampleUiSelect',
                   breadcrumbs: ExampleSelectBreadcrumb,
                 },
-                component: () => import('@/pages/example/ui/Select.vue'),
+                component: () => import('@/pages/example/ui/select.vue'),
               },
               {
                 path: 'date-picker',
                 meta: {
                   name: 'ExampleUiDatePicker',
                 },
-                component: () => import('@/pages/example/ui/DatePicker.vue'),
+                component: () => import('@/pages/example/ui/date-picker.vue'),
               },
               {
                 path: 'toggle',
                 meta: {
                   name: 'ExampleUitoggle',
                 },
-                component: () => import('@/pages/example/ui/FormToggle.vue'),
+                component: () => import('@/pages/example/ui/toggle.vue'),
               },
               {
                 path: 'file-picker',
                 meta: {
                   name: 'ExampleUiFilePicker',
                 },
-                component: () => import('@/pages/example/ui/FilePicker.vue'),
+                component: () => import('@/pages/example/ui/file-picker.vue'),
               },
             ],
           },
@@ -198,7 +219,7 @@ const routes: RouteRecordRaw[] = [
     children: [
       {
         path: '',
-        component: () => import('@/pages/chats/Index.vue')
+        component: () => import('@/pages/chats/index.vue')
       },
     ]
   },
@@ -211,22 +232,22 @@ const routes: RouteRecordRaw[] = [
       {
         path: 'profile',
         meta: { pageName: 'page.settingsPublicProfile' },
-        component: () => import('@/pages/settings/Profile.vue'),
+        component: () => import('@/pages/settings/profile.vue'),
       },
       {
         path: 'notifications',
         meta: { pageName: 'page.settingsNotification' },
-        component: () => import('@/pages/settings/Notification.vue'),
+        component: () => import('@/pages/settings/notifications.vue'),
       },
       {
         path: 'security',
         meta: { pageName: 'page.settingsSecurity' },
-        component: () => import('@/pages/settings/Security.vue'),
+        component: () => import('@/pages/settings/security.vue'),
       },
       {
         path: 'emails',
         meta: { pageName: 'page.settingsEmail' },
-        component: () => import('@/pages/settings/Email.vue'),
+        component: () => import('@/pages/settings/emails.vue'),
       },
     ],
   },
@@ -235,10 +256,10 @@ const routes: RouteRecordRaw[] = [
     component: () => import('layouts/BlankLayout.vue'),
     children: [
       { path: '', redirect: '/auth/login' },
-      { path: 'login', component: () => import('@/pages/auth/Login.vue') },
+      { path: 'login', component: () => import('@/pages/auth/login.vue') },
       {
         path: 'login2',
-        component: () => import('@/pages/auth/Login2.vue'),
+        component: () => import('@/pages/auth/login2.vue'),
       },
     ],
   },
@@ -246,7 +267,7 @@ const routes: RouteRecordRaw[] = [
     path: '/feed',
     component: () => import('@/layouts/FeedLayout.vue'),
     meta: { requireAuth: true },
-    children: [{ path: '', component: () => import('@/pages/FeedPage.vue') }],
+    children: [{ path: '', component: () => import('@/pages/feed/index.vue') }],
   },
   {
     path: '/error',

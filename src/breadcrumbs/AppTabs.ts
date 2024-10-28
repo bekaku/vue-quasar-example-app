@@ -7,7 +7,7 @@ import {
     biArrowsCollapse,
     biDiagram3,
 } from '@quasar/extras/bootstrap-icons';
-export const TAB_COMPANY_CONFIG: Breadcrumb[] = [
+export const TabCompanyConfig: Breadcrumb[] = [
     {
         label: 'base.pont',
         to: `/test-config/:${PageIdParamiter}/point`,

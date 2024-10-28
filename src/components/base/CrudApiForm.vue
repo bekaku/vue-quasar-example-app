@@ -3,7 +3,7 @@
     <q-card-section>
       <slot name="crudFromToolbar">
         <q-toolbar>
-          <q-btn
+          <UiButton
             v-if="isHaveListPermission && showBack"
             @click="$emit('on-back')"
             flat
@@ -13,7 +13,7 @@
             <q-tooltip>
               {{ t('base.back') }}
             </q-tooltip>
-          </q-btn>
+          </UiButton>
           <q-toolbar-title>
             <template v-if="crudAction && showActionText">
               {{
@@ -39,7 +39,7 @@
         <slot name="crudAction">
           <q-separator />
           <q-card-section align="center" class="q-gutter-sm">
-            <q-btn
+            <UiButton
               v-if="isHaveManagePermission && showEdit"
               unelevated
               :icon="biPencil"
@@ -47,10 +47,10 @@
                 t('base.save') + (crudAction === 'view' ? t('base.edit') : '')
               "
               type="submit"
-              color="primary"
               :loading="loading"
+              color="primary"
             />
-            <q-btn
+            <UiButton
               v-if="
                 crudAction === 'view' && isHaveManagePermission && showDelete
               "
@@ -62,11 +62,10 @@
               @click="$emit('on-delete')"
             />
 
-            <q-btn
+            <UiButton
               v-if="isHaveListPermission && showBack"
               :label="t('base.cancel')"
               @click="$emit('on-back')"
-              color="primary"
               flat
               class="q-ml-sm"
               :disable="loading"
@@ -84,6 +83,7 @@ import { PropType, computed } from 'vue';
 import { useLang } from '@/composables/useLang';
 import { ICrudAction } from '@/types/common';
 import { usePermissionStore } from '@/stores/permissionStore';
+import UiButton from '@/components/quasar/Button.vue'
 import {
   biFile,
   biArrowLeft,

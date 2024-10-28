@@ -1,59 +1,39 @@
 <template>
-  <q-dialog v-model="doalogModel">
-    <q-card class="dialog">
-      <q-card-section>
-        <div class="text-h6 ellipsis">{{ t('sort.sort') }}</div>
-      </q-card-section>
+  <div>
+    <q-list>
+      <SlickList axis="y" v-model:list="modelValue" useDragHandle :distance="1" helperClass="sortHelper">
+        <SlickItem v-for="(item, i) in modelValue" :key="item.id" :index="i" class="SortableHelper">
 
-      <q-card-section class="q-pt-none">
-        <q-list>
-          <SlickList
-            axis="y"
-            v-model:list="modelValue"
-            useDragHandle
-            :distance="1"
-            helperClass="sortHelper"
-          >
-            <SlickItem
-              v-for="(item, i) in modelValue"
-              :key="item.id"
-              :index="i"
-              class="SortableHelper"
-            >
-              <q-item>
-                <q-item-section avatar>
-                  {{ i + 1 }}
-                </q-item-section>
-                <q-item-section>
-                  <q-item-label>
-                    {{ item[labelKey] }}
-                  </q-item-label>
-                </q-item-section>
-                <q-item-section side>
-                  <DragHandle>
-                    <q-btn flat round :icon="biList"> </q-btn>
-                  </DragHandle>
-                </q-item-section>
-              </q-item>
-              <q-separator />
-            </SlickItem>
-          </SlickList>
-        </q-list>
-      </q-card-section>
-
+          <slot name="item" v-bind="{ item, inedx: i }">
+            <q-item>
+              <q-item-section avatar>
+                {{ i + 1 }}
+              </q-item-section>
+              <q-item-section>
+                <q-item-label>
+                  {{ item[labelKey] }}
+                </q-item-label>
+              </q-item-section>
+              <q-item-section side>
+                <DragHandle>
+                  <q-btn flat round :icon="biList"> </q-btn>
+                </DragHandle>
+              </q-item-section>
+            </q-item>
+            <q-separator />
+          </slot>
+        </SlickItem>
+      </SlickList>
+    </q-list>
+    <slot name="action">
       <q-separator />
-
       <q-card-actions align="center">
-        <q-btn
-          flat
-          @click="onSorting"
-          color="primary"
-          :label="t('base.save')"
-        />
+        <q-btn flat @click="onSorting" color="primary" :label="t('base.save')" />
         <q-btn v-close-popup flat :label="t('base.close')" />
       </q-card-actions>
-    </q-card>
-  </q-dialog>
+    </slot>
+
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -66,10 +46,6 @@ const props = defineProps<{
 }>();
 const { t } = useLang();
 const modelValue = defineModel<any[]>();
-const doalogModel = defineModel('doalogModel', {
-  type: Boolean,
-  default: false,
-});
 const emit = defineEmits<{
   onSorting: [any[]];
 }>();

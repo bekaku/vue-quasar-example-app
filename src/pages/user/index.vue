@@ -78,7 +78,7 @@ const headers = ref<ICrudListHeader[]>([
     },
   },
   {
-    label: 'model_user_status',
+    label: 'base.enable',
     column: 'active',
     type: CrudListDataType.STATUS,
     options: {

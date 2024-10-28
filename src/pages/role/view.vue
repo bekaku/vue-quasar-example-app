@@ -43,19 +43,15 @@
             </q-input>
           </div> -->
           <div class="col-12 col-md-6 q-pa-md">
-            <q-toggle
+            <form-togle
+              :label="t('base.enable')"
               v-model="crudEntity.active"
-              color="primary"
-              size="xl"
-              :label="t('model_role_status')"
             />
           </div>
           <div class="col-12 col-md-6 q-pa-md">
-            <q-toggle
-              v-model="crudEntity.frontEnd"
-              color="primary"
-              size="xl"
+            <form-togle
               :label="t('model_permission_frontEnd')"
+              v-model="crudEntity.frontEnd"
             />
           </div>
         </div>
@@ -110,6 +106,11 @@
                       <q-item-label>{{
                         p.description ? p.description : 'unknown'
                       }}</q-item-label>
+                        <q-item-label caption>
+                        {{
+                          p.code
+                        }}
+                      </q-item-label>
                     </q-item-section>
                   </q-item>
 
@@ -133,6 +134,11 @@
                       <q-item-label>{{
                         r.description ? r.description : 'unknown'
                       }}</q-item-label>
+                        <q-item-label caption>
+                        {{
+                          r.code
+                        }}
+                      </q-item-label>
                     </q-item-section>
                   </q-item>
 
@@ -154,6 +160,11 @@
                       <q-item-label>{{
                         o.description ? o.description : 'unknown'
                       }}</q-item-label>
+                         <q-item-label caption>
+                        {{
+                          o.code
+                        }}
+                      </q-item-label>
                     </q-item-section>
                   </q-item>
 
@@ -175,6 +186,11 @@
                       <q-item-label>{{
                         f.description ? f.description : 'unknown'
                       }}</q-item-label>
+                       <q-item-label caption>
+                        {{
+                          f.code
+                        }}
+                      </q-item-label>
                     </q-item-section>
                   </q-item>
                 </q-list>
@@ -207,6 +223,10 @@
                       <q-item-label>{{
                         findDisplayPermissionById(s)
                       }}</q-item-label>
+                        <q-item-label caption>{{
+                          findCodePermissionById(s)
+                        }}
+                      </q-item-label>
                     </q-item-section>
                     <q-item-section side>
                       <q-btn
@@ -245,6 +265,7 @@ import CrudApiForm from '@/components/base/CrudApiForm.vue';
 import { useValidation } from '@/composables/useValidation';
 import PermissionService from '@/api/PermissionService';
 import { useBase } from '@/composables/useBase';
+import FormTogle from '@/components/quasar/Togle.vue'
 import {
   biPeople,
   biCheck,
@@ -350,6 +371,10 @@ const filteredFrontendList = computed(() =>
 const findDisplayPermissionById = (id: number) => {
   const item = permissions.value.find((p) => p.id === id);
   return item && item.description ? item.description : 'unknown';
+};
+const findCodePermissionById = (id: number) => {
+  const item = permissions.value.find((p) => p.id === id);
+  return item && item.code ? item.code : 'unknown';
 };
 const removePermission = (index: number) => {
   if (crudEntity.value && crudEntity.value.selectdPermissions) {

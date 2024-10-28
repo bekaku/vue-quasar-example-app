@@ -23,7 +23,7 @@
         </div>
         <div class="col-12 col-md-12 q-pa-md">
           <form-togle
-            :title="t('base.other')"
+            :label="t('base.other')"
             v-model="entity.autoFollowUser"
           />
         </div>

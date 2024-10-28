@@ -44,14 +44,7 @@
             </q-input>
           </div>
           <div class="col-12 col-md-6 q-pa-md">
-            <q-toggle
-              v-model="crudEntity.frontEnd"
-              :checked-icon="biCheck"
-              color="primary"
-              size="xl"
-              label="Frontend"
-              :unchecked-icon="biX"
-            />
+            <form-togle  useLabelTitle label="Frontend" v-model="crudEntity.frontEnd" />
           </div>
           <div class="col-12 col-md-6 q-pa-md">
             <div class="q-px-sm">Permission type</div>
@@ -106,6 +99,10 @@ import {
   biCheck,
   biX,
 } from '@quasar/extras/bootstrap-icons';
+import { defineAsyncComponent } from 'vue';
+const FormTogle = defineAsyncComponent(
+  () => import('@/components/quasar/Togle.vue'),
+);
 const { t } = useLang();
 const { required } = useValidation();
 const entity: Permission = {

@@ -11,8 +11,8 @@
             <q-card-section>
 
                 <div class="q-pa-md q-gutter-sm">
-                    <ui-button label="Primary"></ui-button>
-                    <ui-button label="Unelevated" unelevated></ui-button>
+                    <ui-button label="Primary" color="primary"></ui-button>
+                    <ui-button label="Unelevated" unelevated color="primary"></ui-button>
                     <ui-button label="Outline" outline></ui-button>
                     <ui-button color="white" :unelevated="false" text-color="black" label="Standard"></ui-button>
                     <ui-button color="secondary" label="Secondary"></ui-button>

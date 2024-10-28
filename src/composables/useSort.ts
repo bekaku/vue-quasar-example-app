@@ -51,7 +51,7 @@ export const useSort = (defaultSort?: ISort, perPage?: number) => {
           : undefined,
   };
   const pagesInitial: IPagination = {
-    current: p || 1,
+    current: p != undefined ? p + 1 : 1,
     itemsPerPage:
       s && s <= 50 && s > 0 ? s : perPage ? perPage : DEFULT_ITEM_PER_PAGET,
     totalPages: 0,

@@ -1,15 +1,16 @@
 <template>
   <q-page padding>
     <crud-api-list
-      :icon="biPeople"
-      :title="t('model_role')"
-      :loading="loading"
+      :icon="biShieldCheck"
+      :title="t('model_permission')"
       :crud-name="crudName"
+      :loading="loading"
       :frist-load="fristLoad"
       :pages="pages"
       :headers="headers"
       :sort="sort"
       :list="filteredList"
+      show-search-text-box
       @on-item-click="onItemClick"
       @on-item-copy="onItemCopy"
       @on-page-no-change="onPageNoChange"
@@ -19,6 +20,7 @@
       @on-reload="onReload"
       @update-search="filterText = $event"
       @on-advance-search="onAdvanceSearch"
+      @on-keyword-search="onKeywordSearch"
       @on-item-delete="onItemDelete"
       @on-new-form="onNewForm"
     />
@@ -26,10 +28,10 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import { useLang } from '@/composables/useLang';
 import { useCrudList } from '@/composables/useCrudList';
-import { Role } from '@/types/models';
+import { Permission } from '@/types/models';
 import { useAppMeta } from '@/composables/useAppMeta';
 import {
   ICrudListHeader,
@@ -37,12 +39,12 @@ import {
   ICrudListHeaderOptionSearchType,
 } from '@/types/common';
 import CrudApiList from '@/components/base/CrudApiList.vue';
-import { biPeople } from '@quasar/extras/bootstrap-icons';
+import { biShieldCheck } from '@quasar/extras/bootstrap-icons';
 useAppMeta();
 const { t } = useLang();
 const headers = ref<ICrudListHeader[]>([
   {
-    label: 'model_role_id',
+    label: 'model_permission_id',
     column: 'id',
     type: CrudListDataType.NUMBER_FORMAT,
     options: {
@@ -54,8 +56,8 @@ const headers = ref<ICrudListHeader[]>([
     },
   },
   {
-    label: 'model_role_name',
-    column: 'name',
+    label: 'model_permission_name',
+    column: 'code',
     type: CrudListDataType.TEXT,
     options: {
       fillable: true,
@@ -66,36 +68,17 @@ const headers = ref<ICrudListHeader[]>([
       searchOperation: ':',
     },
   },
-  // {
-  //   label: 'model_role_name_en',
-  //   column: 'nameEn',
-  //   type: CrudListDataType.TEXT,
-  //   options: {
-  //     fillable: true,
-  //     searchable: true,
-  //     sortable: true,
-  //     searchType: ICrudListHeaderOptionSearchType.TEXT,
-  //     searchModel: '',
-  //     searchOperation: ':',
-  //   },
-  // },
   {
-    label: 'model_permission_frontEnd',
-    column: 'frontEnd',
-    type: CrudListDataType.STATUS,
+    label: 'model_permission_description',
+    column: 'description',
+    type: CrudListDataType.TEXT,
     options: {
       fillable: true,
-      sortable: true,
-      searchable: true,
-      align: 'center',
-      searchType: ICrudListHeaderOptionSearchType.BOOLEAN,
-      searchModel: false,
-      searchOperation: '=',
     },
   },
   {
-    label: 'model_role_status',
-    column: 'active',
+    label: 'model_permission_frontEnd',
+    column: 'frontEnd',
     type: CrudListDataType.STATUS,
     options: {
       fillable: true,
@@ -121,32 +104,49 @@ const headers = ref<ICrudListHeader[]>([
 ]);
 const {
   loading,
-  crudName,
   fristLoad,
   pages,
   sort,
-  filteredList,
-  onItemClick,
-  onItemCopy,
   onPageNoChange,
   onItemPerPageChange,
   onSort,
   onSortMode,
   onReload,
+  filteredList,
   filterText,
   onAdvanceSearch,
   onItemDelete,
   onNewForm,
-} = useCrudList<Role>(
+  onItemClick,
+  onItemCopy,
+  crudName,
+  onKeywordSearch
+} = useCrudList<Permission>(
   {
-    crudName: 'role',
+    crudName: 'permission',
     apiEndpoint: '/api',
     fetchListOnload: true,
     defaultSort: {
-      column: 'name',
+      column: 'code',
       mode: 'asc',
     },
   },
   headers,
 );
+// const crud = reactive(
+//   useCrudApi<Permission>(
+//     {
+//       actionList: '/api/permission',
+//       fetchListOnload: true,
+//       defaultSort: {
+//         column: 'code',
+//         mode: 'asc',
+//       },
+//     },
+//     headers
+//   )
+// );
+onMounted(async () => {
+  console.log('PermissionList onMounted');
+});
 </script>

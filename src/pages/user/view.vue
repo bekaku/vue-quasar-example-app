@@ -48,7 +48,7 @@
             </q-input>
             <q-banner
               class="q-my-sm"
-              :class="$q.dark.isActive ? 'bg-grey-9' : 'bg-grey-3'"
+              :class="dark.isActive ? 'bg-grey-9' : 'bg-grey-3'"
               dense
             >
               <template v-slot:avatar>
@@ -88,16 +88,8 @@
           </div>
 
           <div class="col-12 col-md-6 q-pa-md">
-            <!-- <q-toggle
-              v-model="entity.active"
-              color="primary"
-              size="xl"
-              :checked-icon="biCheck"
-              :unchecked-icon="biX"
-              :label="t('model_role_status')"
-            /> -->
             <form-togle
-              :title="t('model_role_status')"
+              :label="t('base.enable')"
               v-model="entity.active"
             />
           </div>
@@ -223,6 +215,7 @@ import {
   biPeople,
   biInfoCircle,
 } from '@quasar/extras/bootstrap-icons';
+import { useQuasar } from 'quasar';
 const ChangePasswordForm = defineAsyncComponent(
   () => import('@/components/form/ChangePasswordForm.vue'),
 );
@@ -232,6 +225,7 @@ const AppResult = defineAsyncComponent(
 const FormTogle = defineAsyncComponent(
   () => import('@/components/quasar/Togle.vue'),
 );
+const {dark}=useQuasar()
 const { t } = useLang();
 const { required, requireEmail, requireUsername } = useValidation();
 const { WeeLoader } = useBase();

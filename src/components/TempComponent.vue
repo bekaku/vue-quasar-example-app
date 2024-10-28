@@ -159,6 +159,14 @@ defineExpose({
       <span class="q-focus-helper"></span>
     </div>
 
+    <!-- 
+    <slot name="additionalBaseTool" v-bind="{ item: item, index: index }">
+    </slot> 
+    
+     <template #additionalBaseTool="{ item, index }">
+     </template>
+    -->
+
     <q-scroll-area style="height: 70vh;" content-active-style="width: 100%;" content-style="width: 100%;">
 
     </q-scroll-area>

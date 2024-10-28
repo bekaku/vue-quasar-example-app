@@ -10,7 +10,7 @@
   }">
     <q-scroll-observer @scroll="onScroll" />
     <q-toolbar class="q-py-xs">
-      <q-btn v-if="showTogleDrawer" dense flat round :icon="biList" @click="
+      <q-btn v-if="showTogleDrawer" dense flat round :icon="hambergerIcon" @click="
         langugeAndThemeStore.setLeftDrawer(
           !langugeAndThemeStore.leftDrawerOpen,
         )
@@ -83,13 +83,15 @@ const SearchDialog = defineAsyncComponent(
   () => import('@/components/search/SearchDialog.vue'),
 );
 
-const { bordered = false, reveal = false, showTogleDrawer = false, frontend = false, showLogo = true, showUserSetting = true } = defineProps<{
+const { bordered = false, reveal = false, showTogleDrawer = false, showLogo = true, showUserSetting = true, hambergerIcon=biList } = defineProps<{
   bordered?: boolean;
   reveal?: boolean;
   showTogleDrawer?: boolean;
   frontend?: boolean;
   showLogo?: boolean;
   hambergerMenu?: boolean;
+  hambergerIcon?: string;
+  hambergerIconOff?: string;
   showUserSetting?: boolean;
 }>();
 
