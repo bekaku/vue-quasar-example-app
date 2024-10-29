@@ -279,7 +279,7 @@ const AppResult = defineAsyncComponent(
 );
 const { t } = useLang();
 const { required } = useValidation();
-const { WeeLoader } = useBase();
+const { appLoading } = useBase();
 const { findAllBackendPermission, findAllFrontendPermission } =
   PermissionService();
 const permissions = ref<Permission[]>([]);
@@ -313,7 +313,7 @@ const {
   },
   entity,
 );
-WeeLoader();
+appLoading();
 useAppMeta({
   additionalTitle: t('crudAction.' + crudAction.value),
 });
@@ -332,7 +332,7 @@ const onLoadData = async () => {
   }
 
   await preFectData();
-  WeeLoader(false);
+  appLoading(false);
 };
 
 const filteredList = computed(() => {

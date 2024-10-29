@@ -4,8 +4,8 @@
     full-height>
     <q-card class="text-white" dark>
       <q-toolbar>
-        <template v-if="user">
-          <base-avatar :src="user.avatar?.thumbnail" :size="32" />
+        <template v-if="user && user.avatar?.thumbnail">
+          <base-avatar :src="user.avatar.thumbnail" size="32px" />
         </template>
 
         <q-toolbar-title v-if="$q.screen.gt.xs">
@@ -151,7 +151,7 @@ const emit = defineEmits([
   'on:delete'
 ]);
 const { t } = useLang();
-const { WeeConfirm } = useBase();
+const { appConfirm } = useBase();
 // const fullscreen = ref(false);
 const slide = ref(0);
 // const items = ref<string[]>([]);
@@ -247,7 +247,7 @@ const download = async () => {
   }
 };
 const deletePhoto = async () => {
-  const confirm = await WeeConfirm(
+  const confirm = await appConfirm(
     t('app.monogram'),
     t('base.deletePhotoConfirm')
   );

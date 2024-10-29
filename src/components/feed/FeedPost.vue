@@ -63,7 +63,7 @@
             />
           </q-item-label>
           <q-item-label caption>
-            {{ AppFormatDateTime(post.postDatetime, FORMAT_DATE12) }}
+            {{ appFormatDateTime(post.postDatetime, FORMAT_DATE12) }}
           </q-item-label>
         </q-item-section>
         <q-item-section side top>
@@ -158,7 +158,7 @@ const props = defineProps({
 });
 const $q=useQuasar();
 //   const { getOgMeta } = UtilService();
-const { AppFormatDateTime } = useBase();
+const { appFormatDateTime } = useBase();
 const opengraphItem = ref<OgMeta>();
 onMounted(() => {
   checkOgLink();

@@ -4,7 +4,7 @@ import { useBase } from './useBase';
 import { ref } from 'vue';
 import { useLang } from '@/composables/useLang';
 export const useSort = (defaultSort?: ISort, perPage?: number) => {
-  const { WeeGetQuery } = useBase();
+  const { getQuery } = useBase();
   const { t } = useLang();
   const sortMode = ref<ISortMode[]>([
     { value: 'asc', label: t('sort.asc') },
@@ -12,11 +12,11 @@ export const useSort = (defaultSort?: ISort, perPage?: number) => {
   ]);
 
   const getNumberQuery = (param: string): number => {
-    const pageQuery = WeeGetQuery(param);
+    const pageQuery = getQuery(param);
     return pageQuery ? +pageQuery : 0;
   };
   const getSortParam = (): ISort | undefined => {
-    const sortQuery = WeeGetQuery('sort');
+    const sortQuery = getQuery('sort');
     if (sortQuery) {
       const sortArr = sortQuery.split(',');
       if (sortArr.length == 2) {

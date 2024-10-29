@@ -78,14 +78,14 @@ const SettingPersonal = defineAsyncComponent(
 );
 useAppMeta();
 const { t } = useLang();
-const { WeeLoader } = useBase();
+const { appLoading } = useBase();
 const { uploadApi } = FileManagerService();
 const { updateUserAvatar, updateUserCover } = UserService();
 const authenStore = useAuthenStore();
 const dialog = ref(false);
 const dialogCover = ref(false);
 const onOkay = async (f: any) => {
-  WeeLoader();
+  appLoading();
   const response = await uploadApi(f);
   if (response && authenStore.auth && response.id) {
     //update avatar id to user
@@ -97,7 +97,7 @@ const onOkay = async (f: any) => {
       authItem.avatar.image = response.filePath;
     }
   }
-  WeeLoader(false);
+  appLoading(false);
 };
 const onOpenCropper = () => {
   dialog.value = true;
@@ -106,7 +106,7 @@ const onOpenCropperCover = () => {
   dialogCover.value = true;
 };
 const onUploadCover = async (f: any) => {
-  WeeLoader();
+  appLoading();
   const response = await uploadApi(f);
   if (response && authenStore.auth && response.id) {
     //update cover id to user
@@ -118,7 +118,7 @@ const onUploadCover = async (f: any) => {
       image: response.filePath,
     };
   }
-  WeeLoader(false);
+  appLoading(false);
 };
 const coverStle = computed(() => {
   return `height: 175px;

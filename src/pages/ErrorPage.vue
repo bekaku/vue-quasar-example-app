@@ -26,12 +26,12 @@ import { useLang } from '@/composables/useLang';
 import { biArrowLeft } from '@quasar/extras/bootstrap-icons';
 import { useMeta } from 'quasar';
 const { t } = useLang();
-const { WeeGetQuery } = useBase();
+const { getQuery } = useBase();
 useMeta({
   title: t('error.error'),
 });
 
-const code = ref(WeeGetQuery('code'));
+const code = ref(getQuery('code'));
 const message = computed(() => {
   return code.value ? t(`http.${code.value}`) : undefined;
 });

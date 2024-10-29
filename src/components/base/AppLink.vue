@@ -52,10 +52,10 @@ defineProps({
     default: '_blank',
   },
 });
-// const { WeeGoTo } = useBase();
+// const { appGoto } = useBase();
 // const onOpen = (event: any) => {
 //   if (props.to) {
-//     WeeGoTo(props.to);
+//     appGoto(props.to);
 //   } else if (props.href) {
 //     openUrlInNewTab(props.href, props.external ? '_blank' : '_self', event);
 //   }

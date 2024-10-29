@@ -14,7 +14,7 @@
                         <div class="text-h5 q-my-sm">
                             Single Select
                         </div>
-                        <ui-select can-filter clearable :items="simpleItems" v-model="singleModel" dense
+                        <ui-select required can-filter clearable :items="simpleItems" v-model="singleModel" dense
                             :multiple="false" label="Select Single" />
                         <p>simpleModel : {{ singleModel }}</p>
                     </div>
@@ -30,7 +30,7 @@
                         <div class="text-h5 q-my-sm">
                             Select Alt
                         </div>
-                        <ui-select-alt :items="simpleItems3" v-model="multipleAnyModel" dense label="Select Any" option-label="name" option-value="id" />
+                        <ui-select-alt :items="simpleItems3" v-model="multipleAnyModel" multiple dense label="Select Any" option-label="name" option-value="id" />
                         <p>multipleAnyModel : {{ multipleAnyModel }}</p>
                     </div>
                 </div>

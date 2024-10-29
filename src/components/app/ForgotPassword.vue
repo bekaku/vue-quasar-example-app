@@ -136,7 +136,7 @@ const PasswordForm = defineAsyncComponent(
 const { requestVerifyCodeToResetPwd, sendVerifyCodeToResetPwd, resetPassword } =
   AuthenService();
 const { requireEmail } = useValidation();
-const { WeeLoader, WeeToast } = useBase();
+const { appLoading, appToast } = useBase();
 const { t } = useLang();
 const modelValue = defineModel<boolean>();
 const stepper = ref();
@@ -152,13 +152,13 @@ const requestVerifyCode = async () => {
   if (!entity.value.email) {
     return;
   }
-  WeeLoader();
+  appLoading();
   const res = await requestVerifyCodeToResetPwd(entity.value);
-  WeeLoader(false);
+  appLoading(false);
   if (res && res.status && res.status == 200) {
     const responseData = res.data as ResponseMessage;
     if (responseData.message) {
-      WeeToast(responseData.message, {
+      appToast(responseData.message, {
         type: 'positive',
         position: 'bottom',
         multiLine: false,
@@ -176,9 +176,9 @@ const verifyCode = async (code?: string) => {
     return;
   }
   entity.value.token = code;
-  WeeLoader();
+  appLoading();
   const res = await sendVerifyCodeToResetPwd(entity.value);
-  WeeLoader(false);
+  appLoading(false);
   if (res && res.status != undefined && res.status != 200) {
     notifyError(res.data as AppException);
   } else {
@@ -189,7 +189,7 @@ const verifyCode = async (code?: string) => {
 };
 const notifyError = (error: AppException) => {
   if (error.errors) {
-    WeeToast(error.errors.toString(), {
+    appToast(error.errors.toString(), {
       type: 'negative',
       position: 'bottom',
       multiLine: false,
@@ -200,13 +200,13 @@ const setNewPassword = async () => {
   if (!entity.value.token || !entity.value.email || !entity.value.newPassword) {
     return;
   }
-  WeeLoader();
+  appLoading();
   const res = await resetPassword(entity.value);
-  WeeLoader(false);
+  appLoading(false);
   if (res && res.status && res.status == 200) {
     const responseData = res.data as ResponseMessage;
     if (responseData.message) {
-      WeeToast(responseData.message, {
+      appToast(responseData.message, {
         type: 'positive',
         position: 'bottom',
         multiLine: false,

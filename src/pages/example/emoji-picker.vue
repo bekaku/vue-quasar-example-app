@@ -13,7 +13,7 @@
 
 
                 <q-input outlined v-model="message" type="textarea" autogrow label="Type message">
-                    <template #prepend>
+                    <template #prepend v-if="authenStore?.auth?.avatar?.thumbnail">
                         <base-avatar :src="authenStore?.auth?.avatar?.thumbnail" />
                     </template>
                     <template #before>

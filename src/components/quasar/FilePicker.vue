@@ -64,7 +64,7 @@ const props = withDefaults(defineProps<{
     icon: biPaperclip,
     accept: FileExtensionAccept
 });
-const { WeeToast } = useBase();
+const { appToast } = useBase();
 const { t } = useLang();
 const modelValue = defineModel<any[]>({ default: () => [] });
 const fileItems = defineModel<FileManagerDto[]>('fileItems', { default: () => [] });
@@ -76,7 +76,7 @@ const appFileInputRef = ref();
 const openFilePicker = () => {
 
     if (props.maxFiles > 0 && modelValue.value && modelValue.value.length == props.maxFiles) {
-        WeeToast(t('error.limitFile2', { total: props.maxFiles }), {
+        appToast(t('error.limitFile2', { total: props.maxFiles }), {
             type: 'negative'
         });
         return;
@@ -95,7 +95,7 @@ const onClear = (event: any) => {
     modelImageFiles.value = [];
 };
 const onRejected = (rejectedEntries: any) => {
-    WeeToast(t('error.filesValidationFmt', { total: rejectedEntries.length }), {
+    appToast(t('error.filesValidationFmt', { total: rejectedEntries.length }), {
         type: 'negative'
     });
 };
@@ -104,7 +104,7 @@ const validateAndZipFile = async (files: File[]): Promise<any[]> => {
     for (const f of files) {
         const type = f.type;
         if (f.size > LIMIT_FILE_SIZE) {
-            WeeToast(t('error.limitEachFile2', [f.name, LIMIT_FILE_SIZE_MB]), {
+            appToast(t('error.limitEachFile2', [f.name, LIMIT_FILE_SIZE_MB]), {
                 multiLine: false,
                 type: 'negative'
             });

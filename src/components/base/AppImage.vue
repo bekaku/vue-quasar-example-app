@@ -2,7 +2,7 @@
     <q-img v-if="loading" :spinner-color="spinnerColor" :placeholder-src="placHolder" :ratio="ratio" v-bind="$attrs"
         loading="lazy">
         <div class="absolute-full flex flex-center">
-            <q-inner-loading showing color="grey-4" size="xs" />
+            <q-inner-loading showing color="white" size="xs" />
         </div>
     </q-img>
     <q-img v-else-if="srcUrl" :src="srcUrl" :fit="fit" :placeholder-src="placHolder" :spinner-color="spinnerColor"
@@ -32,7 +32,7 @@ import { watchEffect, onBeforeUnmount, onMounted, ref } from 'vue';
 import { biCardImage } from '@quasar/extras/bootstrap-icons';
 import FileManagerService from '@/api/FileManagerService';
 
-const {src, spinnerColor = 'grey-5',  ratio = 4 / 3, fetch = false, imageBg = false, fit = 'cover', alt='img' } = defineProps<{
+const {src, spinnerColor = 'white',  ratio = 4 / 3, fetch = false, imageBg = false, fit = 'cover', alt='img' } = defineProps<{
     src: string;
     fetch?: boolean;
     imageBg?: boolean;
@@ -73,7 +73,6 @@ const onFetchImage = async () => {
 
     } else {
         srcUrl.value = src;
-        loading.value = false;
         clearLoading();
     }
 

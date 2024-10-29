@@ -45,12 +45,12 @@ const props = defineProps({
     default: '_blank',
   },
 });
-const { WeeGoTo } = useBase();
+const { appGoto } = useBase();
 const onGo = () => {
   if (props.href && props.external) {
     openUrlInNewTab(props.href, props.target);
   } else if (props.to) {
-    WeeGoTo(props.to);
+    appGoto(props.to);
   }
 };
 </script>

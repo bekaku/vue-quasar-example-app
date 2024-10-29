@@ -6,11 +6,11 @@ import {
 } from '@/types/models';
 import { useAxios } from '@/composables/useAxios';
 export default () => {
-  const { callAxiosV2 } = useAxios();
+  const { callAxios } = useAxios();
   const updateFcmSetting = async (
     refreshToken: RefreshTokenRequest
   ): Promise<void> => {
-    await callAxiosV2<void>({
+    await callAxios<void>({
       API: '/api/userNotify/updateFcmSetting',
       method: 'PUT',
       body: refreshToken,
@@ -19,7 +19,7 @@ export default () => {
   const refreshFcmToken = async (
     refreshToken: RefreshTokenRequest
   ): Promise<void> => {
-    await callAxiosV2<void>({
+    await callAxios<void>({
       API: '/api/userNotify/refreshFcmToken',
       method: 'PUT',
       body: refreshToken,
@@ -30,7 +30,7 @@ export default () => {
     page: number,
     size: number
   ): Promise<NotificationDto[] | null> => {
-    // return await callAxiosV2<NotificationDto[]>({
+    // return await callAxios<NotificationDto[]>({
     //   API: `/api/userNotify/findAllByUser?page=${page}&size=${size}`,
     //   method: 'GET',
     // });
@@ -43,19 +43,19 @@ export default () => {
   const findCountAllNotRead = async (
     lastNOtifyId: number
   ): Promise<NotificationCount | null> => {
-    return await callAxiosV2<NotificationCount>({
+    return await callAxios<NotificationCount>({
       API: `/api/userNotify/findCountAllNotRead?lastestNotifyId=${lastNOtifyId}`,
       method: 'GET',
     });
   };
   const updateReadNotify = async (notifyId: number): Promise<void | null> => {
-    return await callAxiosV2<void>({
+    return await callAxios<void>({
       API: `/api/userNotify/updateReadNotify/${notifyId}`,
       method: 'PUT',
     });
   };
   const updateReadNotifyAll = async (): Promise<void | null> => {
-    return await callAxiosV2<void>({
+    return await callAxios<void>({
       API: '/api/userNotify/updateReadNotifyAll',
       method: 'PUT',
     });

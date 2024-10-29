@@ -31,7 +31,7 @@ const props = defineProps({
     require: true,
   },
 });
-const { WeeGoTo } = useBase();
+const { appGoto } = useBase();
 const { t } = useLang();
 const emit = defineEmits(['on-close', 'update:modelValue', 'on-submit']);
 const show = computed({
@@ -45,7 +45,7 @@ const onSubmit = (item: SearchItem) => {
   }&q_hashtag=${item.hashTag ? 'true' : 'false'}&q_theme=${
     item.theme ? 'true' : 'false'
   }`;
-  WeeGoTo(`/search?${q}`);
+  appGoto(`/search?${q}`);
 };
 </script>
 <style lang="sass" scoped>

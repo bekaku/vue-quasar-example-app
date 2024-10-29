@@ -20,7 +20,7 @@
                                     <swiper-slide v-for="(item, i) in items" :key="i">
                                         <q-card flat class="text-center" :style="defualtStyle">
                                             <ripple-item>
-                                                <base-avatar rounded :src="item.image" :size="56">
+                                                <base-avatar rounded :src="item.image" size="56px">
                                                 </base-avatar>
                                                 <q-item>
                                                     <q-item-section>
@@ -49,7 +49,7 @@
                                     <swiper-slide v-for="(item, i) in items" :key="`virtical-${i}`">
                                         <q-card flat class="text-center" :style="defualtStyle">
                                             <ripple-item>
-                                                <base-avatar rounded :src="item.image" :size="56">
+                                                <base-avatar rounded :src="item.image" size="56px">
                                                 </base-avatar>
                                                 <q-item>
                                                     <q-item-section>

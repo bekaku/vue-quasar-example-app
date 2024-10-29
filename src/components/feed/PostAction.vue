@@ -160,7 +160,7 @@ import {
   biBookmark,
 } from '@quasar/extras/bootstrap-icons';
 import { AvatarPlaceHolder128 } from '@/utils/constant';
-const { WeeToast } = useBase();
+const { appToast } = useBase();
 const props = defineProps({
   action: {
     type: String as PropType<PostActionType | undefined>,
@@ -249,7 +249,7 @@ const actionColor = computed(() => {
 });
 // test
 const testNotify = () => {
-  WeeToast(
+  appToast(
     `
     <strong>Chanavee Bekaku</strong><br> Received a reward from Danial <svg class="bi" width="1em" height="1em"><use xlink:href="#collection"/></svg>
     `,

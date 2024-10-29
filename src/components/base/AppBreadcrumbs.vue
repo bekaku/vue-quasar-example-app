@@ -11,7 +11,7 @@
           <template v-else> <span class="text-muted">/</span></template>
         </template>
       </template>
-      <template v-for="(item, index) in breadcrumbs" 
+      <template v-for="(item, index) in breadcrumbs"
       :key="`breadcrumb-${index}-${item.to}`">
       <q-breadcrumbs-el
         :label="item.translateLabel ? t(item.label) : item.label"
@@ -54,14 +54,14 @@ defineProps({
 });
 const permisisonStore = usePermissionStore();
 const { t } = useLang();
-const { WeeGetParam, WeeGetQuery } = useBase();
+const { getParam, getQuery } = useBase();
 const getLink = (item: Breadcrumb) => {
   let link = item.to;
   if (link) {
     const params = item.params;
     if (params && params.length > 0) {
       for (const p of params) {
-        const paramValue = WeeGetParam(p);
+        const paramValue = getParam(p);
         if (paramValue) {
           link = link.replaceAll(`:${p}`, paramValue);
         }
@@ -70,7 +70,7 @@ const getLink = (item: Breadcrumb) => {
     const queries = item.queries;
     if (queries && queries.length > 0) {
       for (const q of queries) {
-        const queryValue = WeeGetQuery(q);
+        const queryValue = getQuery(q);
         if (queryValue) {
           link = link.replaceAll(`{${q}}`, queryValue);
         }

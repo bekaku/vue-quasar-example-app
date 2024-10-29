@@ -13,7 +13,7 @@ import { useSSRContext } from 'vue';
 
 export const useAxios = () => {
   const { canSyncActiveStatusToServer } = useDevice();
-  const { WeeToast, WeeLoader, isDevMode } = useBase();
+  const { appToast, appLoading, isDevMode } = useBase();
   const { locale } = useLang();
   const ssrContext = process.env.SERVER ? useSSRContext() : null;
   const cookies = process.env.SERVER ? Cookies.parseSSR(ssrContext) : Cookies; // otherwise we're on client
@@ -41,8 +41,8 @@ export const useAxios = () => {
     });
   };
   const notifyMessage = (response: AppException): void => {
-    WeeLoader(false);
-    WeeToast(
+    appLoading(false);
+    appToast(
       `<strong>${response.message}</strong><br> ${response.errors?.join(
         '<br>'
       )}`,
@@ -64,8 +64,8 @@ export const useAxios = () => {
     if (!response.message) {
       return;
     }
-    WeeLoader(false);
-    WeeToast(response.message, {
+    appLoading(false);
+    appToast(response.message, {
       multiLine: true,
       html: true,
       type:
@@ -84,13 +84,26 @@ export const useAxios = () => {
       actions: [{ icon: biX, color: 'white' }]
     });
   };
-  const callAxiosV2 = async <T>(req: RequestType): Promise<T | null> => {
-    // const res = await callAxios<T>(req);
-    // return await validateServerResponse<T>(res);
+  // const callAxiosV2 = async <T>(req: RequestType): Promise<T | null> => {
+  //   return new Promise(async (resolve, reject) => {
+  //     callAxios<T>(req)
+  //       .then(async (response) => {
+  //         const finalResponse = await validateServerResponse<T>(response);
+  //         resolve(finalResponse);
+  //       })
+  //       .catch((error) => {
+  //         reject(error);
+  //       });
+  //   });
+  // };
+  const callAxios = async <T>(req: RequestType): Promise<T | null> => {
     return new Promise(async (resolve, reject) => {
-      callAxios<T>(req)
+      callAxiosProcess<T>(req)
         .then(async (response) => {
-          const finalResponse = await validateServerResponse<T>(response);
+          if (response.status != 401 && response.status != 403) {
+            exeptionNotify(response);
+          }
+          const finalResponse = await validateServerResponse<T>(response.data);
           resolve(finalResponse);
         })
         .catch((error) => {
@@ -98,20 +111,20 @@ export const useAxios = () => {
         });
     });
   };
-  const callAxios = async <T>(req: RequestType): Promise<any> => {
-    return new Promise(async (resolve, reject) => {
-      callAxiosProcess<T>(req)
-        .then((response) => {
-          if (response.status != 401 && response.status != 403) {
-            exeptionNotify(response);
-          }
-          resolve(response.data as T);
-        })
-        .catch((error) => {
-          reject(error);
-        });
-    });
-  };
+  // const callAxios = async <T>(req: RequestType): Promise<any> => {
+  //   return new Promise(async (resolve, reject) => {
+  //     callAxiosProcess<T>(req)
+  //       .then((response) => {
+  //         if (response.status != 401 && response.status != 403) {
+  //           exeptionNotify(response);
+  //         }
+  //         resolve(response.data as T);
+  //       })
+  //       .catch((error) => {
+  //         reject(error);
+  //       });
+  //   });
+  // };
   const exeptionNotify = <T>(response: AxiosResponse<T>) => {
     if (response && response.data) {
       if (isAppException(response.data)) {
@@ -134,22 +147,8 @@ export const useAxios = () => {
 
   };
   const callAxiosProcess = async <T>(req: RequestType, devLog: boolean = true): Promise<AxiosResponse<T>> => {
-    const cahSyncOnlineStatus = await canSyncActiveStatusToServer();
+    const canSyncOnlineStatus = await canSyncActiveStatusToServer();
     return new Promise((resolve, reject) => {
-      /* Deprecated
-      // api.defaults.headers = reqHeader();
-      // api.defaults.headers['Accept-Language'] = locale.value;
-      // api.defaults.headers.Authorization = `Bearer ${token}`;
-      // api.defaults.headers.common['Content-Type'] = 'application/json';
-      // api.defaults.headers.common['Accept-Language'] = locale.value as string;
-      // api.defaults.headers.common.Authorization = `Bearer ${cookies.get(
-      //   AppAuthTokenKey
-      // )}`;
-      // api.defaults.headers['Accept-Language'] = locale.value as string;
-       */
-
-
-      // api.defaults.headers['Accept-Language'] =  cookies.get(LocaleKey);
       api.defaults.headers.Authorization = `Bearer ${cookies.get(AppAuthTokenKey)}`;
       // console.log('useAxios > callAxios :', req);
       if (req.baseURL != undefined) {
@@ -169,7 +168,7 @@ export const useAxios = () => {
         api.defaults.responseType = 'json';
       }
 
-      api.defaults.headers['X-Sync-Active'] = cahSyncOnlineStatus ? '1' : '0';
+      api.defaults.headers['X-Sync-Active'] = canSyncOnlineStatus ? '1' : '0';
       api({
         method: req.method,
         url: req.API,
@@ -183,7 +182,7 @@ export const useAxios = () => {
         // if (isDevMode()) {
         //   console.error(`api ${api.defaults.baseURL}${req.API}`, error);
         // }
-        WeeLoader(false);
+        appLoading(false);
         if (error?.response) {
           if (error.response.status != 401 && error.response.status != 403) {
             const responseData = error?.response?.data;
@@ -192,30 +191,9 @@ export const useAxios = () => {
             }
           }
         }
-        // const exeption: any = {
-        //   status: error.response.status,
-        //   message: error.message,
-        //   errors: 'Error'
-        // };
         reject(error);
-        // resolve(exeption);
       });
-
-      // api
-      //   .get(req.API)
-      //   .then((response) => {
-      //     resolve(response.data);
-      //   })
-      //   .catch((error) => {
-      //     reject(error.message);
-      //     WeeLoader(false);
-      //     WeeToast(error.message, {
-      //       multiLine: true,
-      //       type: 'negative',
-      //       timeout: 10 * 1000,
-      //     });
-      //   });
     });
   };
-  return { callAxios, validateServerResponse, callAxiosV2, callAxiosFile, callAxiosProcess };
+  return { callAxios, validateServerResponse, callAxiosFile, callAxiosProcess };
 };

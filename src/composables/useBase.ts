@@ -1,61 +1,58 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useRouter, useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import { computed } from 'vue';
 import { useQuasar } from 'quasar';
 import { useLang } from './useLang';
-import { ITextValue, NotifyOptions, GenerateLinkType } from '@/types/common';
+import { ITextValue, NotifyOptions } from '@/types/common';
 import { SearchOperation } from '@/utils/constant';
+import { formatDate, formatDateTime, formatDistanceFromNow } from '@/utils/dateUtil';
 import {
-  formatDateTime,
-  formatDate,
-  formatDistanceFromNow,
-} from '@/utils/dateUtil';
-import {
-  biInfoCircle,
   biCheckCircle,
-  biExclamationTriangle,
   biExclamationCircle,
-  biX,
+  biExclamationTriangle,
+  biInfoCircle,
+  biX
 } from '@quasar/extras/bootstrap-icons';
 import { DOMPurify } from 'boot/dompurify';
 import { Clipboard } from '@capacitor/clipboard';
+
 export const useBase = () => {
   const { t, locale } = useLang();
-  const $q = useQuasar();
+  const {dark, loading, notify, dialog} = useQuasar();
   const route = useRoute();
   const router = useRouter();
 
-  const isDark = computed(() => $q.dark.isActive);
+  const isDark = computed(() => dark.isActive);
   const getCurrentPath = (fullPath = true) => {
     return fullPath ? route.fullPath : route.path;
   };
   const getPreviousPath = () => {
     return router.options.history.state.back;
   };
-  const WeeGetParam = (field: string): string | undefined => {
+  const getParam = (field: string): string | undefined => {
     if (!field) {
       return undefined;
     }
     return route.params ? (route.params[field] as string) : undefined;
   };
-  const WeeGetQuery = (field: string): string | undefined => {
+  const getParamNumber = (att: string): number => {
+    const val = getParam(att);
+    return val != undefined ? +val : 0;
+  };
+  const getQuery = (field: string): string | undefined => {
     if (!field) {
       return;
     }
     return route.query ? (route.query[field] as string) : undefined;
   };
+  const getQueryNumber = (att: string): number => {
+    const val = getQuery(att);
+    return val != undefined ? +val : 0;
+  };
   const onReplaceUrl = (url: string) => {
     history.pushState({}, '', url);
   };
-  const getParamNumber = (att: string): number => {
-    const val = WeeGetParam(att);
-    return val != undefined ? +val : 0;
-  };
-  const getQueryNumber = (att: string): number => {
-    const val = WeeGetQuery(att);
-    return val != undefined ? +val : 0;
-  };
-  const WeeGoTo = (link: string | undefined, replace?: boolean): void => {
+  const appGoto = (link: string | undefined, replace?: boolean): void => {
     if (!link) {
       return;
     }
@@ -68,31 +65,32 @@ export const useBase = () => {
     }
   };
 
-  const WeeLoaderClose = () => {
-    if ($q.loading.isActive) {
-      $q.loading.hide();
+  const appLoaderClose = () => {
+    if (loading.isActive) {
+      loading.hide();
     }
   };
-  const WeeLoader = (open = true, message = undefined, delay = 0): void => {
+  const appLoading = (open = true, message = undefined, delay = 0): void => {
     if (open) {
-      WeeLoaderClose();
-      $q.loading.show({
+      appLoaderClose();
+      loading.show({
         delay: delay, // ms
-        message: message === undefined ? t('base.pleaseWait') : message,
+        message: message || t('base.pleaseWait'),
       });
     } else {
-      WeeLoaderClose();
+      appLoaderClose();
     }
   };
   /* https://quasar.dev/quasar-plugins/notify
         position > top-left top-right bottom-left bottom-right top bottom left right center
-    WeeToast('Quasar Framework Template',{type:'positive', position:'right', color:''});
-    WeeToast('Quasar Framework Template',{caption:'5 Minutes ago', avatar: 'https://cdn.quasar.dev/img/boy-avatar.png'});
+    appToast('Quasar Framework Template',{type:'positive', position:'right', color:''});
+    appToast('Quasar Framework Template',{caption:'5 Minutes ago', avatar: 'https://cdn.quasar.dev/img/boy-avatar.png'});
      */
-  const WeeToast = (message: string, options: NotifyOptions | undefined) => {
+  const appToast = (message: string, options: NotifyOptions | undefined=undefined) => {
     if (!message) {
       return;
     }
+
     let icon :string |undefined = undefined;
     if (options && options.type) {
       const t = options.type;
@@ -106,7 +104,8 @@ export const useBase = () => {
         icon = biInfoCircle;
       }
     }
-    $q.notify(
+
+    notify(
       Object.assign(
         {
           message,
@@ -125,21 +124,21 @@ export const useBase = () => {
   };
 
   /**
-   * const conf = await WeeConfirm(t('app.monogram'), t('base.deleteConfirm'));
+   * const conf = await appConfirm(t('app.monogram'), t('base.deleteConfirm'));
    * @param title
    * @param text
    * @param okBtn
    * @param cancelBtn
    * @returns
    */
-  const WeeConfirm = async (
+  const appConfirm = async (
     title: string,
     text: string,
     okBtn = {}, //btn component
     cancelBtn = {} //btn component
   ) => {
     return new Promise((resolve) => {
-      $q.dialog({
+      dialog({
         title: title,
         message: text,
         ok: Object.assign(
@@ -200,13 +199,13 @@ export const useBase = () => {
       : undefined
   );
 
-  const AppFormatDate = (d: string, fmt: string) => {
+  const appFormatDate = (d: string, fmt: string) => {
     return formatDate(d, fmt, locale.value);
   };
-  const AppFormatDateTime = (d: string, fmt: string) => {
+  const appFormatDateTime = (d: string, fmt: string) => {
     return formatDateTime(d, fmt, locale.value);
   };
-  const AppFormatDateDistance = (d: string) => {
+  const appFormatDateDistance = (d: string) => {
     return formatDistanceFromNow(d, locale.value);
   };
 
@@ -257,69 +256,37 @@ export const useBase = () => {
       (item.symbol ? t('readableNum.' + item.symbol) : '')
       : '0';
   };
-  const generateWebLink = (params: string, type: GenerateLinkType) => {
-    let appUrl = process.env.webAppUrl;
-    if (type == 'post') {
-      appUrl += `/post/view/${params}`;
-    }
-    return appUrl;
-  };
   const writeToClipboard = async (text: string) => {
     await Clipboard.write({
       string: text,
     });
+    appToast(t('success.copy'), {multiLine:false})
     return new Promise((resolve) => {
       resolve(true);
     });
   };
-  /**
-   * onOpenProfile($event, post.user.id)
-   * @param event
-   * @param userId
-   */
-  const onOpenProfile = (
-    event: any,
-    userId: number | string | null | undefined
-  ) => {
-    const l = getUserPageLink(userId);
-    if (userId && l) {
-      WeeGoTo(l);
-    }
-    if (event) {
-      event.stopImmediatePropagation();
-    }
-  };
-  const getUserPageLink = (userId: number | string | null | undefined) => {
-    if (userId) {
-      return `/user/${userId}`;
-    }
-    return undefined;
-  };
   return {
-    WeeGetParam,
-    WeeGetQuery,
-    WeeGoTo,
-    WeeLoader,
-    WeeToast,
-    WeeConfirm,
+    getParam,
+    getQuery,
+    appGoto,
+    appLoading,
+    appToast,
+    appConfirm,
     getCurrentPath,
     searchOperations,
     datePickerLocale,
     getParamNumber,
     getQueryNumber,
     getPreviousPath,
-    AppFormatDate,
+    appFormatDate,
     scrollToTop,
     onReplaceUrl,
     isDevMode,
     inputSanitizeHtml,
-    AppFormatDateTime,
-    AppFormatDateDistance,
+    appFormatDateTime,
+    appFormatDateDistance,
     readableNumber,
     isDark,
-    generateWebLink,
     writeToClipboard,
-    onOpenProfile,
-    getUserPageLink,
   };
 };

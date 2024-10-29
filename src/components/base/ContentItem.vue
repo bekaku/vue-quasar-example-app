@@ -54,7 +54,7 @@ const props = withDefaults(
     hashtagUrlify: false
   }
 );
-const { WeeGoTo } = useBase();
+const { appGoto } = useBase();
 const { t } = useLang();
 const lineHeight = ref(0);
 const showMoreBtn = ref(false);
@@ -124,7 +124,7 @@ const onHashtagClick = (event: any) => {
   if (event.srcElement && event.srcElement.innerText) {
     const hashtag = event.srcElement.innerText;
     if (hashtag) {
-      WeeGoTo(`/hashtag/${hashtag.replace('#', '')}`);
+      appGoto(`/hashtag/${hashtag.replace('#', '')}`);
     }
   }
 
@@ -173,7 +173,7 @@ const urlify = (
 };
 const onOpenPage = (event: any) => {
   if (props.to) {
-    WeeGoTo(props.to);
+    appGoto(props.to);
   }
 
   event.stopImmediatePropagation();

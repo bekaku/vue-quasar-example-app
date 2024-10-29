@@ -82,7 +82,6 @@ const onUpdate = (viewStartIndex: number, viewEndIndex: number, visibleStartInde
 };
 const onResize = () => {
 };
-
 defineExpose({
   onScrollToBottom, onScrollToItem
 });

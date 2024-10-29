@@ -18,7 +18,7 @@
                             <q-card-section>
                                 <q-btn @click="sortDialog = true" color="primary" no-caps>Open sort dialog</q-btn>
 
-                                <pre style="max-height: 350px;overflow: auto;">
+                                <pre style="max-height: 450px;overflow: auto;">
                                     {{ items }}
                                 </pre>
                             </q-card-section>
@@ -34,7 +34,7 @@
                                 <UiTogle v-model="cansort" label="Toggle" :use-checkbox="false"/>
                             </q-toolbar>
                             <q-card-section>
-                                <app-slick v-model="items" label-key="name" value-key="id" @on-sorting="onSorting">
+                                <app-slick style="height: 60vh;overflow: auto;" v-model="items" label-key="name" value-key="id" @on-sorting="onSorting">
                                     <template #item="{ item }">
                                         <q-item>
                                             <q-item-section avatar>

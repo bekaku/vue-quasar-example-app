@@ -113,7 +113,4 @@ const testExtractHashTag = () => {
 </script>
 
 <style lang="scss" scoped>
-.btn-fixed-width {
-    width: 200px
-}
 </style>

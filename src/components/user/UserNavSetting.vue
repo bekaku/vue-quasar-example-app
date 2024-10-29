@@ -1,9 +1,7 @@
 <template>
     <q-item v-bind="$attrs" clickable>
         <q-item-section avatar top>
-            <q-avatar size="36px" class="shadow-5">
-                <q-img :src="authenStore.auth?.avatar?.thumbnail" />
-            </q-avatar>
+            <base-avatar v-if="authenStore.loginedAvatar" class="shadow-5" :src="authenStore.loginedAvatar" size="36px"/>
         </q-item-section>
         <q-item-section v-if="$q.screen.gt.xs">
             <q-item-label lines="1">
@@ -22,7 +20,7 @@
             <q-list style="min-width: 260px">
                 <q-item clickable v-close-popup :to="`/user/${authenStore.auth?.id}`">
                     <q-item-section avatar>
-                        <base-avatar v-if="authenStore.loginedAvatar" :src="authenStore.loginedAvatar" :size="36"
+                        <base-avatar v-if="authenStore.loginedAvatar" :src="authenStore.loginedAvatar" size="36px"
                             rounded />
                         <q-icon v-else :name="biPersonSquare" />
                     </q-item-section>
@@ -109,11 +107,11 @@
 </template>
 
 <script setup lang="ts">
+import BaseAvatar from '@/components/base/BaseAvatar.vue';
 import { useAuth } from '@/composables/useAuth';
 import { useLang } from '@/composables/useLang';
 import { availableLocales } from '@/utils/lang';
 import { availableThemes } from '@/utils/theme';
-import BaseAvatar from '@/components/base/BaseAvatar.vue';
 import {
     biBoxArrowRight,
     biCheck2,

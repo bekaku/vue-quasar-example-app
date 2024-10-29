@@ -89,7 +89,7 @@ const props = defineProps({
 });
 const emit = defineEmits(['on-close', 'on-okay']);
 const { t } = useLang();
-const { WeeLoader } = useBase();
+const { appLoading } = useBase();
 const show = ref(false);
 const newPassword = ref('');
 const logoutAllDevice = ref(true);
@@ -116,14 +116,14 @@ const onUpdateUserPassword = async (req: UserChangePasswordRequest) => {
   if (!props.userId) {
     return;
   }
-  WeeLoader();
+  appLoading();
   if (!props.isFromCompanyAdmin) {
     await updateUserPassword(req, props.userId);
   } else {
     await updateUserPasswordByAdmin(req, props.userId);
   }
 
-  WeeLoader(false);
+  appLoading(false);
   onClose();
 
   newPassword.value = '';

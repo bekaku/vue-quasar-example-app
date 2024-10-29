@@ -133,7 +133,7 @@ const PasswordForm = defineAsyncComponent(
   () => import('@/components/app/PasswordForm.vue'),
 );
 useAppMeta();
-const { WeeConfirm, WeeLoader } = useBase();
+const { appConfirm, appLoading } = useBase();
 const { t } = useLang();
 const { signOut } = useAuth();
 const { selfUpdatePassword, currentAuthSession } = UserService();
@@ -222,14 +222,14 @@ const displayDate = (d: string) => {
   return date.formatDate(d, 'MMMM DD YYYY, HH:mm:ss');
 };
 const onDeleteSession = async (index: number) => {
-  const conf = await WeeConfirm(t('authSessions'), t('base.deleteConfirm'));
+  const conf = await appConfirm(t('authSessions'), t('base.deleteConfirm'));
   if (conf) {
     const item = sessionList.value[index];
     if (item && item.id) {
-      WeeLoader();
+      appLoading();
       const res = await removeAccessTokenSession(item.id);
 
-      WeeLoader(false);
+      appLoading(false);
       if (res && res.status == 'OK') {
         sessionList.value.splice(index, 1);
       }

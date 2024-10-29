@@ -1,17 +1,12 @@
 <template>
-  <div class="row items-center" v-bind="$attrs"
-    :style="{ minHeight: `${height > 0 ? height : 0}px`, width: 'fit-content' }">
+  <div class="avatar-group" v-bind="$attrs">
     <slot>
-      <q-avatar v-for="(item, index) in avatarItems" :key="index" :size="`${size}px`" :square="square"
-        :rounded="rounded" class="overlapping" color="white" :style="`left: -${index * 5}px`">
-        <!--      <img :src="item" style="padding: 1px 1px 1px 1px"  alt=""/>-->
-        <app-image :src="item" style="padding: 1px 1px 1px 1px" :fetch="fetch" :ratio="1" />
-      </q-avatar>
+      <app-image v-for="(item, index) in items.slice(0, limit)" :key="`${index}-${item}`" :square="square"
+        :rounded="rounded" class="avatar" :src="item" :fetch="fetch" :ratio="1" :style="{zIndex:limit-index}" />
       <slot name="moreNumber">
-        <q-avatar v-if="moreNo > 0" :size="size + 'px'" :color="$q.dark.isActive ? 'grey-9' : 'grey-4'"
-          :style="`left: -${avatarItems.length * 4}px`" class="relative-position">
-          <span :class="$q.dark.isActive ? 'text-white' : 'text-black'">+{{ moreNo }}</span>
-        </q-avatar>
+        <div v-if="items.length > 5" class="avatar extra">
+          +{{ items.length - 5 }}
+        </div>
       </slot>
     </slot>
   </div>
@@ -26,78 +21,72 @@
     >
     </base-avatar-group>
  */
-import { computed, PropType } from 'vue';
 import AppImage from '@/components/base/AppImage.vue';
-import { useQuasar } from 'quasar';
 
-const props = defineProps({
-  items: {
-    type: Array as PropType<string[]>,
-    default: () => []
-  },
-  spinnerColor: {
-    type: String as PropType<string>,
-    default: 'white'
-  },
-  imgBg: {
-    type: String as PropType<string>,
-    default: 'bg-grey-8'
-  },
-  ratio: {
-    type: Number as PropType<number | undefined>,
-    default: 4 / 3
-  },
-  size: {
-    type: Number,
-    default: 32
-  },
-  limitUser: {
-    type: Number,
-    default: 5
-  },
-  height: {
-    type: Number,
-    default: 0
-  },
-  square: {
-    type: Boolean,
-    default: false
-  },
-  rounded: {
-    type: Boolean,
-    default: false
-  },
-  fetch: {
-    type: Boolean,
-    default: true
+ withDefaults(defineProps<{
+  items: string[];
+  spinnerColor?: string;
+  color?: string;
+  imgBg?: string;
+  ratio?: number;
+  height?: number;
+  size?: string;
+  square?: boolean;
+  rounded?: boolean;
+  fetch?: boolean;
+  limit?: number;
+  boderColor?: string;
+  overrapSize?: string;
+}>(),
+  {
+    boderColor: 'white',
+    spinnerColor: 'white',
+    imgBg: 'bg-grey-8',
+    ratio: 4 / 3,
+    size: '40px',
+    square: false,
+    rounded: false,
+    fetch: false,
+    bordered: false,
+    borderedColor: '#fff',
+    height: 0,
+    limit: 5,
+    overrapSize: '-10px',
   }
-});
-const $q = useQuasar();
-const moreNo = computed(() => {
-  if (!props.items) {
-    return 0;
-  }
-  const total = props.items.length || 0;
-  const limit = props.limitUser ? props.limitUser : 10;
-  const diff = total - limit;
-  return diff > 0 ? diff : 0;
-});
-const avatarItems = computed((): string[] => {
-  if (!props.items) {
-    return [];
-  }
-  const limit = props.limitUser ? props.limitUser : 10;
-  const images = props.items.slice(0, limit);
-  const items: string[] = [];
-  for (const item of images) {
-    items.push(item);
-  }
-  return items;
-});
+);
 </script>
-<style lang="sass" scoped>
-.overlapping
-  // border: 2px solid #fff
-  // position: absolute
-  position: relative
+<style lang="scss" scoped>
+.avatar-group {
+  display: flex;
+  align-items: center;
+}
+
+.avatar {
+  width: v-bind(size);
+  height: v-bind(size);
+  border-radius: 50%;
+  border: 2px solid v-bind(boderColor);
+  margin-left: v-bind(overrapSize);
+  object-fit: cover;
+}
+
+.avatar.extra {
+  width: v-bind(size);
+  height: v-bind(size);
+  border-radius: 50%;
+  background-color: var(--gray-200);
+  color: #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  margin-left: v-bind(overrapSize);
+}
+
+body.body--dark {
+  .avatar.extra {
+    background-color: var(--color-dark-500);
+    color: white;
+  }
+}
 </style>

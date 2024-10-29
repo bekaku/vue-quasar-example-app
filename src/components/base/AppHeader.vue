@@ -97,7 +97,7 @@ const { bordered = false, reveal = false, showTogleDrawer = false, showLogo = tr
 
 const $q = useQuasar();
 const showGotTopBtn = ref(false);
-// const { WeeGoTo } = useBase();
+// const { appGoto } = useBase();
 const { notify, resetBadgeCount } = useNotification();
 const { t } = useLang();
 const langugeAndThemeStore = useLangugeAndThemeStore();

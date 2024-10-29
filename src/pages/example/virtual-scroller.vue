@@ -15,8 +15,8 @@
                     </p>
                 </div>
                 <q-card-actions>
-                    <q-btn no-caps label="Scroll to bottom" @click="scrollToBottom" />
-                    <q-btn no-caps label="Scroll to top" @click="onScrollTo(0)" />
+                    <q-btn :icon="biArrowDown" no-caps label="Scroll to bottom" @click="scrollToBottom" />
+                    <q-btn :icon="biArrowUp" no-caps label="Scroll to top" @click="onScrollTo(0)" />
                 </q-card-actions>
                 <base-virtual-scroller id="scroll-chat-target-id" ref="scrollerTestRef" class="q-pa-sm" key-field="id"
                     :items="dataList" :min-item-size="24" scroll-area-height="250px" @on-update="onVirtualScrollUpdate">
@@ -24,7 +24,7 @@
                         Before Slot
                     </template>
                     <template v-slot="{ item, index, /*active */ }">
-                        <q-item :key="index" dense>
+                        <q-item :key="index" dense clickable>
                             <q-item-section>
                                 <q-item-label>
                                     #{{ index }} - {{ item.label }}
@@ -45,7 +45,7 @@
 <script setup lang="ts">
 import { useAppMeta } from '@/composables/useAppMeta';
 import { useLang } from '@/composables/useLang';
-import { biList, biFunnel } from '@quasar/extras/bootstrap-icons';
+import { biArrowDown, biArrowUp } from '@quasar/extras/bootstrap-icons';
 import { onMounted, ref, useTemplateRef } from 'vue';
 import BaseVirtualScroller from '@/components/base/BaseVirtualScroller.vue';
 import { VirtualScrollerUpdate } from '@/types/common';

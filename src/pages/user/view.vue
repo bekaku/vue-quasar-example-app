@@ -228,7 +228,7 @@ const FormTogle = defineAsyncComponent(
 const {dark}=useQuasar()
 const { t } = useLang();
 const { required, requireEmail, requireUsername } = useValidation();
-const { WeeLoader } = useBase();
+const { appLoading } = useBase();
 const { findAllBackendRole } = RoleService();
 const roles = ref<Role[]>([]);
 const filterText = ref('');
@@ -261,7 +261,7 @@ const {
   } as UserDto,
 );
 const entity = ref<UserDto>(crudEntity.value);
-WeeLoader();
+appLoading();
 useAppMeta({
   additionalTitle: t('crudAction.' + crudAction.value),
 });
@@ -272,7 +272,7 @@ const onLoadData = async () => {
   roles.value = await findAllBackendRole();
   await preFectData();
   entity.value = crudEntity.value;
-  WeeLoader(false);
+  appLoading(false);
 };
 const filteredList = computed(() => {
   const list = roles.value;

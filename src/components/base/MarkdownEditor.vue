@@ -77,7 +77,7 @@ const { t } = useLang();
 const { uploadApi } = FileManagerService();
 // const text = ref('# Hello Editor ### 🤖 Base');
 const modelValue = defineModel<string>();
-const { isDark, inputSanitizeHtml, WeeLoader } = useBase();
+const { isDark, inputSanitizeHtml, appLoading } = useBase();
 const excludToolBars = ref<ToolbarNames[]>(['save', 'github', 'htmlPreview']);
 const sanitizer = (html: string) => {
   if (props.sanitize) {
@@ -92,7 +92,7 @@ const onSave = (v: any, h: any) => {
   });
 };
 const onUploadImg = async (files: any, callback: any) => {
-  WeeLoader();
+  appLoading();
   const res = await Promise.all(
     files.map((file: any) => {
       return new Promise(async (rev, rej) => {
@@ -124,7 +124,7 @@ const onUploadImg = async (files: any, callback: any) => {
       title: item.fileName,
     })),
   );
-  WeeLoader(false);
+  appLoading(false);
 };
 </script>
 <style scoped lang="scss">

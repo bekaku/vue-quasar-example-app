@@ -14,7 +14,7 @@
                 <q-img :src="item.image" />
               </q-avatar> -->
               <base-avatar :src="item.image" :fetch-image="item.fetchImage === true"
-                :size="item.imageSize ? item.imageSize : 25" />
+                :size="item.imageSize+'px' ? item.imageSize+'px' : '25px'" />
             </template>
             <template v-else-if="item.isSsIcon">
               <ss-icon v-if="item.ssIcon" :icon="item.ssIcon" :size="item.iconSize ? item.iconSize : 24"

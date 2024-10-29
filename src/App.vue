@@ -87,7 +87,7 @@ defineOptions({
   },
 });
 
-const { WeeGoTo, isDevMode } = useBase();
+const { appGoto, isDevMode } = useBase();
 const exceptionStore = useExceptionStore();
 const router = useRouter();
 const authenStore = useAuthenStore();
@@ -102,7 +102,7 @@ onMounted(() => {
     exceptionStore.error.status &&
     exceptionStore.error.message
   ) {
-    WeeGoTo('/error', true);
+    appGoto('/error', true);
   }
   if (authenStore.auth) {
     if (isDevMode()) {
@@ -127,7 +127,7 @@ onMounted(() => {
     //   this.$router.push('/');
     // }
     // if (authenStore.auth === undefined) {
-    //   WeeGoTo('/auth/login', true);
+    //   appGoto('/auth/login', true);
     // }
   };
 });
@@ -145,7 +145,7 @@ watch(langugeAndThemeStore, (state) => {
 });
 watch(authenStore, (state) => {
   if (state && state.sessionExpired) {
-    WeeGoTo('/auth/login', true);
+    appGoto('/auth/login', true);
   }
 });
 onBeforeUnmount(() => {

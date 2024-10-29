@@ -167,8 +167,35 @@ const routes: RouteRecordRaw[] = [
             component: () => import('@/pages/example/virtual-scroller.vue'),
           },
           {
+            path: 'composables',
+            children: [
+              {
+                path: 'use-axios',
+                meta: {
+                  name: 'ExampleComposablesUseAxios',
+                },
+                component: () => import('@/pages/example/composables/use-axios.vue'),
+              },
+              {
+                path: 'use-base',
+                meta: {
+                  name: 'ExampleComposablesUseBase',
+                },
+                component: () => import('@/pages/example/composables/use-base.vue'),
+              },
+            ]
+          },
+          {
             path: 'ui',
             children: [
+              {
+                path: 'avatar',
+                meta: {
+                  name: 'ExampleUiAvatar',
+                  breadcrumbs: ExampleBtnBreadcrumb,
+                },
+                component: () => import('@/pages/example/ui/avatar.vue'),
+              },
               {
                 path: 'button',
                 meta: {

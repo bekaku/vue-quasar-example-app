@@ -19,7 +19,7 @@ const onSubmit=(ev: any)=>{
 
 <template>
   <q-item v-bind="$attrs" dense class="q-pa-none q-mt-md">
-    <q-item-section side>
+    <q-item-section side v-if="authenStore?.auth?.avatar?.thumbnail">
       <base-avatar :src="authenStore?.auth?.avatar?.thumbnail"/>
     </q-item-section>
     <q-item-section>

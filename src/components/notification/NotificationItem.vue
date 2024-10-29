@@ -33,7 +33,7 @@
         {{ item.message }}
       </q-item-label>
       <q-item-label caption>
-        {{ AppFormatDateDistance(item.createdDate) }}
+        {{ appFormatDateDistance(item.createdDate) }}
       </q-item-label>
     </q-item-section>
     <q-item-section side>
@@ -66,7 +66,7 @@ const props = defineProps({
 });
 const { updateReadNotify } = UserNotifyService();
 const { notificationLink } = useNotification();
-const { AppFormatDateDistance, isDark } = useBase();
+const { appFormatDateDistance, isDark } = useBase();
 const emit = defineEmits(['on:click']);
 const onClick = () => {
   if (!props.item.readStatus) {

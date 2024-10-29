@@ -124,6 +124,13 @@ const additionalMenu: IMenu[] = [
         translate: false,
         items: [
           {
+            icon: 'bi-person-circle',
+            permission: '',
+            title: 'Avatar',
+            translate: false,
+            to: '/example/ui/avatar'
+          },
+          {
             icon: 'bi-app',
             permission: '',
             title: 'Button',

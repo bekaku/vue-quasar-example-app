@@ -18,7 +18,7 @@ export const useAuth = () => {
   const ssrContext = process.env.SERVER ? useSSRContext() : null;
   const cookies = process.env.SERVER ? Cookies.parseSSR(ssrContext) : Cookies; // otherwise we're on client
   const authenStore = useAuthenStore();
-  const { WeeConfirm, WeeLoader, isDevMode } = useBase();
+  const { appConfirm, appLoading, isDevMode } = useBase();
   const { t } = useLang();
   const { singoutToServer } = AuthenService();
   const { logoutClear } = useCache();
@@ -43,13 +43,13 @@ export const useAuth = () => {
       return;
     }
 
-    const conf = await WeeConfirm(t('app.monogram'), t('helper.logoutConfirm'));
+    const conf = await appConfirm(t('app.monogram'), t('helper.logoutConfirm'));
     if (conf) {
-      WeeLoader();
+      appLoading();
       const token = getAuthCookieByKey(AppAuthRefeshTokenKey);
       const email = authenStore.auth?.email;
       await logoutToServer(token, email);
-      WeeLoader(false);
+      appLoading(false);
       destroyAuthDataAndRedirect();
     }
     return;
@@ -136,7 +136,7 @@ export const useAuth = () => {
     authenStore.logout();
     if (forceRedirectToLoginPage) {
       window.location.replace('/auth/login');
-      // WeeGoTo('/auth/login', true);
+      // appGoto('/auth/login', true);
     }
   };
 

@@ -28,11 +28,11 @@ import { biArrowLeft } from '@quasar/extras/bootstrap-icons';
 import { useMeta } from 'quasar';
 import { useExceptionStore } from '@/stores/exceptionStore';
 const { t } = useLang();
-const { WeeGetParam } = useBase();
+const { getParam } = useBase();
 const exceptionStore = useExceptionStore();
 useMeta({
   title: t('error.error'),
 });
-const code = ref(WeeGetParam('code'));
-const message = ref(WeeGetParam('message'));
+const code = ref(getParam('code'));
+const message = ref(getParam('message'));
 </script>

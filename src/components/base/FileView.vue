@@ -37,7 +37,7 @@ const props = withDefaults(defineProps<{
   isBlob: false,
 });
 const show = defineModel('show', { type: Boolean, default: false });
-const { WeeLoader } = useBase();
+const { appLoading } = useBase();
 const { downloadCdnData } = FileManagerService();
 const showView = ref(false);
 const fileType = ref<FileType | undefined>(undefined);
@@ -47,7 +47,7 @@ const pdfSrc = ref<any>();
 const imageItems = ref<FileManagerDto[]>([]);
 const imageSelectIndex = ref(0);
 onMounted(async () => {
-  WeeLoader();
+  appLoading();
   await detechFile();
   if (props.selectIndex != undefined && props.selectIndex >= 0) {
     imageSelectIndex.value = props.selectIndex;
@@ -75,7 +75,7 @@ onMounted(async () => {
     await onDownloadFile();
     onClose();
   }
-  WeeLoader(false);
+  appLoading(false);
 });
 const onDownloadFile = async () => {
   const file = props.item;

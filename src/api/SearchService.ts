@@ -1,7 +1,7 @@
 import { ISearch } from '@/types/models';
 // import { useAxios } from '@/composables/useAxios';
 export default () => {
-  // const { callAxiosV2 } = useAxios();
+  // const { callAxios } = useAxios();
   const searchApi = async (
     page: number,
     size: number,
@@ -13,7 +13,7 @@ export default () => {
         resolve([]);
       }, 1500);
     });
-    // return await callAxiosV2<ISearch[]>({
+    // return await callAxios<ISearch[]>({
     //   API: `/api/search/v2?page=${page}&size=${size}&${q}`,
     //   method: 'GET',
     // });

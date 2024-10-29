@@ -40,7 +40,7 @@ onMounted(async () => {
             <q-item class="card-top-bg">
                 <q-item-section avatar>
                     <base-avatar :fetch-image="false"
-                        src="https://www.primefaces.org/cdn/primevue/images/landing/apps/avatar11.jpg" :size="42">
+                        src="https://www.primefaces.org/cdn/primevue/images/landing/apps/avatar11.jpg" size="42px">
                         <template #extra>
                             <q-badge floating color="positive" rounded transparent class="absolute" style="top: 30px" />
                         </template>

@@ -210,7 +210,7 @@ const onHistoryTabChange = (event: any) => {
                         content-style="width: 100%;">
                         <q-item v-for="(item, index) in items" :key="`${item.id}-${index}`" clickable>
                             <q-item-section avatar>
-                                <base-avatar :fetch-image="false" :src="item.image" :size="42">
+                                <base-avatar :fetch-image="false" :src="item.image" size="42px">
                                     <template v-if="item.online" #extra>
                                         <q-badge floating color="positive" rounded transparent class="absolute"
                                             style="top: 30px" />

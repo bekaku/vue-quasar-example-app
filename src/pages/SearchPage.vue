@@ -154,7 +154,7 @@ const SearchItemComp = defineAsyncComponent(
 );
 const { searchApi } = SearchService();
 const { t } = useLang();
-const { WeeGetQuery, onReplaceUrl } = useBase();
+const { getQuery, onReplaceUrl } = useBase();
 const { setTitle } = useAppMeta();
 const items = ref<ISearch[]>([] as ISearch[]);
 const isInfiniteDisabled = ref(false);
@@ -178,11 +178,11 @@ onMounted(async () => {
 });
 const initSearch = () => {
   return new Promise((resolve) => {
-    const q = WeeGetQuery('q');
-    const qPost = WeeGetQuery('q_post');
-    const qProfile = WeeGetQuery('q_profile');
-    const qHashtag = WeeGetQuery('q_hashtag');
-    const qTheme = WeeGetQuery('q_theme');
+    const q = getQuery('q');
+    const qPost = getQuery('q_post');
+    const qProfile = getQuery('q_profile');
+    const qHashtag = getQuery('q_hashtag');
+    const qTheme = getQuery('q_theme');
     searchItem.value.q = q;
     searchItem.value.profile = qProfile && qProfile == 'true' ? true : false;
     searchItem.value.hashTag = qHashtag && qHashtag == 'true' ? true : false;

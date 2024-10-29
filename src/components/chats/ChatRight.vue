@@ -45,7 +45,7 @@ const onHMidiaTabChange = (event: any) => {
     <q-scroll-area style="height: 90vh;" content-active-style="width: 100%;" content-style="width: 100%;">
       <q-card-section class="text-center">
         <base-avatar :fetch-image="false" src="https://www.primefaces.org/cdn/primevue/images/landing/apps/avatar11.jpg"
-          rounded :size="75">
+          rounded size="75px">
         </base-avatar>
         <div class="text-subtitle1 text-weight-bold q-pt-sm">
           PrimeTek

@@ -176,7 +176,7 @@ const props = defineProps({
 const authenStore = useAuthenStore();
 const emit = defineEmits(['on-close', 'on-okay']);
 const { t } = useLang();
-const { WeeToast } = useBase();
+const { appToast } = useBase();
 const canvasImg = ref(null); // ref to <canvas ref="canvasImg" width="120" height="100"></canvas>
 const cropper = ref(null);
 const originalimagFile = ref(null);
@@ -234,7 +234,7 @@ const onFileAdded = (file) => {
       canvasImg.value.src = URL.createObjectURL(originalimagFile.value);
       onInitCroper();
     } else {
-      WeeToast('Please choose an image file.', { type: 'negative' });
+      appToast('Please choose an image file.', { type: 'negative' });
     }
   }
 };

@@ -33,14 +33,14 @@ defineProps({
 });
 const $q = useQuasar();
 const { t } = useLang();
-const { WeeGetParam } = useBase();
+const { getParam } = useBase();
 const permisisonStore = usePermissionStore();
 const getLink = (item: Breadcrumb) => {
   let link = item.to;
   const params = item.params;
   if (link && params && params.length > 0) {
     for (const p of params) {
-      const paramValue = WeeGetParam(p);
+      const paramValue = getParam(p);
       if (paramValue) {
         link = link.replaceAll(`:${p}`, paramValue);
       }

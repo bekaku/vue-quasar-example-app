@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-bind="$attrs">
     <q-list>
       <SlickList axis="y" v-model:list="modelValue" useDragHandle :distance="1" helperClass="sortHelper">
         <SlickItem v-for="(item, i) in modelValue" :key="item.id" :index="i" class="SortableHelper">

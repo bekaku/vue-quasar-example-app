@@ -24,7 +24,7 @@ export const useCrudList = <T>(
     options ? options.itemsPerPage : 10
   );
   const { t } = useLang();
-  const { WeeGoTo, getCurrentPath, WeeGetQuery, WeeConfirm, WeeLoader, inputSanitizeHtml } =
+  const { appGoto, getCurrentPath, getQuery, appConfirm, appLoading, inputSanitizeHtml } =
     useBase();
   const { callAxios } = useAxios();
   const dataList = ref<T[]>([]);
@@ -57,7 +57,7 @@ export const useCrudList = <T>(
     );
   };
   const validateQSearch = () => {
-    const qParam = WeeGetQuery(SearchParamiter);
+    const qParam = getQuery(SearchParamiter);
     const qParmArray = qParam?.split(',');
     const operations: any = SearchOperation;
     if (qParmArray && qParmArray.length > 0) {
@@ -177,7 +177,7 @@ export const useCrudList = <T>(
           if (response.last != undefined) {
             pages.value.last = response.last;
           }
-        } else if (isArray(response)) {
+        } else if (isArray(response) && response!=null) {
           dataList.value = response;
         }
       }
@@ -247,7 +247,7 @@ export const useCrudList = <T>(
     if (!pathParam.value) {
       return;
     }
-    WeeGoTo(pathParam.value);
+    appGoto(pathParam.value);
     // onReplaceUrl(pathParam.value);
     await fetchList();
   };
@@ -283,26 +283,26 @@ export const useCrudList = <T>(
     indexOrIds: number | number[],
     isSingle: boolean
   ) => {
-    const conf = await WeeConfirm(t('app.monogram'), t('base.deleteConfirm'));
+    const conf = await appConfirm(t('app.monogram'), t('base.deleteConfirm'));
     if (conf) {
       if (isSingle) {
         const item: any = await getItemByIndex(indexOrIds as number);
         if (item) {
           const i: number = await getItemIndexById(item.id);
-          WeeLoader();
+          appLoading();
           const status = await onDeleteItemSingle(item.id);
           if (status && i != -1) {
             dataList.value.splice(i, 1);
           }
-          WeeLoader(false);
+          appLoading(false);
         }
       } else {
-        WeeLoader();
+        appLoading();
         for (const id of indexOrIds as number[]) {
           await onDeleteItemSingle(id);
         }
         await fetchList();
-        WeeLoader(false);
+        appLoading(false);
       }
     }
   };
@@ -322,13 +322,13 @@ export const useCrudList = <T>(
       });
     }
     return new Promise((resolve) => {
-      resolve(response.status == 'OK');
+      resolve(!!(response && response.status == 'OK'));
     });
   };
 
   const onNewForm = () => {
     if (options.apiEndpoint && options.crudName) {
-      WeeGoTo(`${options.crudName.replaceAll('_', '-')}/${CrudAction.NEW}/0`);
+      appGoto(`${options.crudName.replaceAll('_', '-')}/${CrudAction.NEW}/0`);
     }
   };
   const onItemClick = async (index: number) => {
@@ -337,7 +337,7 @@ export const useCrudList = <T>(
       return;
     }
     if (options.apiEndpoint && options.crudName) {
-      WeeGoTo(
+      appGoto(
         `${options.crudName.replaceAll('_', '-')}/${CrudAction.VIEW}/${item.id}`
       );
     }
@@ -348,7 +348,7 @@ export const useCrudList = <T>(
       return;
     }
     if (options.apiEndpoint && options.crudName) {
-      WeeGoTo(
+      appGoto(
         `${options.crudName.replaceAll('_', '-')}/${CrudAction.COPY}/${item.id}`
       );
     }

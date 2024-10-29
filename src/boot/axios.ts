@@ -5,10 +5,10 @@ import axios, { AxiosInstance } from 'axios';
 import { Cookies } from 'quasar';
 // import { canRefreshToken } from '@/utils/JwtUtil';
 import { useAuthenStore } from '@/stores/authenStore';
-import { getTokenStatus } from '@/utils/jwtUtil';
+// import { getTokenStatus } from '@/utils/jwtUtil';
 
-const AppAuthRefeshTokenKey ='_myappkey_01';
-const AppAuthTokenKey ='_myappkey_02';
+// const AppAuthTokenKey ='_myappkey_01';
+const AppAuthRefeshTokenKey ='_myappkey_02';
 const DefaultApiCLient ='default';
 const LocaleKey ='_myappkey_locale';
 
@@ -70,7 +70,7 @@ export default boot(({ app, redirect, ssrContext, store }) => {
     }, error => {
       return Promise.reject(error);
     });
-    api.interceptors.response.use(function (response) {
+    api.interceptors.response.use(function(response) {
       return response;
     }, async (error) => {
 
@@ -80,7 +80,8 @@ export default boot(({ app, redirect, ssrContext, store }) => {
       if (refreshToken && error.response && error.response.status === 403 && !originalRequest._retry) {
 
         if (isRefreshing) {
-          return new Promise(function (resolve, reject) {
+          return new Promise(function(resolve, reject) {
+            console.warn('isRefreshing > failedQueue.push', originalRequest.url);
             failedQueue.push({ resolve, reject });
           }).then(token => {
             originalRequest.headers['Authorization'] = 'Bearer ' + token;
@@ -90,18 +91,22 @@ export default boot(({ app, redirect, ssrContext, store }) => {
           });
         }
 
-        const currentToken = Cookies.get(AppAuthTokenKey);
-        if (currentToken) {
-          const currentExpireStatus = await getTokenStatus(currentToken);
-          if (currentExpireStatus && currentExpireStatus == 'VALID') {
-            originalRequest.headers['Authorization'] = 'Bearer ' + currentToken;
-            return api(originalRequest);
-          }
-        }
+        //TODO
+        // const currentToken = Cookies.get(AppAuthTokenKey);
+        // if (currentToken) {
+        //   const currentExpireStatus = await getTokenStatus(currentToken);
+        //   console.log('try new call currentExpireStatus', 'currentToken', currentToken, currentExpireStatus);
+        //   if (currentExpireStatus && currentExpireStatus == 'VALID') {
+        //     originalRequest.headers['Authorization'] = 'Bearer ' + currentToken;
+        //     return api(originalRequest);
+        //   }
+        // }
+
         originalRequest._retry = true;
         isRefreshing = true;
 
         return new Promise(async (resolve, reject) => {
+          console.warn('/api/auth/refreshToken', refreshToken);
 
           api.defaults.baseURL = process.env.API;
           api.defaults.responseType = 'json';
@@ -112,17 +117,21 @@ export default boot(({ app, redirect, ssrContext, store }) => {
             }
           })
             .then(async ({ data }) => {
+              console.warn('/api/auth/refreshToken then', data);
               // if (data && data.refreshToken && data.authenticationToken) {
               await authenStore.setRefreshTokenCookie(undefined, data);
               originalRequest.headers['Authorization'] = 'Bearer ' + data.authenticationToken;
               processQueue(null, data.authenticationToken);
+              console.warn('/api/auth/refreshToken end');
               resolve(api(originalRequest));
             })
             .catch((errRefesh) => {
               isRefreshing = false;
+              console.warn('/api/auth/refreshToken catch', errRefesh);
               processQueue(errRefesh, null);
               if (errRefesh?.response && errRefesh?.response?.status) {
                 if (errRefesh.response.status == 401) {
+                  console.warn('GOTO LoginPage');
                   redirect({ path: '/auth/login' });
                 }
               }
@@ -142,3 +151,4 @@ export default boot(({ app, redirect, ssrContext, store }) => {
 });
 
 export { api };
+

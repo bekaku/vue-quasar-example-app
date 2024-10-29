@@ -12,7 +12,7 @@ import {
 } from '@/utils/fileUtils';
 
 export default () => {
-  const { callAxios, callAxiosFile, validateServerResponse } = useAxios();
+  const { callAxios, callAxiosFile } = useAxios();
   const uploadApi = async (
     file: any,
     fileDirectoryId = 0,
@@ -22,16 +22,15 @@ export default () => {
     postData.append(FILES_UPLOAD_ATT, file);
     postData.append(FILES_DIRECTORY_ID_ATT, fileDirectoryId.toString());
     postData.append('resizeImage', resizeImage ? '1' : '0');
-    const res = await callAxios<FileManagerDto>({
+    return await callAxios<FileManagerDto>({
       API: '/api/fileManager/uploadApi',
       method: 'POST',
       body: postData,
       baseURL: process.env.cdnBaseUrl,
       contentType: 'multipart/form-data'
     });
-    return await validateServerResponse<FileManagerDto>(res);
   };
-  const deleteFileApi = async (fileId: number): Promise<ResponseMessage> => {
+  const deleteFileApi = async (fileId: number): Promise<ResponseMessage | null> => {
     return await callAxios<ResponseMessage>({
       API: `/api/fileManager/deleteFileApi/${fileId}`,
       method: 'DELETE',
@@ -40,7 +39,7 @@ export default () => {
   };
   const updateUserAvatar = async (
     fileManagerId: number
-  ): Promise<ResponseMessage> => {
+  ): Promise<ResponseMessage | null> => {
     return await callAxios<ResponseMessage>({
       API: `/api/fileManager/updateUserAvatar?fileManagerId=${fileManagerId}`,
       method: 'PUT',
@@ -49,7 +48,7 @@ export default () => {
   };
   const updateUserCover = async (
     fileManagerId: number
-  ): Promise<ResponseMessage> => {
+  ): Promise<ResponseMessage | null> => {
     return await callAxios<ResponseMessage>({
       API: `/api/fileManager/updateUserCover?fileManagerId=${fileManagerId}`,
       method: 'PUT',

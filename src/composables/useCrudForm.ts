@@ -24,15 +24,15 @@ import {
 
 
 export const useCrudForm = <T>(options: CrudFormApiOptions, initialEntity: T) => {
-  const { WeeGoTo, WeeGetParam, WeeToast, WeeConfirm, isDevMode, getPreviousPath } = useBase();
+  const { appGoto, getParam, appToast, appConfirm, isDevMode, getPreviousPath } = useBase();
   const { callAxios } = useAxios();
   const { t } = useLang();
 
   const previousPath = ref(getPreviousPath() as string);
   const loading = ref(false);
   const crudId = ref<number>(
-    WeeGetParam(PageIdParamiter) != undefined
-      ? convertStringToNumber(WeeGetParam(PageIdParamiter))
+    getParam(PageIdParamiter) != undefined
+      ? convertStringToNumber(getParam(PageIdParamiter))
       : 0
   );
 
@@ -41,7 +41,7 @@ export const useCrudForm = <T>(options: CrudFormApiOptions, initialEntity: T) =>
     options.requestEntityName ? options.requestEntityName : undefined
   );
   const crudAction = ref<ICrudAction>(
-    WeeGetParam(PageActionParamiter) as ICrudAction
+    getParam(PageActionParamiter) as ICrudAction
   );
   const fetchDataLink = ref(options.fetchDataLink);
   onMounted(async () => {
@@ -129,7 +129,7 @@ export const useCrudForm = <T>(options: CrudFormApiOptions, initialEntity: T) =>
             : '';
     }
     if (backLink) {
-      WeeGoTo(backLink);
+      appGoto(backLink);
     }
   };
   const apiEnpoint = computed(() => {
@@ -198,7 +198,7 @@ export const useCrudForm = <T>(options: CrudFormApiOptions, initialEntity: T) =>
     });
   };
   const showToast = (message: string) => {
-    WeeToast(message, {
+    appToast(message, {
       multiLine: false,
       html: true,
       type: 'positive',
@@ -224,7 +224,7 @@ export const useCrudForm = <T>(options: CrudFormApiOptions, initialEntity: T) =>
     ) {
       return;
     }
-    const conf = await WeeConfirm(t('app.monogram'), t('base.deleteConfirm'));
+    const conf = await appConfirm(t('app.monogram'), t('base.deleteConfirm'));
     if (conf) {
       await callAxios<ResponseMessage>({
         API: deleteApiEndpoint.value,
