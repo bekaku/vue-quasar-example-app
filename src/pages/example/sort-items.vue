@@ -18,7 +18,7 @@
                             <q-card-section>
                                 <q-btn @click="sortDialog = true" color="primary" no-caps>Open sort dialog</q-btn>
 
-                                <pre style="max-height: 450px;overflow: auto;">
+                                <pre style="max-height: 450px;overflow: auto;" class="bg-black text-light-green-13">
                                     {{ items }}
                                 </pre>
                             </q-card-section>

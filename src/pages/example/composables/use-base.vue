@@ -9,19 +9,19 @@
         <q-separator />
       </q-card-section>
       <q-card-section class="q-gutter-md">
-        <q-btn
+        <ui-button
           label="show loading"
           color="primary"
           unelevated
           @click="loader"
         />
-        <q-btn label="show toast" color="warning" @click="toaster" />
-        <q-btn label="show confirm" color="negative" @click="confirm" />
-        <q-btn label="show confirm Custom Btn" @click="confirm2" />
+        <ui-button label="show toast" color="warning" @click="toaster" />
+        <ui-button label="show confirm" color="negative" @click="confirm" />
+        <ui-button label="show confirm Custom Btn" @click="confirm2" />
         <q-input v-model="textModel" outlined style="width: 250px">
           <template v-slot:append>
-            <q-btn flat round :icon="biCopy" @click="onCopyText">
-            </q-btn>
+            <ui-button flat round :icon="biCopy" @click="onCopyText">
+            </ui-button>
           </template>
         </q-input>
       </q-card-section>
@@ -35,6 +35,7 @@ import { useBase } from '@/composables/useBase';
 import { useLang } from '@/composables/useLang';
 import { biCopy } from '@quasar/extras/bootstrap-icons';
 import { ref } from 'vue';
+import UiButton from '@/components/quasar/Button.vue';
 
 const { t } = useLang();
 const { setTitle } = useAppMeta();

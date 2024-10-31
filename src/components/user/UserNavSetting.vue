@@ -29,7 +29,9 @@
                 <q-separator />
                 <q-item clickable>
                     <q-item-section avatar>
-                        <q-icon :name="biMoon" />
+                      <q-icon
+                        :name="langugeAndThemeStore.theme == 'dark' ? biMoon : biSun"
+                      />
                     </q-item-section>
                     <q-item-section>
                         <q-item-label lines="1">
@@ -113,15 +115,15 @@ import { useLang } from '@/composables/useLang';
 import { availableLocales } from '@/utils/lang';
 import { availableThemes } from '@/utils/theme';
 import {
-    biBoxArrowRight,
-    biCheck2,
-    biChevronExpand,
-    biChevronRight,
-    biGear,
-    biMoon,
-    biPersonSquare,
-    biQuestionCircle,
-    biTranslate
+  biBoxArrowRight,
+  biCheck2,
+  biChevronExpand,
+  biChevronRight,
+  biGear,
+  biMoon,
+  biPersonSquare,
+  biQuestionCircle, biSun,
+  biTranslate
 } from '@quasar/extras/bootstrap-icons';
 import { useQuasar } from 'quasar';
 import { useAuthenStore } from 'stores/authenStore';

@@ -1,8 +1,8 @@
 import { RouteRecordRaw } from 'vue-router';
 import {
-  Permission,
-  User,
-  Role,
+  PermissionPermission,
+  UserPermission,
+  RolePermission,
   BackendLogin,
 } from '@/utils/appPermissionList';
 import {
@@ -35,7 +35,7 @@ const routes: RouteRecordRaw[] = [
             path: '',
             meta: {
               pageName: 'model_permission',
-              permission: [Permission.list]
+              permission: [PermissionPermission.list]
             },
             component: () => import('@/pages/permission/index.vue'),
           },
@@ -43,7 +43,7 @@ const routes: RouteRecordRaw[] = [
             path: ':crud/:id/',
             meta: {
               pageName: 'model_permission',
-              permission: [Permission.view],
+              permission: [PermissionPermission.view],
               breadcrumbs: PermissionFormBreadcrumb,
               tabs: TabCompanyConfig
             },
@@ -58,7 +58,7 @@ const routes: RouteRecordRaw[] = [
             path: '',
             meta: {
               pageName: 'model_role',
-              permission: [Role.list]
+              permission: [RolePermission.list]
             },
             component: () => import('@/pages/role/index.vue'),
           },
@@ -66,7 +66,7 @@ const routes: RouteRecordRaw[] = [
             path: ':crud/:id/',
             meta: {
               pageName: 'model_role',
-              permission: [Role.view],
+              permission: [RolePermission.view],
               breadcrumbs: RoleFormBreadcrumb,
             },
             component: () => import('@/pages/role/view.vue'),
@@ -80,7 +80,7 @@ const routes: RouteRecordRaw[] = [
             path: '',
             meta: {
               pageName: 'model_user',
-              permission: [User.list],
+              permission: [UserPermission.list],
             },
             component: () => import('@/pages/user/index.vue'),
           },
@@ -88,7 +88,7 @@ const routes: RouteRecordRaw[] = [
             path: ':crud/:id/',
             meta: {
               pageName: 'model_user',
-              permission: [User.view],
+              permission: [UserPermission.view],
               breadcrumbs: UserFormBreadcrumb,
             },
             component: () => import('@/pages/user/view.vue'),
@@ -182,6 +182,13 @@ const routes: RouteRecordRaw[] = [
                   name: 'ExampleComposablesUseBase',
                 },
                 component: () => import('@/pages/example/composables/use-base.vue'),
+              },
+              {
+                path: 'use-pagefecth',
+                meta: {
+                  name: 'ExampleComposablesUsePagefecth',
+                },
+                component: () => import('@/pages/example/composables/use-pagefecth.vue'),
               },
             ]
           },

@@ -139,7 +139,7 @@ export const useCrudForm = <T>(options: CrudFormApiOptions, initialEntity: T) =>
     if (crudAction.value === CrudAction.VIEW) {
       return options.actionPut
         ? options.actionPut
-        : options.apiEndpoint + '/' + snakeToCamel(options.crudName) + (options.methodPutIncludeId==undefined || options.methodPutIncludeId==true ? '/' + crudEntity.value.id : '');
+        : options.apiEndpoint + '/' + snakeToCamel(options.crudName) + (options.methodPutIncludeId===undefined || options.methodPutIncludeId===true ? '/' + crudEntity.value.id : '');
     }
     return options.actionPost
       ? options.actionPost
