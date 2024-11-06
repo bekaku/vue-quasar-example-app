@@ -104,6 +104,7 @@ export interface UserChangePasswordRequest {
   };
 }
 export interface RefreshTokenResponse {
+  userId?: number;
   authenticationToken: string;
   refreshToken: string;
   expiresAt: string;
@@ -302,10 +303,11 @@ export interface UserDto extends Id {
   email: string;
   username?: string | null;
   password?: string | null;
-  token?: string;
-  fcmToken?: string;
-  avatarFileId?: number;
-  coverFileId?: number;
+  token?: string| null;
+  fcmToken?: string| null;
+  avatarFileId?: number| null;
+  coverFileId?: number| null;
+  accessTokenId?:number|null;
   avatar?: ImageDto | null;
   cover?: ImageDto | null;
   active: boolean;

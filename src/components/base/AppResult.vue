@@ -82,7 +82,7 @@ const props = defineProps({
   },
   iconSize: {
     type: String,
-    default: '258px',
+    default: '125px',
   },
   hideBg: {
     type: Boolean,

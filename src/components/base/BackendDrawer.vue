@@ -23,12 +23,6 @@
       <menu-items :menu-items="additionalMenu">
         <template #after>
           <q-separator />
-          <q-item clickable to="/feed">
-            <q-item-section side>
-              <q-icon class="q-text-black" :name="biNewspaper" />
-            </q-item-section>
-            <q-item-section>Social Feed</q-item-section>
-          </q-item>
           <q-item clickable>
             <q-item-section side>
               <q-icon class="q-text-black" :name="biQuestionCircle" />
@@ -66,7 +60,8 @@ import {
   biNewspaper,
   biQuestionCircle,
   biSearch,
-  biCommand
+  biCommand,
+  biChatDots
 } from '@quasar/extras/bootstrap-icons';
 import { useLangugeAndThemeStore } from 'stores/langugeAndThemeStore';
 import { ref } from 'vue';
@@ -182,6 +177,13 @@ const additionalMenu: IMenu[] = [
         ]
       },
       {
+        icon: biChatDots,
+        permission: '',
+        title: 'Chat',
+        translate: false,
+        to: '/chats'
+      },
+      {
         icon: 'bi-cursor-text',
         permission: '',
         title: 'Content text',
@@ -238,6 +240,13 @@ const additionalMenu: IMenu[] = [
         title: 'Sort items',
         translate: false,
         to: '/example/sort-items'
+      },
+      {
+        icon: biNewspaper,
+        permission: '',
+        title: 'Social feed',
+        translate: false,
+        to: '/feed'
       },
       {
         icon: 'bi-arrow-down-up',

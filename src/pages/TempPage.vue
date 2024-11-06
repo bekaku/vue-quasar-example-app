@@ -3,20 +3,10 @@
     <q-card flat bordered class="wee-container-responsive-center">
       <q-card-section>
         <q-toolbar>
-          <q-btn
-            flat
-            :icon="biArrowLeft"
-            :label="t('base.back')"
-            to="/company-theme/view/0"
-          />
+          <q-btn flat :icon="biArrowLeft" :label="t('base.back')" to="/company-theme/view/0" />
           <q-toolbar-title> {{ t('app.name') }} </q-toolbar-title>
           <q-space />
-          <q-btn
-            flat
-            :icon="biPlus"
-            :label="t('base.addNew')"
-            to="/company-theme/view/0"
-          />
+          <q-btn flat :icon="biPlus" :label="t('base.addNew')" to="/company-theme/view/0" />
         </q-toolbar>
         <q-separator />
       </q-card-section>
@@ -28,12 +18,12 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, defineAsyncComponent, ref } from 'vue';
-import { useLang } from '@/composables/useLang';
-import { IApiListResponse, Permission } from '@/types/models';
-import { useAppMeta } from '@/composables/useAppMeta';
 import PermissionService from '@/api/PermissionService';
+import { useAppMeta } from '@/composables/useAppMeta';
+import { useLang } from '@/composables/useLang';
+import { IMenu, Permission } from '@/types/models';
 import { biArrowLeft, biPlus } from '@quasar/extras/bootstrap-icons';
+import { defineAsyncComponent, onMounted, ref } from 'vue';
 const AppResult = defineAsyncComponent(
   () => import('@/components/base/AppResult.vue'),
 );

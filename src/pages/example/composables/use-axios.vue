@@ -101,6 +101,7 @@ const responseError = ref<any>();
 const responseErrorLoading = ref<boolean>(false);
 
 const fetchResponseApi = async () => {
+
     reaponseApiLoading.value = true;
     reponseApiItem.value = await callAxios<IApiListResponse<Permission>>({
         API: '/api/permission?page=0&size=10&sort=code,asc',

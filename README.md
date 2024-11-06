@@ -14,18 +14,17 @@ yarn
 # or
 npm install
 ```
-Config your Project at `my-app`/quasar.config.js
 
-API endpoint
+
+API endpoint at `my-app`/env/`.env.dev` or `my-app`/env/`.env.prod`
 
 ```js
-  env: {
-        API: ctx.dev ? 'http://localhost:8080' : 'https://api.yourdomain.com',
-        cdnBaseUrl: ctx.dev
-          ? 'http://localhost:8080'
-          : 'https://api.yourdomain.com',
-  }
+API= 'http://localhost:8080'
+cdnBaseUrl= 'http://localhost:8080'
 ```
+
+Config your Project at `my-app`/quasar.config.ts
+
 devServer
 ```js
    devServer: {
@@ -92,4 +91,4 @@ docker-compose up -d
 
 ### Customize the configuration
 
-See [Configuring quasar.config.js](https://v2.quasar.dev/quasar-cli-vite/quasar-config-js).
+See [Configuring quasar.config.ts](https://v2.quasar.dev/quasar-cli-vite/quasar-config-js).

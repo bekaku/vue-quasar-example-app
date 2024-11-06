@@ -3,23 +3,22 @@
 </template>
 
 <script setup lang="ts">
-import { defineComponent, watch, onMounted, onBeforeUnmount } from 'vue';
-import { AppSetup } from './utils/app';
-import { useQuasar } from 'quasar';
-import { useLangugeAndThemeStore } from 'stores/langugeAndThemeStore';
-import { useAuthenStore } from 'stores/authenStore';
-import { ITheme } from '@/types/common';
-import { useRouter } from 'vue-router';
-import { useDrawerStore } from '@/stores/drawerStore';
-import { usePermissionStore } from '@/stores/permissionStore';
-import { usePreFetch } from '@/composables/usePreFetch';
-import { IAcl, UserDto } from '@/types/models';
 import { useBase } from '@/composables/useBase';
-import { detroyAuthCookie, isAppException } from '@/utils/appUtil';
-import { useExceptionStore } from '@/stores/exceptionStore';
-import { Cookies } from 'quasar';
-import { AppAuthTokenKey, AUTH_NO_FILTER } from '@/utils/constant';
+import { usePreFetch } from '@/composables/usePreFetch';
 import { useRequiredAuth } from '@/composables/useRequiredAuth';
+import { useDrawerStore } from '@/stores/drawerStore';
+import { useExceptionStore } from '@/stores/exceptionStore';
+import { usePermissionStore } from '@/stores/permissionStore';
+import { ITheme } from '@/types/common';
+import { IAcl, UserDto } from '@/types/models';
+import { detroyAuthCookie, isAppException } from '@/utils/appUtil';
+import { AppAuthTokenKey, AUTH_NO_FILTER } from '@/utils/constant';
+import { Cookies, useQuasar } from 'quasar';
+import { useAuthenStore } from 'stores/authenStore';
+import { useLangugeAndThemeStore } from 'stores/langugeAndThemeStore';
+import { onBeforeUnmount, onMounted, watch } from 'vue';
+import { useRouter } from 'vue-router';
+import { AppSetup } from './utils/app';
 defineOptions({
   async preFetch({ currentRoute, ssrContext, redirect }) {
     const cookies = process.env.SERVER ? Cookies.parseSSR(ssrContext) : Cookies;

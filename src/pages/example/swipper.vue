@@ -45,7 +45,7 @@
                                 Virtical
                             </div>
                             <q-card-section>
-                                <base-swiper-slides :paramiters="slideOptsVertical" style="height: 450px;">
+                                <base-swiper-slides :paramiters="slideOptsVertical" style="height: 450px;width: 250px;">
                                     <swiper-slide v-for="(item, i) in items" :key="`virtical-${i}`">
                                         <q-card flat class="text-center" :style="defualtStyle">
                                             <ripple-item>

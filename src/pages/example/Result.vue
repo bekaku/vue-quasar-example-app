@@ -47,7 +47,7 @@
 import AppResult from '@/components/base/AppResult.vue';
 import { useAppMeta } from '@/composables/useAppMeta';
 import { useLang } from '@/composables/useLang';
-import { biEmojiSmile, biImage, biSend } from '@quasar/extras/bootstrap-icons';
+import { biImage } from '@quasar/extras/bootstrap-icons';
 const { t } = useLang();
 const { setTitle } = useAppMeta();
 setTitle(`Result | ${t('app.name')}`);
