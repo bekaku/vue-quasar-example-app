@@ -16,7 +16,7 @@ npm install
 ```
 
 
-API endpoint at `my-app`/env/`.env.dev` or `my-app`/env/`.env.prod`
+API endpoint at `my-app/env/.env.dev` or `my-app/env/.env.prod`
 
 ```js
 API= 'http://localhost:8080'
