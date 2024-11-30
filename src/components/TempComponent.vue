@@ -133,7 +133,7 @@ How to access to a child method from the parent
 
 //call from parent
 const childComponentRef = ref()
-const childComponentRef = useTemplateRef('childComponentRef')
+const childComponentRef = useTemplateRef<InstanceType<typeof ChildComponent>>('childComponentRef')
  childComponentRef.value.onTestClickFromParent()
 <template>
     <ChildComponent ref="childComponentRef" />
@@ -175,6 +175,7 @@ defineExpose({
 <style scoped lang="scss">
 .text-holder-fitcontent {
   background-color: var(--dark-100);
+  // line-clamp: v-bind(lines);
 }
 
 body.body--dark {

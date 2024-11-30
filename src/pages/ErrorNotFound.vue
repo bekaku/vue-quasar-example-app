@@ -1,6 +1,6 @@
 <template>
   <div class="fullscreen text-center q-pa-md flex flex-center">
-    <app-result status="404" :description="t('error.pageNotFound')">
+    <base-result status="404" :description="t('error.pageNotFound')">
       <template #extra>
         <q-btn
           outline
@@ -9,14 +9,14 @@
           :to="previosPath"
         />
       </template>
-    </app-result>
+    </base-result>
   </div>
 </template>
 
 <script setup lang="ts">
 import { useMeta } from 'quasar';
 import { ref } from 'vue';
-import AppResult from 'components/base/AppResult.vue';
+import BaseResult from 'components/base/BaseResult.vue';
 import { useLang } from '@/composables/useLang';
 import { useBase } from '@/composables/useBase';
 import { biArrowLeft } from '@quasar/extras/bootstrap-icons';

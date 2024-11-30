@@ -3,7 +3,7 @@
         <q-item-section side>
             <template v-if="item.isImage || item.image">
                 <q-avatar square :size="imageSize" class="cursor-pointer" @click="onClick($event, index)">
-                    <app-image :fetch="fetch" :src="item.filePath" />
+                    <base-image :fetch="fetch" :src="item.filePath" />
                 </q-avatar>
             </template>
             <template v-else>
@@ -41,7 +41,7 @@
 import { formatBytes } from '@/utils/appUtil';
 import { getFileTypeIcon } from '@/utils/fileUtils';
 import { FileManagerDto } from '@/types/models';
-import AppImage from '@/components/base/AppImage.vue';
+import BaseImage from '@/components/base/BaseImage.vue';
 import { biTrashFill } from '@quasar/extras/bootstrap-icons';
 import { useLang } from '@/composables/useLang';
 

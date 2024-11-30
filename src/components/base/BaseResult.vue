@@ -3,14 +3,14 @@
     <div class="col">
       <div class="column items-center">
         <div class="col text-center">
-          <img v-if="status == 'empty'" src="/icons/empty-box.png" :style="`width: ${iconSize} ; height: auto`" />
-          <img v-else-if="status == 'error'" :style="`width: ${iconSize} ; height: auto`" src="/icons/sad-man.png" />
+          <!-- <img v-if="status == 'empty'" src="/icons/empty-box.png" :style="`width: ${iconSize} ; height: auto`" /> -->
+          <!-- <img v-else-if="status == 'error'" :style="`width: ${iconSize} ; height: auto`" src="/icons/sad-man.png" /> -->
           <!-- <img
             v-else-if="status == 'warning'"
             src="/icons/warning.png"
             :style="`width: ${iconSize} ; height: auto`"
           /> -->
-          <q-avatar square v-else-if="status == '404'" style="width: 100%; height: auto">
+          <q-avatar square v-if="status == '404'" style="width: 100%; height: auto">
             <img src="/icons/404.png" />
           </q-avatar>
           <q-avatar v-else-if="showIcon" :size="iconSize" :color="!hideBg ? getBgColor() : undefined"
@@ -61,6 +61,7 @@ import {
   mdiPaperclip,
   mdiRobotConfused,
 } from '@quasar/extras/mdi-v6';
+import { useQuasar } from 'quasar';
 import { PropType } from 'vue';
 
 const props = defineProps({
@@ -93,6 +94,7 @@ const props = defineProps({
     default: true,
   },
 });
+const {dark}=useQuasar();
 const getIcon = (): string => {
   let icon: string | undefined = undefined;
 
@@ -148,7 +150,7 @@ const getIconColor = () => {
       color = 'text-red';
       break;
     case 'empty':
-      color = 'text-blue-grey-2';
+      color = 'text-grey-5';
       break;
     default:
       color = 'text-blue';
@@ -163,22 +165,22 @@ const getBgColor = () => {
     case '403':
     case '500':
     case '418':
-      color = 'amber-1';
+      color = !dark.isActive ?  'amber-1' : 'amber-2';
       break;
     case 'success':
-      color = 'green-1';
+      color = !dark.isActive ?  'green-1' : 'green-2';
       break;
     case 'warning':
-      color = 'orange-1';
+      color = !dark.isActive ?  'orange-1' : 'orange-2';
       break;
     case 'error':
-      color = 'red-1';
+      color = !dark.isActive ?  'red-1' : 'red-2';
       break;
     case 'empty':
-      color = 'grey-1';
+      color = !dark.isActive ?  'grey-1' : 'grey-8';
       break;
     default:
-      color = 'blue-1';
+      color = !dark.isActive ?  'blue-1' : 'blue-2';
       break;
   }
   return color;

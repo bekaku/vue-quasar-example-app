@@ -12,8 +12,8 @@ import {
 } from '@quasar/extras/bootstrap-icons';
 import BaseAvatar from '@/components/base/BaseAvatar.vue';
 
-const AppResult = defineAsyncComponent(
-  () => import('@/components/base/AppResult.vue')
+const BaseResult = defineAsyncComponent(
+  () => import('@/components/base/BaseResult.vue')
 );
 const BaseLoadmore = defineAsyncComponent(
   () => import('@/components/base/BaseLoadmore.vue')

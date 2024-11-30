@@ -37,7 +37,13 @@
 
 
                 <div class="row q-gutter-x-xl">
-                    <base-avatar-group :items="items" :limit="5" size="42px" />
+                    <base-avatar-group :items="items" :limit="5" size="42px" >
+                    <template #extra="{index}">
+                    <q-tooltip>
+                      {{ getTooltipBy(index) }}
+                    </q-tooltip>
+                  </template>
+                    </base-avatar-group>
                     <base-avatar-group :items="items" :limit="5" size="42px" boder-color="#00a0dc" />
                 </div>
             </q-card-section>
@@ -66,6 +72,9 @@ const items = ref<string[]>([
     'https://cdn.quasar.dev/img/avatar7.jpg',
     'https://cdn.quasar.dev/img/avatar8.jpg',
 ])
+const getTooltipBy=(index:number)=>{
+  return items.value[index]
+}
 </script>
 
 <style lang="scss" scoped></style>

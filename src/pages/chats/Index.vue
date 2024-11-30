@@ -7,8 +7,8 @@ import ChatContent from '@/components/chats/ChatContent.vue';
 import ChatRight from '@/components/chats/ChatRight.vue';
 import { useQuasar } from 'quasar';
 
-const AppResult = defineAsyncComponent(
-    () => import('@/components/base/AppResult.vue')
+const BaseResult = defineAsyncComponent(
+    () => import('@/components/base/BaseResult.vue')
 );
 const BaseLoadmore = defineAsyncComponent(
     () => import('@/components/base/BaseLoadmore.vue')

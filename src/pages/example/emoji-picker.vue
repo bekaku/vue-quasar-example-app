@@ -21,9 +21,9 @@
                         <q-no-ssr>
                             <q-btn round flat :icon="biEmojiSmile" color="grey-7">
                                 <q-menu>
-                                    <app-emoji-picker :picker-id="`emo-${contentID}`"
-                                        :theme="$q.dark.isActive ? 'dark' : 'light'" @on:emojiClick="onEmojiClick">
-                                    </app-emoji-picker>
+                                    <base-emoji-picker :picker-id="`emo-${contentID}`"
+                                        :theme="dark.isActive ? 'dark' : 'light'" @on:emojiClick="onEmojiClick">
+                                    </base-emoji-picker>
                                 </q-menu>
                             </q-btn>
                         </q-no-ssr>
@@ -42,7 +42,7 @@
 </template>
 
 <script setup lang="ts">
-import AppEmojiPicker from '@/components/base/AppEmojiPicker.vue';
+import BaseEmojiPicker from '@/components/base/BaseEmojiPicker.vue';
 import BaseAvatar from '@/components/base/BaseAvatar.vue';
 import UiButton from '@/components/quasar/Button.vue';
 import { useAppMeta } from '@/composables/useAppMeta';
@@ -56,7 +56,7 @@ const authenStore = useAuthenStore();
 const { t } = useLang();
 const { setTitle } = useAppMeta();
 setTitle(`File picker | ${t('app.name')}`);
-const $q = useQuasar();
+const {dark} = useQuasar();
 const contentID = useId();
 const message = ref();
 const onEmojiClick = (emoji: string) => {

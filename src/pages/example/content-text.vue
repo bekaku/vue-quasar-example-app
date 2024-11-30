@@ -28,6 +28,16 @@
                     </div>
                     <div class="col-12 col-md-6 q-pa-md">
                         <div class="text-h5 q-pb-sm">
+                            Ellipsis
+                        </div>
+
+                        <ellipsis class="q-mb-lg" :lines="4" clickable>
+                            {{ content }}
+                        </ellipsis>
+
+
+
+                        <div class="text-h5 q-pb-sm">
                             Preview with sanitize html
                         </div>
                         <template v-if="showContent">
@@ -63,6 +73,7 @@ import { useAppMeta } from '@/composables/useAppMeta';
 import { useLang } from '@/composables/useLang';
 import { useValidation } from '@/composables/useValidation';
 import { extractHashtagsFromString } from '@/utils/appUtil';
+import Ellipsis from '@/components/base/Ellipsis.vue';
 import { ref, useId } from 'vue';
 const { required } = useValidation();
 const { t } = useLang();

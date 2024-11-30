@@ -5,7 +5,7 @@
         <q-img :src="src" :class="{'bordered':bordered, 'avatar-rounded':!square && rounded, 'avatar-round':!square && !rounded}" :spinner-color="spinnerColor" no-native-menu />
       </template>
       <template v-else>
-        <app-image v-if="src" :src="src" :class="{'bordered':bordered, 'avatar-rounded':!square && rounded, 'avatar-round':!square && !rounded}" :ratio="1"></app-image>
+        <base-image v-if="src" :src="src" :class="{'bordered':bordered, 'avatar-rounded':!square && rounded, 'avatar-round':!square && !rounded}" :ratio="1"></base-image>
       </template>
       <slot name="extra"></slot>
     </slot>
@@ -13,7 +13,7 @@
 </template>
 
 <script setup lang="ts">
-import AppImage from '@/components/base/AppImage.vue';
+import BaseImage from '@/components/base/BaseImage.vue';
 withDefaults(defineProps<{
   src: string;
   spinnerColor?: string;

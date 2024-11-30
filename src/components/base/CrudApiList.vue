@@ -33,7 +33,7 @@
               <q-btn v-if="showSearchBtn" class="q-ml-xs" flat round :icon="biSearch" @click="showSearch = !showSearch">
                 <q-tooltip>{{ t('base.search') }}</q-tooltip>
               </q-btn>
-              <app-sort v-if="showSort" :sort="sort" :fields="sortableHeaders"
+              <base-sort v-if="showSort" :sort="sort" :fields="sortableHeaders"
                 @on-sort-column="$emit('on-sort', $event)" @on-sort-mode="$emit('on-sort-mode', $event)" />
 
               <crud-api-list-header-filter v-if="showFilter" :headers="headers" />
@@ -417,7 +417,7 @@
               </tbody>
             </q-markup-table>
             <q-card-section v-else class="text-center">
-              <app-result status="empty" :description="t('error.dataNotfound')" />
+              <base-result status="empty" :description="t('error.dataNotfound')" />
             </q-card-section>
           </slot>
         </template>
@@ -431,7 +431,7 @@
 </template>
 
 <script setup lang="ts">
-import AppSort from '@/components/base/AppSort.vue';
+import BaseSort from '@/components/base/BaseSort.vue';
 import AppPaging from '@/components/base/Paging.vue';
 import SkeletonTable from '@/components/skeleton/SkeletonTable.vue';
 import { useBase } from '@/composables/useBase';
@@ -472,14 +472,14 @@ import {
 } from '@quasar/extras/bootstrap-icons';
 import { computed, defineAsyncComponent, PropType, ref } from 'vue';
 
-const AppResult = defineAsyncComponent(
-  () => import('@/components/base/AppResult.vue'),
+const BaseResult = defineAsyncComponent(
+  () => import('@/components/base/BaseResult.vue'),
 );
 const DatePicker = defineAsyncComponent(
   () => import('@/components/quasar/DatePicker.vue'),
 );
 const FormTogle = defineAsyncComponent(
-  () => import('@/components/quasar/Togle.vue'),
+  () => import('@/components/quasar/Toggle.vue'),
 );
 const CrudApiListHeaderFilter = defineAsyncComponent(
   () => import('@/components/base/CrudApiListHeaderFilter.vue'),

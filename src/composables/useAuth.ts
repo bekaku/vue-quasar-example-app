@@ -68,7 +68,7 @@ export const useAuth = () => {
         path: '/',
         // domain: secure ? AppDomain : null,
         secure: secure,
-        sameSite: 'Strict'
+        sameSite: 'Lax'
       });
 
       cookies.set(AppAuthRefeshTokenKey, authResponse.refreshToken, {

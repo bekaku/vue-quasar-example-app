@@ -1,7 +1,7 @@
 <template>
   <!-- <q-layout view="hHh LpR fFf"> -->
     <q-layout view="lHh Lpr lff">
-    <app-header :frontend="false" :show-togle-drawer="true" :show-logo="true" bordered :hamberger-icon="biWindowSidebar"/>
+    <base-header :frontend="false" :show-togle-drawer="true" :show-logo="true" bordered :hamberger-icon="biWindowSidebar"/>
     <backend-drawer bordered />
 
     <q-page-container>
@@ -12,7 +12,7 @@
 </template>
 
 <script setup lang="ts">
-import AppHeader from '@/components/base/AppHeader.vue';
+import BaseHeader from '@/components/base/BaseHeader.vue';
 import BackendDrawer from '@/components/base/BackendDrawer.vue';
 import LayoutBreadcrumbTab from '@/components/base/LayoutBreadcrumbTab.vue';
 import { usePermissionStore } from '@/stores/permissionStore';

@@ -34,23 +34,23 @@
 
                             <q-img v-if="cropedUrl == undefined" spinner-color="white" src="/images/no_picture.jpg" />
                             <template v-if="cropedUrl">
-                                <app-image :src="cropedUrl" :ratio="1" alt="1"
+                                <base-image :src="cropedUrl" :ratio="1" alt="1"
                                     style="height: 250px; max-width: 250px" />
 
-                                <app-image :src="cropedUrl" :ratio="3 / 4" alt="3/4"
+                                <base-image :src="cropedUrl" :ratio="3 / 4" alt="3/4"
                                     style="height: 250px; max-width: 250px" />
 
-                                <app-image :src="cropedUrl" :ratio="16 / 9" alt="16/9"
+                                <base-image :src="cropedUrl" :ratio="16 / 9" alt="16/9"
                                     style="height: 250px; max-width: 250px" />
 
                                 <p>cover</p>
-                                <app-image :src="cropedUrl" fit="cover" alt="contain" />
+                                <base-image :src="cropedUrl" fit="cover" alt="contain" />
                                 <p>contain</p>
-                                <app-image :src="cropedUrl" fit="contain" alt="contain" />
+                                <base-image :src="cropedUrl" fit="contain" alt="contain" />
                                 <p>fill</p>
-                                <app-image :src="cropedUrl" fit="fill" alt="fill" />
+                                <base-image :src="cropedUrl" fit="fill" alt="fill" />
                                 <p>scale-down</p>
-                                <app-image :src="cropedUrl" fit="scale-down" image-bg />
+                                <base-image :src="cropedUrl" fit="scale-down" image-bg />
                             </template>
                         </div>
                     </div>
@@ -65,7 +65,7 @@
 
 <script setup lang="ts">
 import ImageCropper from '@/components/base/ImageCropper.vue';
-import AppImage from '@/components/base/AppImage.vue';
+import BaseImage from '@/components/base/BaseImage.vue';
 import { useAppMeta } from '@/composables/useAppMeta';
 import { useLang } from '@/composables/useLang';
 import { getImgUrlFromFile } from '@/utils/fileUtils';

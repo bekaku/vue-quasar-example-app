@@ -1,6 +1,6 @@
 <template>
   <q-layout view="hHh LpR fFf">
-    <app-header :hamberger-menu="false" />
+    <base-header :hamberger-menu="false" />
     <q-page-container class="wee-container-responsive-center">
       <q-page padding class="q-ma-md wee-bg-white">
         <div class="row">
@@ -18,6 +18,6 @@
 </template>
 
 <script lang="ts" setup>
-import AppHeader from '@/components/base/AppHeader.vue';
+import BaseHeader from '@/components/base/BaseHeader.vue';
 import UserSettingDrawer from '@/components/base/UserSettingDrawer.vue';
 </script>

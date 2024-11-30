@@ -195,7 +195,7 @@
                   </q-item>
                 </q-list>
                 <template v-else>
-                  <app-result
+                  <base-result
                     status="empty"
                     :description="t('error.dataNotfound')"
                   />
@@ -240,7 +240,7 @@
                   </q-item>
                 </q-list>
                 <template v-else>
-                  <app-result
+                  <base-result
                     status="empty"
                     icon-size="55px"
                     :description="t('permissionNotFound')"
@@ -265,7 +265,7 @@ import CrudApiForm from '@/components/base/CrudApiForm.vue';
 import { useValidation } from '@/composables/useValidation';
 import PermissionService from '@/api/PermissionService';
 import { useBase } from '@/composables/useBase';
-import FormTogle from '@/components/quasar/Togle.vue'
+import FormTogle from '@/components/quasar/Toggle.vue'
 import {
   biPeople,
   biCheck,
@@ -274,8 +274,8 @@ import {
   biShieldLock,
   biShieldCheck,
 } from '@quasar/extras/bootstrap-icons';
-const AppResult = defineAsyncComponent(
-  () => import('@/components/base/AppResult.vue'),
+const BaseResult = defineAsyncComponent(
+  () => import('@/components/base/BaseResult.vue'),
 );
 const { t } = useLang();
 const { required } = useValidation();

@@ -1,5 +1,5 @@
 <template>
-  <q-menu :style="{width: `${width}px`}" :dark="dark || isDark">
+  <q-menu :style="{ width: width }" :dark="dark || isDark">
     <div class="q-pa-md">
       <div class="q-mb-md">
         <slot>
@@ -7,36 +7,24 @@
         </slot>
       </div>
       <div class="q-mb-md text-center">
-      <q-btn v-if="showConfirm"
-             :color="confirmColor"
-             :disable="disableConfirm"
-             :label="labelConfirm ? labelConfirm : t('base.okay')"
-             @click="onChange(true)"
-             push
-             v-close-popup
-      />
-      <q-btn v-if="showCancel"
-             @click="onChange(false)"
-             class="q-ml-sm"
-             flat
-             :color="cancelColor"
-             :label="labelCancel ? labelCancel : t('base.cancel')"
-             v-close-popup
-      />
+        <q-btn v-if="showConfirm" no-caps :color="confirmColor" :disable="disableConfirm"
+          :label="labelConfirm ? labelConfirm : t('base.okay')" @click="onChange(true)" push v-close-popup />
+        <q-btn v-if="showCancel" no-caps @click="onChange(false)" class="q-ml-sm" flat :color="cancelColor"
+          :label="labelCancel ? labelCancel : t('base.cancel')" v-close-popup />
       </div>
-      <slot name="extraButton"></slot>
+      <slot name="bottom"></slot>
     </div>
   </q-menu>
 </template>
 
 <script setup lang="ts">
 /*
-<app-popup
-        :title="t('wiRequestApproveResendConfirm')"
-        confirm-color="primary"
+<base-pop-confirm
+        :title="t('base.deleteConfirm')"
+        confirm-color="negative"
         @onChange="$emit('resend-approve',$event)"
       >
-      </app-popup>
+      </base-pop-confirm>
 */
 import { useBase } from '@/composables/useBase';
 import { useLang } from '@/composables/useLang';
@@ -47,7 +35,7 @@ const { isDark } = useBase();
 
 withDefaults(defineProps<{
   title?: string;
-  width?: number;
+  width?: string;
   showConfirm?: boolean;
   disableConfirm?: boolean;
   confirmColor?: string;
@@ -63,7 +51,7 @@ withDefaults(defineProps<{
   showCancel: true,
   confirmColor: 'primary',
   cancelColor: 'primary',
-  width: 250
+  width: '250px'
 });
 const emit = defineEmits<{
   onChange: [boolean];
@@ -72,9 +60,9 @@ const emit = defineEmits<{
 }>();
 const onChange = (status: boolean) => {
   emit('onChange', status);
-  if(status){
+  if (status) {
     emit('onOkay');
-  }else{
+  } else {
     emit('onCancel');
   }
 };

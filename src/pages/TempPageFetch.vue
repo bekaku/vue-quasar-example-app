@@ -25,7 +25,7 @@
           <base-spinner></base-spinner>
         </template>
         <template v-else>
-          <app-result
+          <base-result
             v-if="items.length == 0"
             status="empty"
             :description="t('error.dataNotfound')"
@@ -60,8 +60,8 @@ import { Permission } from '@/types/models';
 import { useAppMeta } from '@/composables/useAppMeta';
 import PermissionService from '@/api/PermissionService';
 import { biArrowLeft, biPlus } from '@quasar/extras/bootstrap-icons';
-const AppResult = defineAsyncComponent(
-  () => import('@/components/base/AppResult.vue'),
+const BaseResult = defineAsyncComponent(
+  () => import('@/components/base/BaseResult.vue'),
 );
 const BaseLoadmore = defineAsyncComponent(
   () => import('@/components/BaseLoadmore.vue'),

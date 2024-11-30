@@ -116,10 +116,10 @@
           </base-loadmore>
         </template>
         <template v-else>
-          <app-result
+          <base-result
             status="empty"
             :description="t('error.dataNotfound')"
-          ></app-result>
+          ></base-result>
         </template>
       </div>
     </div>
@@ -140,8 +140,8 @@ import {
   biHash,
   biFileEarmarkText,
 } from '@quasar/extras/bootstrap-icons';
-const AppResult = defineAsyncComponent(
-  () => import('@/components/base/AppResult.vue'),
+const BaseResult = defineAsyncComponent(
+  () => import('@/components/base/BaseResult.vue'),
 );
 const BaseLoadmore = defineAsyncComponent(
   () => import('@/components/base/BaseLoadmore.vue'),

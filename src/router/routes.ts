@@ -212,6 +212,13 @@ const routes: RouteRecordRaw[] = [
                 component: () => import('@/pages/example/ui/button.vue'),
               },
               {
+                path: 'dialog',
+                meta: {
+                  name: 'ExampleUiDialog',
+                },
+                component: () => import('@/pages/example/ui/dialog.vue'),
+              },
+              {
                 path: 'select',
                 meta: {
                   name: 'ExampleUiSelect',

@@ -1,7 +1,7 @@
 <template>
-  <app-dialog
+  <base-dialog
     :icon="biSearch"
-    :model-value="show"
+    v-model="show"
     :full-width="false"
     :title="t('base.search')"
     @on-close="show = false"
@@ -13,12 +13,12 @@
   >
     <q-separator />
     <search-form @on-submit="onSubmit"></search-form>
-  </app-dialog>
+  </base-dialog>
 </template>
 <script setup lang="ts">
 import { computed, defineAsyncComponent } from 'vue';
 import { useLang } from '@/composables/useLang';
-import AppDialog from '@/components/base/AppDialog.vue';
+import BaseDialog from '@/components/base/BaseDialog.vue';
 import { useBase } from '@/composables/useBase';
 import { SearchItem } from '@/types/models';
 import { biSearch } from '@quasar/extras/bootstrap-icons';

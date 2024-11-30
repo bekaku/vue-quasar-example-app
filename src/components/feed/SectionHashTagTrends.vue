@@ -13,7 +13,7 @@
         </q-item-section>
         <q-item-section>
           <q-item-label lines="1"
-            ><app-link
+            ><base-link
               :label="item.tag"
               color="text-black"
               color-dark="text-white"
@@ -44,7 +44,7 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { useLang } from '@/composables/useLang';
-import AppLink from '@/components/base/AppLink.vue';
+import BaseLink from '@/components/base/BaseLink.vue';
 import { biChevronDown, biPlus } from '@quasar/extras/bootstrap-icons';
 import { laHashtagSolid } from '@quasar/extras/line-awesome';
 import { FeedSectionWidth } from '@/utils/constant';

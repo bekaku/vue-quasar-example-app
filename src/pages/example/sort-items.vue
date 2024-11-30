@@ -34,7 +34,7 @@
                                 <UiTogle v-model="cansort" label="Toggle" :use-checkbox="false"/>
                             </q-toolbar>
                             <q-card-section>
-                                <app-slick style="height: 60vh;overflow: auto;" v-model="items" label-key="name" value-key="id" @on-sorting="onSorting">
+                                <base-slick style="height: 60vh;overflow: auto;" v-model="items" label-key="name" value-key="id" @on-sorting="onSorting">
                                     <template #item="{ item }">
                                         <q-item>
                                             <q-item-section avatar>
@@ -57,7 +57,7 @@
                                             </q-item-section>
                                         </q-item>
                                     </template>
-                                </app-slick>
+                                </base-slick>
                             </q-card-section>
                         </q-card>
                     </div>
@@ -66,16 +66,16 @@
             </q-card-section>
         </q-card>
 
-        <app-slick-dialog v-if="sortDialog" v-model="items" v-model:doalogModel="sortDialog" label-key="name"
+        <base-slick-dialog v-if="sortDialog" v-model="items" v-model:doalogModel="sortDialog" label-key="name"
             value-key="id" @on-sorting="onSorting">
-        </app-slick-dialog>
+        </base-slick-dialog>
     </q-page>
 </template>
 
 <script setup lang="ts">
-import AppSlick from '@/components/base/AppSlick.vue';
-import AppSlickDialog from '@/components/base/AppSlickDialog.vue';
-import UiTogle from '@/components/quasar/Togle.vue';
+import BaseSlick from '@/components/base/BaseSlick.vue';
+import BaseSlickDialog from '@/components/base/BaseSlickDialog.vue';
+import UiTogle from '@/components/quasar/Toggle.vue';
 import { useAppMeta } from '@/composables/useAppMeta';
 import { useLang } from '@/composables/useLang';
 import { biList, biFunnel } from '@quasar/extras/bootstrap-icons';

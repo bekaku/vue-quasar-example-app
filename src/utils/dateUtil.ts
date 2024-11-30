@@ -56,6 +56,17 @@ export const getMonthNow = () => {
 export const getCurrentTimestamp = () => {
   return Date.now();
 };
+export const getCurrentTime = () => {
+  const now = new Date();
+  const hours = String(now.getHours()).padStart(2, '0');  // Ensure two digits
+  const minutes = String(now.getMinutes()).padStart(2, '0');  // Ensure two digits
+  return `${hours}:${minutes}`;
+};
+export const getCurrentDateByFormat = (
+  forMatString: string | undefined = FORMAT_DATE14//yyyy-MM-dd
+) => {
+  return formatDateBy(getDateNow(), forMatString);
+};
 export const convertStringToDate = (
   dateString: string,
   format = 'yyyy-MM-dd HH:mm:ss'
@@ -254,14 +265,7 @@ export const formatDateBy = (d: Date, forMatString: string) => {
 export const formatIos = (d: string, forMatString: string) => {
   return format(parseISO(d), forMatString);
 };
-export const getCurrentDateByFormat = (
-  forMatString: string | undefined = undefined
-) => {
-  return formatDateBy(
-    getDateNow(),
-    forMatString ? forMatString : FORMAT_DATE14
-  );
-};
+
 export const isDateEqua = (dateLeft: string, dateRight: string) => {
   const d1 = convertStringToDate(dateLeft, FORMAT_DATE14);
   const d2 = convertStringToDate(dateRight, FORMAT_DATE14);

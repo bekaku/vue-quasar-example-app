@@ -1,6 +1,6 @@
 <template>
-  <app-dialog
-    :model-value="show"
+  <base-dialog
+    v-model="show"
     :full-width="false"
     :title="title"
     @on-close="onClose()"
@@ -49,7 +49,7 @@
       </profile-item>
     </q-virtual-scroll>
     <!-- </q-scroll-area> -->
-  </app-dialog>
+  </base-dialog>
 </template>
 <script setup lang="ts">
 import { PropType, defineAsyncComponent, computed, ref } from 'vue';
@@ -59,8 +59,8 @@ import { biPeople, biSearch } from '@quasar/extras/bootstrap-icons';
 const ProfileItem = defineAsyncComponent(
   () => import('@/components/user/ProfileItem.vue'),
 );
-const AppDialog = defineAsyncComponent(
-  () => import('@/components/base/AppDialog.vue'),
+const BaseDialog = defineAsyncComponent(
+  () => import('@/components/base/BaseDialog.vue'),
 );
 const props = defineProps({
   modelValue: {

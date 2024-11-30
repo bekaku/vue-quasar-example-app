@@ -16,7 +16,7 @@ import { onBeforeUnmount, onMounted, ref } from 'vue';
 import { escapeHtml, isEmpty, openUrlInNewTab, roundDecimal } from '@/utils/appUtil';
 import { useBase } from '@/composables/useBase';
 import { useLang } from '@/composables/useLang';
-import AppLink from '@/components/base/AppLink.vue';
+import BaseLink from '@/components/base/BaseLink.vue';
 import ContentHtml from '@/components/base/ContentHtml.vue';
 
 const props = withDefaults(
@@ -199,8 +199,8 @@ const onShowMoreText = async () => {
       <content-html :content="urlify(content, 'text-primary')" :high-light-text="highLightText"
         @on-press="onOpenPage($event)"></content-html>
     </div>
-    <app-link v-if="showMoreBtn && !showMoreText" :label="t('base.seeMore')" color="text-primary"
-      @click="onShowMoreText"></app-link>
+    <base-link v-if="showMoreBtn && !showMoreText" :label="t('base.seeMore')" color="text-primary"
+      @click="onShowMoreText"></base-link>
     <slot name="bottom">
     </slot>
   </div>

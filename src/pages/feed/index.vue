@@ -1,7 +1,7 @@
 <template>
   <q-page class="q-px-md">
     <q-infinite-scroll @load="onLoadRef" :offset="250">
-      <q-card v-if="!$q.screen.gt.sm" flat bordered class="q-mb-md">
+      <q-card v-if="!screen.gt.sm" flat bordered class="q-mb-md">
         <profile-card
           :avatar-image="authenStore.loginedAvatar"
           :cover-image="authenStore.loginedCover"
@@ -44,7 +44,7 @@ import { useQuasar } from 'quasar';
 
 const authenStore = useAuthenStore();
 useAppMeta();
-const $q=useQuasar();
+const {screen}=useQuasar();
 const initialPost: PostData[] = [
   {
     id: 1,

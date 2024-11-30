@@ -1,22 +1,20 @@
-import {
-  watch,
-  onMounted,
-  onBeforeUnmount,
-  computed,
-  useSSRContext,
-} from 'vue';
-import { IThemeSettingOptions, ITheme } from '@/types/common';
-import { Cookies } from 'quasar';
+import { useBase } from '@/composables/useBase';
 import { useLangugeAndThemeStore } from '@/stores/langugeAndThemeStore';
+import { ITheme, IThemeSettingOptions } from '@/types/common';
 import { ThemeKey } from '@/utils/constant';
 import { addDateByDays } from '@/utils/dateUtil';
-import { useBase } from '@/composables/useBase';
 import {
-  biLaptop,
-  biSun,
   biMoon,
-  biClock,
+  biSun
 } from '@quasar/extras/bootstrap-icons';
+import { Cookies } from 'quasar';
+import {
+  computed,
+  onBeforeUnmount,
+  onMounted,
+  useSSRContext,
+  watch,
+} from 'vue';
 export const availableThemes: {
   key: IThemeSettingOptions;
   text: string;

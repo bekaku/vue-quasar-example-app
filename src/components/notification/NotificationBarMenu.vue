@@ -27,10 +27,10 @@
       </q-card-section>
     </template>
     <template v-else>
-      <app-result
+      <base-result
         status="empty"
         :description="t('error.dataNotfound')"
-      ></app-result>
+      ></base-result>
     </template>
   </q-card>
 </template>
@@ -45,8 +45,8 @@ const NotificationItem = defineAsyncComponent(
 const SkeletonItem = defineAsyncComponent(
   () => import('@/components/skeleton/SkeletonItem.vue'),
 );
-const AppResult = defineAsyncComponent(
-  () => import('@/components/base/AppResult.vue'),
+const BaseResult = defineAsyncComponent(
+  () => import('@/components/base/BaseResult.vue'),
 );
 const { findAllByUser } = UserNotifyService();
 const { t } = useLang();

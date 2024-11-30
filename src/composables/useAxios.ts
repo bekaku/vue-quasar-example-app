@@ -144,7 +144,6 @@ export const useAxios = () => {
           reject(error);
         });
     });
-
   };
   const callAxiosProcess = async <T>(req: RequestType, devLog: boolean = true): Promise<AxiosResponse<T>> => {
     const canSyncOnlineStatus = await canSyncActiveStatusToServer();

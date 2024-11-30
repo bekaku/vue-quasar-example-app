@@ -15,10 +15,7 @@
         />
       </div>
     </div> -->
-    <div
-      class="q-py-md q-px-md"
-      :class="$q.dark.isActive ? 'text-grey-5' : 'text-grey-7'"
-    >
+    <div class="q-py-md q-px-md" :class="dark.isActive ? 'text-grey-5' : 'text-grey-7'">
       <div class="row items-center q-gutter-x-sm">
         <!-- <app-link
           v-for="button in buttons2"
@@ -30,12 +27,7 @@
           color-dark="text-grey-5"
           style="font-weight: 500; font-size: 0.75rem"
         /> -->
-        <q-item
-          v-for="button in buttons2"
-          :key="button.text"
-          :href="button.link"
-          target="_blank"
-        >
+        <q-item v-for="button in buttons2" :key="button.text" :href="button.link" target="_blank">
           <q-item-section avatar>
             <q-icon :name="biShieldExclamation" />
           </q-item-section>
@@ -47,10 +39,7 @@
     </div>
     <q-separator />
 
-    <div
-      class="q-py-md q-px-md"
-      :class="$q.dark.isActive ? 'text-grey-5' : 'text-grey-7'"
-    >
+    <div class="q-py-md q-px-md" :class="dark.isActive ? 'text-grey-5' : 'text-grey-7'">
       <div class="row items-center q-gutter-x-sm q-gutter-y-xs">
         <q-avatar square size="42px" class="q-mr-xs">
           <img src="/logo/logo.png" />
@@ -67,6 +56,8 @@
 import { getYearNow } from '@/utils/dateUtil';
 import { useLang } from '@/composables/useLang';
 import { biShieldExclamation } from '@quasar/extras/bootstrap-icons';
+import { useQuasar } from 'quasar';
+const { dark } = useQuasar();
 const { t } = useLang();
 // const buttons1 = [
 //   { text: 'About' },

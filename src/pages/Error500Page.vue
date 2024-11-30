@@ -1,6 +1,6 @@
 <template>
   <div class="fullscreen text-center q-pa-md flex flex-center">
-    <app-result
+    <base-result
       status="error"
       icon-size="256px"
       :title="code"
@@ -15,14 +15,14 @@
           to="/"
         />
       </template>
-    </app-result>
+    </base-result>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue';
 import { useBase } from '@/composables/useBase';
-import AppResult from 'components/base/AppResult.vue';
+import BaseResult from 'components/base/BaseResult.vue';
 import { useLang } from '@/composables/useLang';
 import { biArrowLeft } from '@quasar/extras/bootstrap-icons';
 import { useMeta } from 'quasar';

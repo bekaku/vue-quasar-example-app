@@ -8,7 +8,7 @@
           bordered
           class="rounded-borders"
         >
-          <AppBreadcrumbs
+          <BaseBreadcrumbs
             :breadcrumbs="breadcrumbs"
             :separator-icon="biChevronRight"
           />
@@ -19,18 +19,18 @@
           "
         />
         <q-toolbar v-if="tabs && tabs.length > 0">
-          <app-tabs :items="tabs" />
+          <base-tabs :items="tabs" />
         </q-toolbar>
       </q-card>
     </div>
   </div>
 </template>
 <script setup lang="ts">
-const AppBreadcrumbs = defineAsyncComponent(
-  () => import('@/components/base/AppBreadcrumbs.vue'),
+const BaseBreadcrumbs = defineAsyncComponent(
+  () => import('@/components/base/BaseBreadcrumbs.vue'),
 );
-const AppTabs = defineAsyncComponent(
-  () => import('@/components/base/AppTabs.vue'),
+const BaseTabs = defineAsyncComponent(
+  () => import('@/components/base/BaseTabs.vue'),
 );
 import { useAppBreadcrumbTabs } from '@/composables/useAppBreadcrumbTabs';
 import { defineAsyncComponent } from 'vue';

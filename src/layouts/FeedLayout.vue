@@ -1,6 +1,6 @@
 <template>
   <q-layout view="hHh LpR fFf">
-    <app-header bordered/>
+    <base-header bordered/>
     <feed-drawer overlay />
     <q-page-container class="app-feed-container q-my-lg">
       <div class="row">
@@ -20,7 +20,7 @@
 
 <script setup lang="ts">
 import FeedDrawer from '@/components/base/FeedDrawer.vue';
-import AppHeader from '@/components/base/AppHeader.vue';
+import BaseHeader from '@/components/base/BaseHeader.vue';
 import FeedLeft from '@/components/feed/FeedLeft.vue';
 import FeedRight from '@/components/feed/FeedRight.vue';
 import { useQuasar } from 'quasar';

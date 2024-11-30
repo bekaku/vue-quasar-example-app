@@ -11,7 +11,7 @@
         <q-separator />
       </q-card-section>
       <q-card-section>
-        <app-result status="empty" :description="t('error.dataNotfound')" />
+        <base-result status="empty" :description="t('error.dataNotfound')" />
       </q-card-section>
     </q-card>
   </q-page>
@@ -24,8 +24,8 @@ import { useLang } from '@/composables/useLang';
 import { IMenu, Permission } from '@/types/models';
 import { biArrowLeft, biPlus } from '@quasar/extras/bootstrap-icons';
 import { defineAsyncComponent, onMounted, ref } from 'vue';
-const AppResult = defineAsyncComponent(
-  () => import('@/components/base/AppResult.vue'),
+const BaseResult = defineAsyncComponent(
+  () => import('@/components/base/BaseResult.vue'),
 );
 const { t } = useLang();
 const { findAll } = PermissionService();

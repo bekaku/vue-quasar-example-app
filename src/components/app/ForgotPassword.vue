@@ -1,6 +1,6 @@
 <template>
-  <app-dialog
-    :model-value="modelValue"
+  <base-dialog
+    v-model="modelValue"
     :full-width="false"
     :title="t('authen.forgetPassword')"
     @on-close="modelValue = false"
@@ -104,7 +104,7 @@
         </q-stepper>
       </q-card-section>
     </q-card>
-  </app-dialog>
+  </base-dialog>
 </template>
 
 <script setup lang="ts">
@@ -124,8 +124,8 @@ import {
   biPersonVcard,
 } from '@quasar/extras/bootstrap-icons';
 import { defineAsyncComponent, ref } from 'vue';
-const AppDialog = defineAsyncComponent(
-  () => import('@/components/base/AppDialog.vue'),
+const BaseDialog = defineAsyncComponent(
+  () => import('@/components/base/BaseDialog.vue'),
 );
 const FormOtp = defineAsyncComponent(
   () => import('@/components/form/FormOtp.vue'),

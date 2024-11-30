@@ -3,7 +3,7 @@
   <q-btn
     type="a"
     align="left"
-    :class="!$q.dark.isActive ? color : colorDark"
+    :class="!dark.isActive ? color : colorDark"
     class="text-capitalize app-text-link btn--no-hover"
     dense
     flat
@@ -19,6 +19,7 @@
 <script setup lang="ts">
 import { PropType } from 'vue';
 import { IHrefTarget } from '@/types/common';
+import { useQuasar } from 'quasar';
 // import { openUrlInNewTab } from '@/utils/appUtil';
 // import {useBase} from '@/composables/useBase';
 defineProps({
@@ -52,6 +53,7 @@ defineProps({
     default: '_blank',
   },
 });
+const {dark}=useQuasar();
 // const { appGoto } = useBase();
 // const onOpen = (event: any) => {
 //   if (props.to) {

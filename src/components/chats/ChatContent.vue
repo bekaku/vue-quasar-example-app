@@ -7,8 +7,8 @@ import { ChatHistoryTab } from '@/types/common';
 import ChatInput from '@/components/chats/ChatInput.vue';
 import ChatMessage from '@/components/chats/Message.vue';
 
-const AppResult = defineAsyncComponent(
-    () => import('@/components/base/AppResult.vue')
+const BaseResult = defineAsyncComponent(
+    () => import('@/components/base/BaseResult.vue')
 );
 const BaseLoadmore = defineAsyncComponent(
     () => import('@/components/base/BaseLoadmore.vue')

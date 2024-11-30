@@ -10,7 +10,7 @@
         </div>
       </div> -->
       <q-card-section>
-        <app-alert
+        <base-alert
           dense
           type="is-warning"
           :icon="biShieldLock"
@@ -18,7 +18,7 @@
           radius
           class="q-mb-md"
         >
-        </app-alert>
+        </base-alert>
         <div class="row">
           <div v-if="showCurrentPassword" class="col-12 col-md-12">
             <q-input
@@ -118,8 +118,8 @@ import {
   biEyeSlash,
 } from '@quasar/extras/bootstrap-icons';
 import { computed, defineAsyncComponent, ref } from 'vue';
-const AppAlert = defineAsyncComponent(
-  () => import('@/components/base/AppAlert.vue'),
+const BaseAlert = defineAsyncComponent(
+  () => import('@/components/base/BaseAlert.vue'),
 );
 interface Props {
   submitLabel?: string;
@@ -127,7 +127,7 @@ interface Props {
   showCurrentPassword?: boolean;
   showLogout?: boolean;
 }
-const props = withDefaults(defineProps<Props>(), {
+withDefaults(defineProps<Props>(), {
   actionAlign: 'center',
   showCurrentPassword: false,
   showLogout: false,

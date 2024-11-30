@@ -21,7 +21,7 @@
 
 <script setup lang="ts">
 /*
- <AppImage
+ <BaseImage
           src="http://localhost:8080/cdn/images/202211/145_1668642842865_fe718909cb0d4bd88e17c8568fe12e2f.jpg"
           style="height: 250px; max-width: 250px"
           fetch

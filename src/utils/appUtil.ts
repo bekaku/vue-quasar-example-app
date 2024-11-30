@@ -340,36 +340,7 @@ export const randomNumber = (min: number, max: number) => {
   return Math.floor(Math.random() * max) + min;;
 }
 
-export const downloadURI = async (url: string, fileName: string) => {
-  const image = await fetch(url)
-  const imageBlog = await image.blob()
-  const imageURL = URL.createObjectURL(imageBlog)
 
-  const link = document.createElement('a')
-  link.href = imageURL
-  link.download = fileName;
-  document.body.appendChild(link)
-  link.click()
-  document.body.removeChild(link)
-};
-
-export const generateimageFileName = (prefix: string | undefined = undefined) => {
-  return `${prefix ? prefix : 'ss'}_${getCurrentTimestamp()}.jpg`;
-};
-export const getImgUrlFromFile = (f: any): Promise<string | undefined> => {
-  if (!f) {
-    return new Promise((resolve) => {
-      resolve(undefined);
-    });
-  }
-  return new Promise((resolve) => {
-    // originalimagFile.value = files[0];
-    if (/^image\/\w+/.test(f.type)) {
-      const url = URL.createObjectURL(f);
-      resolve(url);
-    }
-  });
-};
 export const numberFormat = (no: number) => {
   return no.toLocaleString();
 }

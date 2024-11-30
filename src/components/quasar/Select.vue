@@ -55,7 +55,7 @@ import { useLang } from '@/composables/useLang';
 import { useValidation } from '@/composables/useValidation';
 import { LabelValue } from '@/types/common';
 import { biCheck, biChevronExpand, biX } from '@quasar/extras/bootstrap-icons';
-import SkeletonItem from 'components/skeleton/SkeletonItem.vue';
+import SkeletonItem from '@/components/skeleton/SkeletonItem.vue';
 import { onMounted, ref } from 'vue';
 
 const { requiredSelect } = useValidation();

@@ -1,8 +1,11 @@
 <template>
   <div class="avatar-group" v-bind="$attrs">
     <slot>
-      <app-image v-for="(item, index) in items.slice(0, limit)" :key="`${index}-${item}`" :square="square"
-        :rounded="rounded" class="avatar" :src="item" :fetch="fetch" :ratio="1" :style="{zIndex:limit-index}" />
+      <base-image v-for="(item, index) in items.slice(0, limit)" :key="`${index}-${item}`" :square="square"
+        :rounded="rounded" class="avatar" :src="item" :fetch="fetch" :ratio="1" :style="{zIndex:limit-index}">
+        <slot name="extra" v-bind="{ index }">
+        </slot>
+        </base-image>
       <slot name="moreNumber">
         <div v-if="items.length > 5" class="avatar extra">
           +{{ items.length - 5 }}
@@ -21,7 +24,7 @@
     >
     </base-avatar-group>
  */
-import AppImage from '@/components/base/AppImage.vue';
+import BaseImage from '@/components/base/BaseImage.vue';
 
  withDefaults(defineProps<{
   items: string[];

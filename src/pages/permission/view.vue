@@ -87,21 +87,19 @@
 
 <script setup lang="ts">
 // import { onMounted } from 'vue';
-import { useLang } from '@/composables/useLang';
-import { useCrudForm } from '@/composables/useCrudForm';
-import { Permission } from '@/types/models';
-import { useAppMeta } from '@/composables/useAppMeta';
 import CrudApiForm from '@/components/base/CrudApiForm.vue';
+import { useAppMeta } from '@/composables/useAppMeta';
+import { useCrudForm } from '@/composables/useCrudForm';
+import { useLang } from '@/composables/useLang';
 import { useValidation } from '@/composables/useValidation';
+import { Permission } from '@/types/models';
 import {
   biPencil,
-  biShieldCheck,
-  biCheck,
-  biX,
+  biShieldCheck
 } from '@quasar/extras/bootstrap-icons';
 import { defineAsyncComponent } from 'vue';
 const FormTogle = defineAsyncComponent(
-  () => import('@/components/quasar/Togle.vue'),
+  () => import('@/components/quasar/Toggle.vue'),
 );
 const { t } = useLang();
 const { required } = useValidation();

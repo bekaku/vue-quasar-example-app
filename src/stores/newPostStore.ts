@@ -1,10 +1,9 @@
 import { defineStore } from 'pinia';
-import { PostDataDto } from '@/types/models';
 import { ref } from 'vue';
 export const useNewPostStore = defineStore('newPostStore', () => {
-  const newPost = ref<PostDataDto | undefined>();
+  const newPost = ref<any | undefined>();
   const counter = ref(0);
-  const setNewPost = (p: PostDataDto) => {
+  const setNewPost = (p: any) => {
     newPost.value = p;
   };
   const clearNewPost = () => {

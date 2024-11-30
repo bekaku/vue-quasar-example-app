@@ -1,5 +1,5 @@
 <template>
-    <app-dialog :model-value="show" :title="title ? title : 'Pdf view'" @on-close="onClose" @on-hide="onClose"
+    <base-dialog v-model="show" :title="title ? title : 'Pdf view'" @on-close="onClose" @on-hide="onClose"
         :persistent="true" transition-show="fade" transition-hide="fade" :icon="biFilePdf" full-width full-height>
         <template #toolbarAction>
             <q-btn flat round :icon="biZoomOut" @click="scale = scale > 0.25 ? scale - 0.25 : scale">
@@ -50,11 +50,11 @@
                 <template v-else> Error</template>
             </q-card-section>
         </q-card>
-    </app-dialog>
+    </base-dialog>
 </template>
 
 <script setup lang="ts">
-import AppDialog from '@/components/base/AppDialog.vue';
+import BaseDialog from '@/components/base/BaseDialog.vue';
 import {
     biArrowLeft,
     biArrowRight,
@@ -123,7 +123,7 @@ const downloadPdf = async () => {
             } catch (err) {
                 console.error(err)
             }
-        }else{
+        } else {
             downloadFileFromUrl(props.src, props.title || 'pdf_file.pdf');
         }
     }

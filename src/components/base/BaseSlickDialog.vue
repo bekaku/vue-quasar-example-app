@@ -5,16 +5,16 @@
         <div class="text-h6 ellipsis">{{ t('sort.sort') }}</div>
       </q-card-section>
 
-      <app-slick v-model="modelValue" :label-key="labelKey" :value-key="valueKey" @on-sorting="onSorting">
+      <base-slick v-model="modelValue" :label-key="labelKey" :value-key="valueKey" @on-sorting="onSorting">
 
-      </app-slick>
+      </base-slick>
 
     </q-card>
   </q-dialog>
 </template>
 
 <script setup lang="ts">
-import AppSlick from '@/components/base/AppSlick.vue';
+import BaseSlick from '@/components/base/BaseSlick.vue';
 import { useLang } from '@/composables/useLang';
 defineProps<{
   labelKey: string;

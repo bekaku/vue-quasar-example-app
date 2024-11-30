@@ -4,27 +4,18 @@
       <q-item v-if="post.reference">
         <q-item-section avatar>
           <q-avatar size="30px">
-            <img
-              class="bg-gray-8"
-              src="https://loremflickr.com/320/240?random=1"
-              spinner-color="white"
-              no-native-menu
-            />
+            <img class="bg-gray-8" src="https://loremflickr.com/320/240?random=1" spinner-color="white"
+              no-native-menu />
           </q-avatar>
         </q-item-section>
 
         <q-item-section>
           <q-item-label>
-            <profile-name
-              :label="post.reference.name"
-              color="wee-text-head"
-              to="/user/bekaku"
-            />
+            <profile-name :label="post.reference.name" color="wee-text-head" to="/user/bekaku" />
 
             <span class="text-caption q-ml-sm text-muted">{{
               post.reference.activity
-            }}</span></q-item-label
-          >
+            }}</span></q-item-label>
           <!-- <q-item-label caption>From hashtag #SetAlarm</q-item-label> -->
         </q-item-section>
         <q-item-section side>
@@ -37,30 +28,14 @@
       <q-item>
         <q-item-section avatar top>
           <q-avatar size="48px">
-            <q-img
-              class="bg-gray-8"
-              :src="AvatarPlaceHolder128"
-              spinner-color="white"
-              no-native-menu
-            />
-            <q-badge
-              floating
-              color="positive"
-              rounded
-              transparent
-              class="absolute"
-              style="top: 30px"
-            />
+            <q-img class="bg-gray-8" :src="AvatarPlaceHolder128" spinner-color="white" no-native-menu />
+            <q-badge floating color="positive" rounded transparent class="absolute" style="top: 30px" />
           </q-avatar>
         </q-item-section>
 
         <q-item-section>
           <q-item-label class="text-weight-bold cursor-pointer">
-            <profile-name
-              label="Chanavee Bekaku"
-              color="wee-text-head wee-text-weight-bold"
-              to="/user/bekaku"
-            />
+            <profile-name label="Chanavee Bekaku" color="wee-text-head wee-text-weight-bold" to="/user/bekaku" />
           </q-item-label>
           <q-item-label caption>
             {{ appFormatDateTime(post.postDatetime, FORMAT_DATE12) }}
@@ -73,7 +48,12 @@
     </slot>
 
     <slot name="description">
-      <post-content :content="post.content" :post-id="post.id" />
+      <!-- <post-content :content="post.content" :post-id="post.id" /> -->
+       <q-card-section>
+        <content-item :wrap-text="true" :content="post.content" :content-id="contentUniqeId" :open-post-view="false"
+          :show-copy-text="false" :show-more="false" :showBackground="false">
+        </content-item>
+      </q-card-section>
     </slot>
     <slot name="hashtag">
       <post-hashtag v-if="post.hashtag.length > 0" :items="post.hashtag" />
@@ -85,19 +65,9 @@
 
     <template v-if="post.gallery.length == 0 && opengraphItem">
       <q-card flat>
-        <q-img
-          spinner-color="white"
-          :src="opengraphItem.image"
-          style="max-height: 314px"
-        />
-        <q-item
-          clickable
-          :class="
-            !$q.dark.isActive ? 'bg-grey-2' : 'wee-main-bg-color-theme-dark'
-          "
-          :href="opengraphItem.url"
-          target="_blank"
-        >
+        <q-img spinner-color="white" :src="opengraphItem.image" :ratio="16/9" />
+        <q-item clickable :class="!$q.dark.isActive ? 'bg-grey-2' : 'wee-main-bg-color-theme-dark'
+          " :href="opengraphItem.url" target="_blank">
           <q-item-section>
             <q-item-label :lines="1">{{ opengraphItem.domain }}</q-item-label>
             <q-item-label :lines="1">{{ opengraphItem.title }}</q-item-label>
@@ -108,8 +78,7 @@
           <q-item-section side>
             <q-icon :name="biBoxArrowUpRight" />
           </q-item-section>
-        </q-item> </q-card
-    ></template>
+        </q-item> </q-card></template>
 
     <slot name="engaging">
       <post-engaging />
@@ -128,7 +97,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, PropType } from 'vue';
+import { ref, onMounted, PropType, useId } from 'vue';
 import { AvatarPlaceHolder128 } from '@/utils/constant';
 import CommentSort from '@/components/feed/CommentSort.vue';
 import PostAction from '@/components/feed/PostAction.vue';
@@ -140,6 +109,7 @@ import PostHashtag from '@/components/feed/PostHashtag.vue';
 import PostContent from '@/components/feed/PostContent.vue';
 import ProfileName from '@/components/feed/ProfileName.vue';
 import PostMenu from '@/components/feed/PostMenu.vue';
+import ContentItem from '@/components/base/ContentItem.vue';
 import { PostData, OgMeta } from '@/types/models';
 import { useBase } from '@/composables/useBase';
 import { FORMAT_DATE12 } from '@/utils/dateUtil';
@@ -156,7 +126,8 @@ const props = defineProps({
     type: Number,
   },
 });
-const $q=useQuasar();
+const contentUniqeId = useId();
+const $q = useQuasar();
 //   const { getOgMeta } = UtilService();
 const { appFormatDateTime } = useBase();
 const opengraphItem = ref<OgMeta>();

@@ -12,8 +12,8 @@ const Paging = defineAsyncComponent(
 const BaseSpinner = defineAsyncComponent(
   () => import('@/components/base/BaseSpinner.vue'),
 );
-const AppResult = defineAsyncComponent(
-  () => import('@/components/base/AppResult.vue'),
+const BaseResult = defineAsyncComponent(
+  () => import('@/components/base/BaseResult.vue'),
 );
 const BaseLoadmore = defineAsyncComponent(
   () => import('@/components/base/BaseLoadmore.vue'),
@@ -71,7 +71,7 @@ onMounted(() => {
               <base-spinner></base-spinner>
             </template>
             <template v-else>
-              <app-result
+              <base-result
                 v-if="dataList.length === 0"
                 status="empty"
                 :description="t('error.dataNotfound')"
@@ -110,7 +110,7 @@ onMounted(() => {
               <base-spinner></base-spinner>
             </template>
             <template v-else>
-              <app-result
+              <base-result
                 v-if="dataList2.length === 0"
                 status="empty"
                 :description="t('error.dataNotfound')"

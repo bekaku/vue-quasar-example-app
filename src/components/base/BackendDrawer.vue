@@ -4,9 +4,10 @@
     @mouseout="miniState = true"> -->
   <!-- <q-drawer v-model="langugeAndThemeStore.leftDrawerOpen" show-if-above :width="width" bordered class="drawer-bg"> -->
 
-  <q-drawer v-model="drawerModel" show-if-above :width="width" :overlay="overlay"
-    :bordered="bordered" :mini-to-overlay="miniToOverlay&&!langugeAndThemeStore.leftDrawerOpen" :mini="miniState&&!langugeAndThemeStore.leftDrawerOpen" @mouseover="miniState = false"
-    @mouseout="miniState = true" class="drawer-bg">
+  <q-drawer v-model="drawerModel" show-if-above :width="width" :overlay="overlay" :bordered="bordered"
+    :mini-to-overlay="miniToOverlay && !langugeAndThemeStore.leftDrawerOpen"
+    :mini="miniState && !langugeAndThemeStore.leftDrawerOpen" @mouseover="miniState = false" @mouseout="miniState = true"
+    class="drawer-bg">
     <q-scroll-area class="fit">
       <div v-show="!miniState || langugeAndThemeStore.leftDrawerOpen">
         <user-nav-setting class="q-pt-md" />
@@ -61,7 +62,9 @@ import {
   biQuestionCircle,
   biSearch,
   biCommand,
-  biChatDots
+  biChatDots,
+  biCursorText,
+  biBack
 } from '@quasar/extras/bootstrap-icons';
 import { useLangugeAndThemeStore } from 'stores/langugeAndThemeStore';
 import { ref } from 'vue';
@@ -73,7 +76,7 @@ const { overlay = false, bordered = false, miniToOverlay = true, width = 250, sh
   width?: number;
   showUserSetting?: boolean;
 }>();
-const drawerModel=ref(true);
+const drawerModel = ref(true);
 const drawerStore = useDrawerStore();
 const { t } = useLang();
 const langugeAndThemeStore = useLangugeAndThemeStore();
@@ -140,6 +143,14 @@ const additionalMenu: IMenu[] = [
             to: '/example/ui/date-picker'
           },
           {
+            icon: biBack,
+            permission: '',
+            title: 'Dialog',
+            caption: 'dialog, popconfirm, menu',
+            translate: false,
+            to: '/example/ui/dialog'
+          },
+          {
             icon: 'bi-upload',
             permission: '',
             title: 'File picker',
@@ -184,7 +195,7 @@ const additionalMenu: IMenu[] = [
         to: '/chats'
       },
       {
-        icon: 'bi-cursor-text',
+        icon: biCursorText,
         permission: '',
         title: 'Content text',
         caption: 'Display user input',

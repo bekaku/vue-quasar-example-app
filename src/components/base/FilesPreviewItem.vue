@@ -1,6 +1,6 @@
 <template>
   <template v-if="item?.isImage || item?.image">
-    <app-image
+    <base-image
       v-bind="$attrs"
       :src="getImagePath"
       :fetch="fetch"
@@ -10,7 +10,7 @@
       <q-btn v-if="showDelete" @click="onRemove($event, index)" class="absolute all-pointer-events" name="info"
              style="top: 8px; left: 8px" round size="sm" :icon="biTrashFill" color="negative">
       </q-btn>
-    </app-image>
+    </base-image>
     <q-item :dense="dense" v-bind="$attrs" v-if="showName || showSize" class="q-pa-none">
       <q-item-section>
         <q-item-label v-if="showName" :lines="linesName" :class="textColor">
@@ -71,7 +71,7 @@
 </template>
 
 <script setup lang="ts">
-import AppImage from '@/components/base/AppImage.vue';
+import BaseImage from '@/components/base/BaseImage.vue';
 import { FileManagerDto } from '@/types/models';
 import { formatBytes } from '@/utils/appUtil';
 import { getFileTypeIcon } from '@/utils/fileUtils';
