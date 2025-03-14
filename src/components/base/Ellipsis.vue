@@ -12,13 +12,18 @@ const onClick = (event: any) => {
     showLineClamp.value = !showLineClamp.value;
   }
   event.preventDefault();
-}
+};
 </script>
 
 <template>
-  <div v-bind="$attrs" :class="{ 'ellipsis-text': lines > 0 && showLineClamp, 'cursor-pointer': clickable }" class=""
-    :style="maxWidth ? { maxWidth: maxWidth } : { maxWidth: '100%' }" @click="onClick">
-    <slot></slot>
+  <div
+    v-bind="$attrs"
+    :class="{ 'ellipsis-text': lines > 0 && showLineClamp, 'cursor-pointer': clickable }"
+    class=""
+    :style="maxWidth ? { maxWidth } : { maxWidth: '100%' }"
+    @click="onClick"
+  >
+    <slot />
   </div>
 </template>
 

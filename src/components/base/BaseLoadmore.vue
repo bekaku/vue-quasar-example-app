@@ -9,8 +9,7 @@
       :icon="showIcon ? icon : undefined"
       flat
       :loading="loading"
-    >
-    </q-btn>
+    />
   </div>
 </template>
 <script setup lang="ts">
@@ -30,7 +29,7 @@
         >
         </base-loadmore>
 */
-import { PropType } from 'vue';
+import type { PropType } from 'vue';
 import { biChevronDown } from '@quasar/extras/bootstrap-icons';
 defineProps({
   fristLoaded: {

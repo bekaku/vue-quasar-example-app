@@ -5,12 +5,3 @@
     </q-page-container>
   </q-layout>
 </template>
-
-<script>
-export default {
-  components: {},
-  setup() {
-    return {};
-  },
-};
-</script>

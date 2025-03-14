@@ -1,7 +1,7 @@
 <template>
   <q-card flat>
     <q-no-ssr>
-      <div :id="pickerId"></div>
+      <div :id="pickerId" />
     </q-no-ssr>
   </q-card>
 </template>
@@ -10,13 +10,13 @@
 import { ref, onMounted } from 'vue';
 import data from '@emoji-mart/data';
 // import { Picker } from 'emoji-mart';
-import { EmojiSet } from '@/types/common';
+import type { EmojiSet } from '@/types/common';
 const { theme = 'light', pickerId = 'emoji-id' } = defineProps<{
   pickerId?: string;
   theme?: 'light' | 'dark';
 }>();
 const pickerEmoji = ref();
-const iconSet = ref<EmojiSet>('native'); //native, apple, facebook, google, twitter
+const iconSet = ref<EmojiSet>('native'); // native, apple, facebook, google, twitter
 onMounted(() => {
   init();
 });
@@ -27,7 +27,7 @@ const init = async () => {
   const EmojiMart = await import('emoji-mart');
   pickerEmoji.value = new EmojiMart.Picker({
     // data: data,
-    theme: theme,
+    theme,
     data: iconSet.value != 'native' ? undefined : data,
     parent: document.querySelector('#' + pickerId),
     set: iconSet.value,
@@ -70,7 +70,7 @@ const init = async () => {
       },
     ],
   });
-}
+};
 const emit = defineEmits(['on-close', 'on:emojiClick']);
 const onSelectEmoji = (event: any) => {
   if (event.native) {

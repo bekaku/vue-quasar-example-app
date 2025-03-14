@@ -1,5 +1,5 @@
 import { useAxios } from '@/composables/useAxios';
-import { AppVersionDto, OgMeta } from '@/types/models';
+import type { AppVersionDto, OgMeta } from '@/types/models';
 export default () => {
   const { callAxios } = useAxios();
 

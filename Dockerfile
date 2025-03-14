@@ -1,40 +1,57 @@
-# develop stage
-# FROM node:18 AS build
-# FROM node:latest AS build
-FROM node:20 AS build
-# FROM node:18-alpine as build
-RUN apt-get update && apt-get install -y --no-install-recommends dumb-init
+# Build stage
+FROM node:22 AS build
 
+# Install necessary tools
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    dumb-init \
+    && rm -rf /var/lib/apt/lists/*
+
+# Set the working directory inside the container
 WORKDIR /app
+# Copy package.json and pnpm-lock.yaml files to the working directory
+COPY ./package.json /app/
+# COPY ./pnpm-lock.yaml /app/
+# Only copy 'file.txt' if it exists
+RUN if [ -f "pnpm-lock.yaml" ]; then cp pnpm-lock.yaml /app/; fi
 
-COPY package*.json /app
+# Install global Quasar CLI and project dependencies
 RUN npm install @quasar/cli -g
-RUN npm install
-# RUN npm ci --only=production
-COPY . /app
+RUN npm install -g pnpm@latest 
+## Install dependencies
+RUN pnpm install --shamefully-hoist --ignore-scripts
 
-# FROM build as local-deps-stage
-RUN quasar build -m ssr
+# Copy the rest of the application files to the working directory
+COPY . ./
+RUN pnpm postinstall
+RUN pnpm build
+# RUN quasar build -m ssr
 
-# FROM node:18-bullseye-slim
-FROM node:20-alpine
+# Production stage
+FROM node:22-alpine
+
+# Set timezone
 ENV TZ=Asia/Bangkok
 RUN apk add --no-cache tzdata
-RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezon
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
-RUN npm install pm2 -g
-ENV NODE_ENV production
-# COPY --from=build /usr/bin/dumb-init /usr/bin/dumb-init
+# Install PM2
+RUN npm install -g pm2
+
+# Set environment to production
+ENV NODE_ENV=production
+
+# Use non-root user
 USER node
 WORKDIR /app
-COPY --chown=node:node --from=build /app/node_modules /app/node_modules
+
+# Copy built artifacts with correct permissions
 COPY --chown=node:node --from=build /app/dist/ssr /app
+COPY --chown=node:node --from=build /app/node_modules /app/node_modules
 COPY --chown=node:node --from=build /app/ecosystem.config.cjs /app
 
-# CMD ["pm2-runtime", "index.js"]
-CMD ["pm2-runtime", "ecosystem.config.cjs"]
-# CMD ["dumb-init", "node", "index.js"]
+# Optional health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s \
+  CMD wget -q -O /dev/null http://localhost:3000 || exit 1
 
-# dev stage
-# FROM local-deps-stage as dev-stage
-# RUN quasar dev -m ssr
+# Use PM2 to run the application
+CMD ["pm2-runtime", "ecosystem.config.cjs"]

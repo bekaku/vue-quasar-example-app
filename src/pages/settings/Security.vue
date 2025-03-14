@@ -1,111 +1,3 @@
-<template>
-  <q-card square flat class="bg-transparent q-pl-lg">
-    <q-card-section>
-      <div class="text-h6">{{ t('updatePassword') }}</div>
-      <q-separator />
-    </q-card-section>
-
-    <q-card-section>
-      <password-form
-        v-model:currentPassword="currentPassword"
-        v-model:newPassword="newPassword"
-        v-model:logoutAllDevice="logoutAllDevice"
-        v-model:loading="loading"
-        show-current-password
-        show-logout
-        @on-submit="onSubmit"
-        :submit-label="t('updatePassword')"
-        action-align="left"
-      ></password-form>
-    </q-card-section>
-    <q-separator />
-    <q-card-section>
-      <div class="text-h6">
-        {{ t('authSessions') }}
-      </div>
-    </q-card-section>
-
-    <template v-if="sessionLoading">
-      <q-card-section class="text-center">
-        <q-spinner color="primary" size="3em" />
-      </q-card-section>
-    </template>
-    <q-list v-else separator class="rounded-borders">
-      <q-item-label header>{{ t('authSessionsHelp') }}</q-item-label>
-      <q-virtual-scroll
-        style="max-height: 350px"
-        :items="sessionList"
-        v-slot="{ item, index }"
-      >
-        <q-item :key="item.id">
-          <q-item-section avatar top>
-            <q-icon
-              :name="
-                item.loginFrom == 'WEB'
-                  ? biDisplay
-                  : item.loginFrom == 'IOS'
-                    ? mdiApple
-                    : mdiAndroid
-              "
-              color="black"
-              size="34px"
-            />
-          </q-item-section>
-
-          <q-item-section top>
-            <q-item-label lines="1">
-              <span class="text-weight-medium">[{{ item.ipAddredd }}]</span>
-              <span class="text-grey-8"> - {{ item.hostName }}</span>
-              <span v-if="item.activeNow"
-                ><q-icon size="lg" :name="biDot" color="positive"
-              /></span>
-            </q-item-label>
-            <q-item-label lines="1">
-              {{ item.agent }}
-            </q-item-label>
-            <q-item-label lines="1" caption>
-              {{
-                t('lastestActive') +
-                ' ' +
-                displayDate(item.lastestActive || item.createdDate)
-              }}
-            </q-item-label>
-          </q-item-section>
-
-          <q-item-section top side>
-            <div class="text-grey-8 q-gutter-xs">
-              <q-btn
-                class="gt-xs"
-                size="12px"
-                flat
-                round
-                icon="bi-trash"
-                @click="onDeleteSession(index)"
-              >
-                <q-tooltip>
-                  {{ t('base.delete') }}
-                </q-tooltip>
-              </q-btn>
-            </div>
-          </q-item-section>
-        </q-item>
-      </q-virtual-scroll>
-    </q-list>
-    <base-loadmore
-      v-if="!isInfiniteDisabled && fristLoaded"
-      :loading="loading"
-      :frist-loaded="fristLoaded"
-      :is-infinite-disabled="isInfiniteDisabled"
-      :label="t('base.loadMore')"
-      @on-next-page="loadNextPage"
-      button
-      show-icon
-      full-width
-    >
-    </base-loadmore>
-  </q-card>
-</template>
-
 <script setup lang="ts">
 import AuthenService from '@/api/AuthenService';
 import UserService from '@/api/UserService';
@@ -114,31 +6,21 @@ import { useAuth } from '@/composables/useAuth';
 import { useBase } from '@/composables/useBase';
 import { useLang } from '@/composables/useLang';
 import { usePaging } from '@/composables/usePaging';
-import { useValidation } from '@/composables/useValidation';
-import { AccessTokenDto } from '@/types/models';
+import type { AccessTokenDto } from '@/types/models';
 import { biDisplay, biDot } from '@quasar/extras/bootstrap-icons';
 import { mdiAndroid, mdiApple } from '@quasar/extras/mdi-v6';
 import { date } from 'quasar';
-import {
-  computed,
-  defineAsyncComponent,
-  onBeforeUnmount,
-  onMounted,
-  ref,
-} from 'vue';
-const BaseLoadmore = defineAsyncComponent(
-  () => import('@/components/base/BaseLoadmore.vue'),
-);
-const PasswordForm = defineAsyncComponent(
-  () => import('@/components/app/PasswordForm.vue'),
-);
+import BaseCard from 'src/components/base/BaseCard.vue';
+import SettingLayout from 'src/components/settings/SettingLayout.vue';
+import PasswordForm from '@/components/app/PasswordForm.vue';
+import { computed, defineAsyncComponent, onBeforeUnmount, onMounted, ref } from 'vue';
+const BaseLoadmore = defineAsyncComponent(() => import('@/components/base/BaseLoadmore.vue'));
 useAppMeta();
 const { appConfirm, appLoading } = useBase();
 const { t } = useLang();
 const { signOut } = useAuth();
 const { selfUpdatePassword, currentAuthSession } = UserService();
 const { removeAccessTokenSession } = AuthenService();
-const { validatePasswordStrongV2, requireField } = useValidation();
 const { pages } = usePaging(10);
 const currentPassword = ref<string>('');
 const newPassword = ref<string>('');
@@ -190,7 +72,6 @@ const onReset = () => {
   showPassword.value = false;
 };
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const loadNextPage = async () => {
   pages.value.current++;
   await loadSeesionLogined();
@@ -235,6 +116,105 @@ const onDeleteSession = async (index: number) => {
       }
     }
   }
-  return;
 };
 </script>
+<template>
+  <SettingLayout>
+    <template #content>
+      <BaseCard :title="t('updatePassword')">
+        <q-card-section>
+          <password-form
+            v-model:currentPassword="currentPassword"
+            v-model:newPassword="newPassword"
+            v-model:logoutAllDevice="logoutAllDevice"
+            v-model:loading="loading"
+            show-current-password
+            show-logout
+            @on-submit="onSubmit"
+            :submit-label="t('updatePassword')"
+            action-align="left"
+          ></password-form>
+        </q-card-section>
+        <q-separator />
+        <q-card-section>
+          <div class="text-h6">
+            {{ t('authSessions') }}
+          </div>
+        </q-card-section>
+
+        <template v-if="sessionLoading">
+          <q-card-section class="text-center">
+            <q-spinner color="primary" size="3em" />
+          </q-card-section>
+        </template>
+        <q-list v-else separator class="rounded-borders">
+          <q-item-label header>{{ t('authSessionsHelp') }}</q-item-label>
+          <q-virtual-scroll style="max-height: 350px" :items="sessionList" v-slot="{ item, index }">
+            <q-item :key="item.id">
+              <q-item-section avatar top>
+                <q-icon
+                  :name="
+                    item.loginFrom == 'WEB'
+                      ? biDisplay
+                      : item.loginFrom == 'IOS'
+                        ? mdiApple
+                        : mdiAndroid
+                  "
+                  color="black"
+                  size="34px"
+                />
+              </q-item-section>
+
+              <q-item-section top>
+                <q-item-label lines="1">
+                  <span class="text-weight-medium">[{{ item.ipAddredd }}]</span>
+                  <span class="text-grey-8"> - {{ item.hostName }}</span>
+                  <span v-if="item.activeNow"
+                    ><q-icon size="lg" :name="biDot" color="positive"
+                  /></span>
+                </q-item-label>
+                <q-item-label lines="1">
+                  {{ item.agent }}
+                </q-item-label>
+                <q-item-label lines="1" caption>
+                  {{
+                    t('lastestActive') + ' ' + displayDate(item.lastestActive || item.createdDate)
+                  }}
+                </q-item-label>
+              </q-item-section>
+
+              <q-item-section top side>
+                <div class="text-grey-8 q-gutter-xs">
+                  <q-btn
+                    class="gt-xs"
+                    size="12px"
+                    flat
+                    round
+                    icon="bi-trash"
+                    @click="onDeleteSession(index)"
+                  >
+                    <q-tooltip>
+                      {{ t('base.delete') }}
+                    </q-tooltip>
+                  </q-btn>
+                </div>
+              </q-item-section>
+            </q-item>
+          </q-virtual-scroll>
+        </q-list>
+        <base-loadmore
+          v-if="!isInfiniteDisabled && fristLoaded"
+          :loading="loading"
+          :frist-loaded="fristLoaded"
+          :is-infinite-disabled="isInfiniteDisabled"
+          :label="t('base.loadMore')"
+          @on-next-page="loadNextPage"
+          button
+          show-icon
+          full-width
+        >
+        </base-loadmore>
+      </BaseCard>
+    </template>
+  </SettingLayout>
+</template>

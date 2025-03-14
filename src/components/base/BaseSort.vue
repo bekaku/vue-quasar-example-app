@@ -14,10 +14,7 @@
           <q-item-section
             ><span
               >{{ f.label
-              }}<q-icon
-                class="q-ml-sm"
-                v-if="sort.column === f.value"
-                :name="biCheck" /></span
+              }}<q-icon class="q-ml-sm" v-if="sort.column === f.value" :name="biCheck" /></span
           ></q-item-section>
         </q-item>
         <q-separator />
@@ -31,10 +28,7 @@
           <q-item-section>
             <span>
               {{ m.label }}
-              <q-icon
-                class="q-ml-sm"
-                v-if="sort.mode === m.value"
-                :name="biCheck" /></span
+              <q-icon class="q-ml-sm" v-if="sort.mode === m.value" :name="biCheck" /></span
           ></q-item-section>
         </q-item>
       </q-list>
@@ -46,9 +40,9 @@
 <script setup lang="ts">
 import { useLang } from '@/composables/useLang';
 import { useSort } from '@/composables/useSort';
-import { ISort, ISortModeType } from '@/types/common';
+import type { ISort, ISortModeType } from '@/types/common';
 import { biCheck, biSortDown } from '@quasar/extras/bootstrap-icons';
-import { PropType } from 'vue';
+import type { PropType } from 'vue';
 const props = defineProps({
   fields: {
     type: Array as PropType<any[]>,

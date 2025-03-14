@@ -1,9 +1,8 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { ref } from 'vue';
 import { useRoute } from 'vue-router';
 import { useMeta } from 'quasar';
 import { useLang } from './useLang';
-import { UseMetaOptions } from '@/types/common';
+import type { UseMetaOptions } from '@/types/common';
 export const useAppMeta = (options?: UseMetaOptions) => {
   const { t } = useLang();
   const route = useRoute();

@@ -1,26 +1,25 @@
 <script setup lang="ts">
-
-import { biAt, biBook, biEmojiSmile, biImage, biSend, biPaperclip } from '@quasar/extras/bootstrap-icons';
 import BaseAvatar from '@/components/base/BaseAvatar.vue';
-import { ref } from 'vue';
 import { useLang } from '@/composables/useLang';
-import {useAuthenStore} from '@/stores/authenStore'
-const {t} = useLang();
+import { useAuthenStore } from '@/stores/authenStore';
+import { biBook, biEmojiSmile, biPaperclip, biSend } from '@quasar/extras/bootstrap-icons';
+import { ref } from 'vue';
+const { t } = useLang();
 const message = ref<string>();
 const authenStore = useAuthenStore();
-const onSubmit=(ev: any)=>{
+const onSubmit = (ev: any) => {
   if (ev && ev.shiftKey) {
     return;
   }
   console.log('onSubmit', message.value);
   message.value = '';
-}
+};
 </script>
 
 <template>
   <q-item v-bind="$attrs" dense class="q-pa-none q-mt-md">
     <q-item-section side v-if="authenStore?.auth?.avatar?.thumbnail">
-      <base-avatar :src="authenStore?.auth?.avatar?.thumbnail"/>
+      <base-avatar :src="authenStore?.auth?.avatar?.thumbnail" />
     </q-item-section>
     <q-item-section>
       <q-item-label>
@@ -37,38 +36,13 @@ const onSubmit=(ev: any)=>{
           dense
         >
           <template #after>
-            <q-btn flat round :icon="biSend" color="primary"></q-btn>
+            <q-btn flat round :icon="biSend" color="primary" />
           </template>
           <template #append>
-            <q-btn
-              dense
-              flat
-              round
-              :icon="biEmojiSmile"
-              size="sm"
-            >
-            </q-btn>
-            <q-btn
-              dense
-              flat
-              round
-              :icon="biPaperclip"
-              size="sm"
-            >
+            <q-btn dense flat round :icon="biEmojiSmile" size="sm" />
+            <q-btn dense flat round :icon="biPaperclip" size="sm">
               <q-tooltip>
                 {{ t('base.chooseFile') }}
-              </q-tooltip>
-            </q-btn>
-            <q-btn
-              dense
-              flat
-              round
-              :icon="biBook"
-              size="sm"
-              class="text-capitalize"
-            >
-              <q-tooltip>
-                {{ t('wiSuggest') }}
               </q-tooltip>
             </q-btn>
           </template>

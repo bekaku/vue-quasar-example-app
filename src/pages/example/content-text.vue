@@ -1,87 +1,23 @@
-<template>
-    <q-page padding>
-        <q-card flat bordered class="content-limit">
-            <q-card-section>
-                <q-toolbar>
-                    <q-toolbar-title> Content Text </q-toolbar-title>
-                    <q-space />
-                </q-toolbar>
-                <q-separator />
-            </q-card-section>
-            <q-card-section>
-                <div class="row">
-                    <div class="col-12 col-md-6">
-                        <q-input outlined v-model="content" bottom-slots label="Content" type="textarea"
-                            :rules="[required]" autogrow class="limited-autogrow">
-                            <template v-slot:hint>
-                                <span class="text-negative">*</span>
-                            </template>
-                        </q-input>
-
-                        <ui-button @click="onPreview">
-                            Reload Preview
-                        </ui-button>
-                        <ui-button @click="testExtractHashTag" class="q-ml-md" color="negative">
-                            Extract HashTag from content
-                        </ui-button>
-
-                    </div>
-                    <div class="col-12 col-md-6 q-pa-md">
-                        <div class="text-h5 q-pb-sm">
-                            Ellipsis
-                        </div>
-
-                        <ellipsis class="q-mb-lg" :lines="4" clickable>
-                            {{ content }}
-                        </ellipsis>
-
-
-
-                        <div class="text-h5 q-pb-sm">
-                            Preview with sanitize html
-                        </div>
-                        <template v-if="showContent">
-                            <content-item wrap-text :content="content" :content-id="contentUniqeId"
-                                :is-escape-html="false" hashtagUrlify show-more>
-                            </content-item>
-                            <open-graph-item-alt :content="content" short imageSize="150px" />
-                        </template>
-                        <q-separator class="q-my-md" />
-
-                        <div class="text-h5 q-pb-sm">
-                            Preview with escape html
-                        </div>
-                        <template v-if="showContent">
-                            <content-item wrap-text :content="content" :content-id="contentUniqeId2" is-escape-html
-                                :limit="10" hashtagUrlify show-more>
-                            </content-item>
-                            <open-graph-item-alt :content="content" />
-                        </template>
-
-                    </div>
-                </div>
-            </q-card-section>
-        </q-card>
-    </q-page>
-</template>
-
 <script setup lang="ts">
 import ContentItem from '@/components/base/ContentItem.vue';
 import OpenGraphItemAlt from '@/components/base/OpenGraphItemAlt.vue';
-import UiButton from '@/components/quasar/Button.vue';
+import BaseButton from '@/components/base/BaseButton.vue';
 import { useAppMeta } from '@/composables/useAppMeta';
 import { useLang } from '@/composables/useLang';
 import { useValidation } from '@/composables/useValidation';
 import { extractHashtagsFromString } from '@/utils/appUtil';
 import Ellipsis from '@/components/base/Ellipsis.vue';
 import { ref, useId } from 'vue';
+import BasePage from 'src/components/base/BasePage.vue';
+import BaseCard from 'src/components/base/BaseCard.vue';
 const { required } = useValidation();
 const { t } = useLang();
 const { setTitle } = useAppMeta();
 setTitle(`Content Text | ${t('app.name')}`);
 const contentUniqeId = useId();
 const contentUniqeId2 = useId();
-const content = ref<string>(`TypeScript has become the go-to language for many developers, providing the benefits of static typing while maintaining the flexibility of JavaScript. However, as TypeScript continues to evolve, some practices that were once considered best may now be outdated or suboptimal. In this article, we’ll cover 10 bad TypeScript habits you should break in 2024 to write cleaner, more efficient, and maintainable code.
+const content =
+  ref<string>(`TypeScript has become the go-to language for many developers, providing the benefits of static typing while maintaining the flexibility of JavaScript. However, as TypeScript continues to evolve, some practices that were once considered best may now be outdated or suboptimal. In this article, we’ll cover 10 bad TypeScript habits you should break in 2024 to write cleaner, more efficient, and maintainable code.
 
 1. Not Using strict Mode
 The Problem:
@@ -106,22 +42,88 @@ Example
 #dev_tips #ทดสอบเท็ก`);
 const showContent = ref(true);
 const onPreview = () => {
-    showContent.value = false;
-    setTimeout(() => {
-        showContent.value = true;
-    }, 500);
-}
+  showContent.value = false;
+  setTimeout(() => {
+    showContent.value = true;
+  }, 500);
+};
 
 const testExtractHashTag = () => {
-    const contentHashTags = extractHashtagsFromString(content.value);
-    console.log('contentHashTags', contentHashTags);
-    // const finalText = content.value.replace(
-    //     /#([a-zA-Z\p{L}\p{N}_\u0E00-\u0E7F]+)/gu,
-    //     '<a class="hashtag-href">#$1</a>'
-    // );
-    // console.log('contentHashTags', finalText)
-}
+  const contentHashTags = extractHashtagsFromString(content.value);
+  console.log('contentHashTags', contentHashTags);
+  // const finalText = content.value.replace(
+  //     /#([a-zA-Z\p{L}\p{N}_\u0E00-\u0E7F]+)/gu,
+  //     '<a class="hashtag-href">#$1</a>'
+  // );
+  // console.log('contentHashTags', finalText)
+};
 </script>
 
-<style lang="scss" scoped>
-</style>
+<template>
+  <BasePage>
+    <BaseCard title="Content Text">
+      <q-card-section>
+        <div class="row">
+          <div class="col-12 col-md-6">
+            <q-input
+              outlined
+              v-model="content"
+              bottom-slots
+              label="Content"
+              type="textarea"
+              :rules="[required]"
+              autogrow
+              class="limited-autogrow"
+            >
+              <template #hint>
+                <span class="text-negative">*</span>
+              </template>
+            </q-input>
+
+            <BaseButton @click="onPreview"> Reload Preview </BaseButton>
+            <BaseButton @click="testExtractHashTag" class="q-ml-md" color="negative">
+              Extract HashTag from content
+            </BaseButton>
+          </div>
+          <div class="col-12 col-md-6 q-pa-md">
+            <div class="text-h5 q-pb-sm">Ellipsis</div>
+
+            <ellipsis class="q-mb-lg" :lines="4" clickable>
+              {{ content }}
+            </ellipsis>
+
+            <div class="text-h5 q-pb-sm">Preview with sanitize html</div>
+            <template v-if="showContent">
+              <content-item
+                wrap-text
+                :content="content"
+                :content-id="contentUniqeId"
+                :is-escape-html="false"
+                hashtagUrlify
+                show-more
+              >
+              </content-item>
+              <open-graph-item-alt :content="content" short imageSize="150px" />
+            </template>
+            <q-separator class="q-my-md" />
+
+            <div class="text-h5 q-pb-sm">Preview with escape html</div>
+            <template v-if="showContent">
+              <content-item
+                wrap-text
+                :content="content"
+                :content-id="contentUniqeId2"
+                is-escape-html
+                :limit="10"
+                hashtagUrlify
+                show-more
+              >
+              </content-item>
+              <open-graph-item-alt :content="content" />
+            </template>
+          </div>
+        </div>
+      </q-card-section>
+    </BaseCard>
+  </BasePage>
+</template>

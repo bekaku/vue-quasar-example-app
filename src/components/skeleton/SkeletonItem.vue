@@ -1,10 +1,21 @@
+<script setup lang="ts">
+withDefaults(defineProps<{
+  show?: boolean
+  showHeader?: boolean
+  no?: number
+}>(), {
+  show: true,
+  showHeader: false,
+  no: 3
+})
+</script>
 <template>
-  <div class="row" v-if="show">
+  <div v-if="show" class="row">
     <div class="col-12">
       <q-item-label v-if="showHeader" header>
         <q-skeleton type="text" />
       </q-item-label>
-      <q-item v-for="index in items" :key="index">
+      <q-item v-for="index in no" :key="index">
         <q-item-section avatar>
           <q-skeleton type="QAvatar" />
         </q-item-section>
@@ -21,14 +32,3 @@
     </div>
   </div>
 </template>
-<script setup lang="ts">
-withDefaults(defineProps<{
-  show?: boolean
-  showHeader?: boolean
-  items?: number
-}>(), {
-  show: true,
-  showHeader: false,
-  items: 3
-})
-</script>

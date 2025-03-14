@@ -6,22 +6,36 @@
         <q-item-label v-else-if="item.header" header>
           {{ item.headerI18n && item.header ? t(item.header) : item.header }}
         </q-item-label>
-        <q-item v-else clickable v-ripple :to="item.to ? item.to : undefined" active-class="q-item-no-link-highlighting"
-          :class="item.to == getCurrentPath(false) ? 'text-primary' : $q.dark.isActive ? 'text-white' : 'text-black'">
+        <q-item
+          v-else
+          clickable
+          v-ripple
+          :to="item.to ? item.to : undefined"
+          active-class="q-item-no-link-highlighting"
+          :class="
+            item.to == getCurrentPath(false)
+              ? 'text-primary'
+              : $q.dark.isActive
+                ? 'text-white'
+                : 'text-black'
+          "
+        >
           <q-item-section avatar>
             <template v-if="item.image">
               <!-- <q-avatar :size="item.imageSize ? `${item.imageSize}px` : '25px'">
                 <q-img :src="item.image" />
               </q-avatar> -->
-              <base-avatar :src="item.image" :fetch-image="item.fetchImage === true"
-                :size="item.imageSize+'px' ? item.imageSize+'px' : '25px'" />
+              <base-avatar
+                :src="item.image"
+                :fetch-image="item.fetchImage === true"
+                :size="item.imageSize + 'px' ? item.imageSize + 'px' : '25px'"
+              />
             </template>
-            <template v-else-if="item.isSsIcon">
-              <ss-icon v-if="item.ssIcon" :icon="item.ssIcon" :size="item.iconSize ? item.iconSize : 24"
-                :color="item.iconSsColor ? item.iconSsColor : 'color'" />
-            </template>
-            <q-icon v-else :name="item.icon" :style="item.iconSize ? `font-size:${item.iconSize}px` : undefined
-              " />
+            <q-icon
+              v-else
+              :name="item.icon"
+              :style="item.iconSize ? `font-size:${item.iconSize}px` : undefined"
+            />
           </q-item-section>
 
           <q-item-section>
@@ -38,7 +52,6 @@
         </q-item>
       </template>
     </template>
-
   </q-list>
 </template>
 
@@ -46,15 +59,12 @@
 import BaseAvatar from '@/components/base/BaseAvatar.vue';
 import { useBase } from '@/composables/useBase';
 import { useLang } from '@/composables/useLang';
-import { IMenuPageItem } from '@/types/models';
+import type { IMenuPageItem } from '@/types/models';
 import { useQuasar } from 'quasar';
 import { defineAsyncComponent } from 'vue';
 
-const SsIcon = defineAsyncComponent(
-  () => import('@/components/icon/SsIcon.vue')
-);
 defineProps<{
-  menuItems?: IMenuPageItem[]
+  menuItems?: IMenuPageItem[];
 }>();
 const $q = useQuasar();
 const { t } = useLang();

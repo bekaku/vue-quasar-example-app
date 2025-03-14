@@ -1,18 +1,13 @@
 <template>
-  <q-card
-    flat
-    bordered
-    class="q-mt-md"
-    :style="{ width: `${FeedSectionWidth}px` }"
-  >
+  <BaseCard :style="{ width: `${FeedSectionWidth}px` }">
     <q-list>
       <q-item-label header>{{ t('todayMostViewPosts') }}</q-item-label>
       <q-item v-for="(item, index) in items" :key="index">
         <q-item-section avatar>
           <q-avatar
             size="36px"
-            :color="!$q.dark.isActive ? 'blue-1' : 'white'"
-            :class="!$q.dark.isActive ? 'text-blue' : 'app-main-bg'"
+            :color="!dark.isActive ? 'blue-1' : 'white'"
+            :class="!dark.isActive ? 'text-blue' : 'app-main-bg'"
           >
             {{ index + 1 }}
           </q-avatar>
@@ -26,12 +21,10 @@
         <q-item-section side>
           <q-icon color="primary" :name="biChevronDown" />
         </q-item-section>
-        <q-item-section class="text-primary">{{
-          t('base.seeMore')
-        }}</q-item-section>
+        <q-item-section class="text-primary">{{ t('base.seeMore') }}</q-item-section>
       </q-item>
     </q-list>
-  </q-card>
+  </BaseCard>
 </template>
 
 <script setup lang="ts">
@@ -39,7 +32,10 @@ import { ref } from 'vue';
 import { useLang } from '@/composables/useLang';
 import { biChevronDown } from '@quasar/extras/bootstrap-icons';
 import { FeedSectionWidth } from '@/utils/constant';
+import BaseCard from '../base/BaseCard.vue';
+import { useQuasar } from 'quasar';
 const { t } = useLang();
+const { dark } = useQuasar();
 const items = ref([
   {
     title: 'The Six Morning Habit of SEO Specialist at Taksdfds',

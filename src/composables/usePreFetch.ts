@@ -1,18 +1,19 @@
+/* eslint-disable no-async-promise-executor */
+import { useExceptionStore } from '@/stores/exceptionStore';
+import type { RequestType } from '@/types/common';
+import { isAppException } from '@/utils/appUtil';
+import { AppAuthTokenKey, LocaleKey } from '@/utils/constant';
+import type { AxiosResponse } from 'axios';
 import { api } from 'boot/axios';
 import { Cookies } from 'quasar';
-import { LocaleKey, AppAuthTokenKey, SucureDeviceIdAtt, AppAuthRefeshTokenKey, ExpireCookieDays } from '@/utils/constant';
-import { RequestType } from '@/types/common';
-import { isAppException } from '@/utils/appUtil';
-import { useExceptionStore } from '@/stores/exceptionStore';
-import { AxiosResponse } from 'axios';
 export const usePreFetch = (ssrContext: any, redirect: any) => {
   const ck: any = process.env.SERVER ? Cookies.parseSSR(ssrContext) : Cookies;
   const exceptionStore = useExceptionStore();
 
   const callAxios = async <T>(req: RequestType): Promise<T> => {
-    //TODO implement refresh token hear 
+    // TODO implement refresh token hear 
     // await refeshTokenCheckProcess();
-    return new Promise(async (resolve, /*reject*/) => {
+    return new Promise(async (resolve, /* reject */) => {
       const response = await callAxiosProcess<T>(req);
       if (isAppException(response.data)) {
         // exceptionStore.setException(response.data);
@@ -32,8 +33,7 @@ export const usePreFetch = (ssrContext: any, redirect: any) => {
     });
   };
   const callAxiosProcess = <T>(req: RequestType): Promise<AxiosResponse<T>> => {
-    return new Promise((resolve, /*reject*/) => {
-
+    return new Promise((resolve, /* reject */) => {
       // api.defaults.headers.common['Accept-Language'] = ck.get(LocaleKey);
       // api.defaults.headers.common.Authorization = `Bearer ${ck.get(AppAuthTokenKey)}`;
 
@@ -49,7 +49,7 @@ export const usePreFetch = (ssrContext: any, redirect: any) => {
       if (req.baseURL) {
         api.defaults.baseURL = req.baseURL;
       } else {
-        api.defaults.baseURL = process.env.API;
+        api.defaults.baseURL = process.env.APP_BASE_API || '';
       }
       if (process.env.NODE_ENV == 'development') {
         console.log(`usePrefecth > api ${api.defaults.baseURL}${req.API}`);

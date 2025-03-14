@@ -3,10 +3,14 @@ import { computed } from 'vue';
 import { useBase } from '@/composables/useBase';
 import { escapeHtml } from '@/utils/appUtil';
 
-const { content, isEscapeHtml = false, highLightText } = defineProps<{
+const {
+  content,
+  isEscapeHtml = false,
+  highLightText,
+} = defineProps<{
   content?: string;
   isEscapeHtml?: boolean;
-  highLightText?: string;
+  highLightText?: string | undefined;
 }>();
 const { inputSanitizeHtml } = useBase();
 const emit = defineEmits(['on-press']);
@@ -32,6 +36,6 @@ const getSanitizeHtml = computed(() => {
 
 <template>
   <q-no-ssr>
-    <div v-bind="$attrs" v-html="getSanitizeHtml" @click="onPress($event)"></div>
+    <div v-bind="$attrs" v-html="getSanitizeHtml" @click="onPress($event)" />
   </q-no-ssr>
 </template>

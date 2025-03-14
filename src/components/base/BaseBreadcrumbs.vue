@@ -1,61 +1,31 @@
-<template>
-  <div class="q-pa-md q-gutter-sm" v-if="breadcrumbs.length > 0">
-    <q-breadcrumbs>
-      <template v-slot:separator>
-        <template v-if="showSeparator">
-          <q-icon
-            v-if="separatorIcon"
-            class="text-muted"
-            :name="separatorIcon"
-          />
-          <template v-else> <span class="text-muted">/</span></template>
-        </template>
-      </template>
-      <template v-for="(item, index) in breadcrumbs"
-      :key="`breadcrumb-${index}-${item.to}`">
-      <q-breadcrumbs-el
-        :label="item.translateLabel ? t(item.label) : item.label"
-        :icon="item.icon"
-        :to="getLink(item)"
-        exact
-      />
-      </template>
-      <!-- <app-breadcrumb-item
-        v-for="(item, index) in breadcrumbs"
-        :key="index"
-        :item="item"
-      >
-      </app-breadcrumb-item> -->
-      <slot name="extra"> </slot>
-    </q-breadcrumbs>
-  </div>
-</template>
-
 <script setup lang="ts">
-import { Breadcrumb } from '@/types/common';
-import { PropType } from 'vue';
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { useBase } from '@/composables/useBase';
-import { useLang } from '@/composables/useLang';
-// import AppBreadcrumbItem from '@/components/base/AppBreadcrumbItem.vue';
-import { usePermissionStore } from '@/stores/permissionStore';
-defineProps({
-  breadcrumbs: {
-    type: Array as PropType<Breadcrumb[]>,
-    default: () => [],
-  },
-  showSeparator: {
-    type: Boolean,
-    default: true,
-  },
-  separatorIcon: {
-    type: String,
-  },
-});
-const permisisonStore = usePermissionStore();
+import { useBase } from 'src/composables/useBase';
+import { useLang } from 'src/composables/useLang';
+import { computed } from 'vue';
+import type { LabelValue, AppColor } from '@/types/common';
+import { useAppStore } from '@/stores/appStore';
+
+const { items, showSeparator = true } = defineProps<{
+  items: LabelValue<any>[];
+  showSeparator?: boolean;
+  separatorIcon?: string;
+  activeColor?: string;
+  textColor?: AppColor;
+}>();
 const { t } = useLang();
+const { isDark } = useBase();
 const { getParam, getQuery } = useBase();
-const getLink = (item: Breadcrumb) => {
+const appStore = useAppStore();
+const canShow = (item: LabelValue<any>) => {
+  if (item.permissions == undefined) {
+    return true;
+  }
+  return appStore.isHavePermission(item.permissions);
+};
+const getItems = computed<LabelValue<any>[]>(() => {
+  return items.filter((t) => canShow(t) === true);
+});
+const getLink = (item: LabelValue<any>) => {
   let link = item.to;
   if (link) {
     const params = item.params;
@@ -79,13 +49,31 @@ const getLink = (item: Breadcrumb) => {
   }
   return link;
 };
-const canShow = (item: Breadcrumb) => {
-  if (item.permissions == undefined) {
-    return true;
-  }
-  if (item.frontend == true) {
-    return permisisonStore.isHaveFrontendMultiPermission(item.permissions);
-  }
-  return permisisonStore.isHaveMultiPermission(item.permissions);
-};
 </script>
+<template>
+  <div v-if="getItems.length > 0" class="q-pa-md q-gutter-sm">
+    <q-breadcrumbs :class="`text-${textColor}`" :active-color="isDark ? 'white' : activeColor">
+      <template #separator>
+        <template v-if="showSeparator">
+          <q-icon v-if="separatorIcon" class="text-muted" :name="separatorIcon" />
+          <template v-else> <span class="text-muted">/</span></template>
+        </template>
+      </template>
+      <template v-for="(item, index) in getItems" :key="`breadcrumb-${index}-${item.to}`">
+        <q-breadcrumbs-el
+          :label="item.translateLabel ? (item.label ? t(item.label) : undefined) : item.label"
+          :icon="item.icon"
+          :to="getLink(item)"
+          exact
+          :class="{ 'under-line': item.to != undefined }"
+        />
+      </template>
+      <slot name="extra" />
+    </q-breadcrumbs>
+  </div>
+</template>
+<style scoped lang="css">
+.under-line:hover {
+  text-decoration: underline;
+}
+</style>

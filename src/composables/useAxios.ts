@@ -1,12 +1,12 @@
 import { useBase } from '@/composables/useBase';
 import { useDevice } from '@/composables/useDevice';
 import { useLang } from '@/composables/useLang';
-import { AppException, RequestType, ResponseMessage } from '@/types/common';
+import type { AppException, RequestType, ResponseMessage } from '@/types/common';
 import { isAppException, isServerException, isServerResponseMessage } from '@/utils/appUtil';
 import { AppAuthTokenKey } from '@/utils/constant';
 import { formatRelativeFromNow } from '@/utils/dateUtil';
 import { biX } from '@quasar/extras/bootstrap-icons';
-import { AxiosResponse } from 'axios';
+import type { AxiosResponse } from 'axios';
 import { api } from 'boot/axios';
 import { Cookies } from 'quasar';
 import { useSSRContext } from 'vue';
@@ -51,11 +51,11 @@ export const useAxios = () => {
         html: true,
         type: 'negative',
         timeout: 0,
-        position: 'bottom',
+        position: 'bottom-left',
         caption: formatRelativeFromNow(
           response.timestamp,
           locale.value as string
-        ),
+        ) || '',
         actions: [{ icon: biX, color: 'white' }]
       }
     );
@@ -76,11 +76,11 @@ export const useAxios = () => {
         response.status == 'OK' || response.status == 'CREATED'
           ? 3 * 1000
           : 10 * 1000,
-      position: 'bottom',
+      position: 'bottom-left',
       caption: formatRelativeFromNow(
         response.timestamp,
         locale.value as string
-      ),
+      ) || '',
       actions: [{ icon: biX, color: 'white' }]
     });
   };
@@ -97,6 +97,7 @@ export const useAxios = () => {
   //   });
   // };
   const callAxios = async <T>(req: RequestType): Promise<T | null> => {
+    // eslint-disable-next-line no-async-promise-executor
     return new Promise(async (resolve, reject) => {
       callAxiosProcess<T>(req)
         .then(async (response) => {
@@ -135,6 +136,7 @@ export const useAxios = () => {
     }
   };
   const callAxiosFile = async <T>(req: RequestType): Promise<any> => {
+    // eslint-disable-next-line no-async-promise-executor
     return new Promise(async (resolve, reject) => {
       callAxiosProcess<T>(req, false)
         .then((response) => {
@@ -153,7 +155,7 @@ export const useAxios = () => {
       if (req.baseURL != undefined) {
         api.defaults.baseURL = req.baseURL;
       } else {
-        api.defaults.baseURL = process.env.API;
+        api.defaults.baseURL = process.env.APP_BASE_API || '';
       }
 
       if (req.contentType) {

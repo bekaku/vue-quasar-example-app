@@ -21,8 +21,7 @@
           :icon="biPencil"
           :label="t('base.edit')"
           type="submit"
-        >
-        </q-btn>
+        />
       </q-card-actions>
     </q-form>
     <q-inner-loading
@@ -35,7 +34,7 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue';
 import { useAuthenStore } from '@/stores/authenStore';
-import { UserPersonalEditRequest } from '@/types/models';
+import type { UserPersonalEditRequest } from '@/types/models';
 import { validateEmail } from '@/utils/appUtil';
 import UserService from '@/api/UserService';
 import { useLang } from '@/composables/useLang';

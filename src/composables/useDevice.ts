@@ -1,16 +1,23 @@
-import { Device } from '@capacitor/device';
+import { Device, DeviceInfo } from '@capacitor/device';
 import { ref } from 'vue';
 import { useCache } from './useCache';
 import { getCurrentTimestamp, getDateDiffMinutes } from '@/utils/dateUtil';
 export const useDevice = () => {
   const deviceId = ref();
   const { latestSyncActiveStatus } = useCache();
-  const getDeviceInfo = async (): Promise<any> => {
+  const getDeviceInfo = async (): Promise<DeviceInfo> => {
     const info = await Device.getInfo();
     return new Promise((resolve) => {
       resolve(info);
     });
   };
+  const isMobileOrTablet = async (): Promise<boolean> => {
+    const info = await getDeviceInfo();
+    return new Promise((resolve) => {
+      resolve(info.operatingSystem == 'android' || info.operatingSystem == 'ios');
+    });
+  };
+
   const getDeviceId = async (): Promise<string | undefined> => {
     const ID = await Device.getId();
     return new Promise((resolve) => {
@@ -53,6 +60,7 @@ export const useDevice = () => {
     getDeviceId,
     deviceId,
     canSyncActiveStatusToServer,
-    setSysncActiveStatus
+    setSysncActiveStatus,
+    isMobileOrTablet
   };
 };

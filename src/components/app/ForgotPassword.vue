@@ -1,5 +1,6 @@
 <template>
   <base-dialog
+    v-if="modelValue != undefined"
     v-model="modelValue"
     :full-width="false"
     :title="t('authen.forgetPassword')"
@@ -13,21 +14,14 @@
     <q-separator />
     <q-card flat>
       <q-card-section>
-        <q-stepper
-          flat
-          bordered
-          v-model="step"
-          ref="stepper"
-          color="primary"
-          animated
-        >
+        <q-stepper flat bordered v-model="step" ref="stepper" color="primary" animated>
           <q-step
             :name="1"
             :title="t('authen.verification')"
             :icon="biPersonVcard"
             :done="step > 1"
           >
-            <q-form @submit="requestVerifyCode" ref="formStep1" class="q-px-sm">
+            <q-form @submit="requestVerifyCode" class="q-px-sm">
               <div class="q-pa-md text-center">
                 <div class="text-body1">
                   {{ t('authen.forgotPwdTitle') }}
@@ -43,28 +37,18 @@
                 :label="t('base.email')"
                 :rules="[requireEmail]"
               >
-                <template v-slot:prepend>
+                <template #prepend>
                   <q-icon :name="biEnvelope" />
                 </template>
               </q-input>
 
               <q-card-actions align="center">
-                <q-btn
-                  unelevated
-                  type="submit"
-                  color="primary"
-                  :label="t('base.continue')"
-                />
+                <q-btn unelevated type="submit" color="primary" :label="t('base.continue')" />
               </q-card-actions>
             </q-form>
           </q-step>
 
-          <q-step
-            :name="2"
-            :title="t('authen.verificationCode')"
-            :icon="bi123"
-            :done="step > 2"
-          >
+          <q-step :name="2" :title="t('authen.verificationCode')" :icon="bi123" :done="step > 2">
             <div class="q-pa-md text-center">
               <div class="text-body1 text-center">
                 {{ t('authen.login_main_helper4') }}
@@ -77,7 +61,7 @@
               </div>
             </div>
 
-            <form-otp :input-length="6" @onSubmit="verifyCode"></form-otp>
+            <BaseInputOtp :input-length="6" @on-submit="verifyCode" />
             <q-card-actions align="center">
               <q-btn
                 flat
@@ -89,17 +73,13 @@
             </q-card-actions>
           </q-step>
 
-          <q-step
-            :name="3"
-            :title="t('authen.setPassword')"
-            :icon="biKey"
-            :done="step > 3"
-          >
+          <q-step :name="3" :title="t('authen.setPassword')" :icon="biKey" :done="step > 3">
             <password-form
+              v-if="entity"
               v-model:newPassword="entity.newPassword"
               v-model:loading="loading"
               @on-submit="setNewPassword"
-            ></password-form>
+            />
           </q-step>
         </q-stepper>
       </q-card-section>
@@ -112,29 +92,13 @@ import AuthenService from '@/api/AuthenService';
 import { useBase } from '@/composables/useBase';
 import { useLang } from '@/composables/useLang';
 import { useValidation } from '@/composables/useValidation';
-import {
-  AppException,
-  ForgotPasswordRequest,
-  ResponseMessage,
-} from '@/types/common';
-import {
-  bi123,
-  biEnvelope,
-  biKey,
-  biPersonVcard,
-} from '@quasar/extras/bootstrap-icons';
+import type { AppException, ForgotPasswordRequest, ResponseMessage } from '@/types/common';
+import { bi123, biEnvelope, biKey, biPersonVcard } from '@quasar/extras/bootstrap-icons';
 import { defineAsyncComponent, ref } from 'vue';
-const BaseDialog = defineAsyncComponent(
-  () => import('@/components/base/BaseDialog.vue'),
-);
-const FormOtp = defineAsyncComponent(
-  () => import('@/components/form/FormOtp.vue'),
-);
-const PasswordForm = defineAsyncComponent(
-  () => import('@/components/app/PasswordForm.vue'),
-);
-const { requestVerifyCodeToResetPwd, sendVerifyCodeToResetPwd, resetPassword } =
-  AuthenService();
+const BaseDialog = defineAsyncComponent(() => import('@/components/base/BaseDialog.vue'));
+const BaseInputOtp = defineAsyncComponent(() => import('@/components/base/BaseInputOtp.vue'));
+const PasswordForm = defineAsyncComponent(() => import('@/components/app/PasswordForm.vue'));
+const { requestVerifyCodeToResetPwd, sendVerifyCodeToResetPwd, resetPassword } = AuthenService();
 const { requireEmail } = useValidation();
 const { appLoading, appToast } = useBase();
 const { t } = useLang();

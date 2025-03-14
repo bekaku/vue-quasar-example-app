@@ -1,5 +1,5 @@
 import { useAxios } from '@/composables/useAxios';
-import { Role } from '@/types/models';
+import type { Role } from '@/types/models';
 export default () => {
   const { callAxios } = useAxios();
 
@@ -10,7 +10,7 @@ export default () => {
     });
   };
 
-  const findAllSystemFrontend = async (): Promise<Role[]| null> => {
+  const findAllSystemFrontend = async (): Promise<Role[] | null> => {
     return await callAxios<Role[]>({
       API: '/api/role/findAllSystemFrontend',
       method: 'GET',
@@ -18,14 +18,14 @@ export default () => {
   };
   const findAllByCompanyAndFrontend = async (
     companyId: number
-  ): Promise<Role[]| null> => {
+  ): Promise<Role[] | null> => {
     return await callAxios<Role[]>({
       API: `/api/role/findAllByCompanyAndFrontend?companyId=${companyId}`,
       method: 'GET',
     });
   };
   const findAllRoleByCompany = async (): Promise<Role[] | null> => {
-    return await callAxios<Role[]| null>({
+    return await callAxios<Role[] | null>({
       API: '/api/role/findAllByCompany',
       method: 'GET',
     });

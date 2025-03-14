@@ -1,41 +1,60 @@
 <template>
   <div v-if="item && fileType">
-    <pdf-view v-if="showView && fileType == 'pdf' && pdfSrc" :src="pdfSrc" :fetch-to-server="fetch"
-      v-model:show="showView" :title="item.fileName || title" @on-close="onClose"></pdf-view>
+    <pdf-view
+      v-if="showView && fileType == 'pdf' && pdfSrc"
+      :src="pdfSrc"
+      :fetch-to-server="fetch || false"
+      v-model:show="showView"
+      :title="item.fileName || title || ''"
+      @on-close="onClose"
+    />
 
-    <photo-view v-else-if="fileType == 'image' && showView" :show-dialog="showView" :files="imageItems"
-      :selected-index="imageSelectIndex" :show-delete-image="false" :maximized="false" :fetch="fetch"
-      :showArrow="showArrow" @on-close="onClose">
-    </photo-view>
+    <photo-view
+      v-else-if="fileType == 'image' && showView"
+      :show-dialog="showView"
+      :files="imageItems"
+      :selected-index="imageSelectIndex"
+      :show-delete-image="false"
+      :maximized="false"
+      :fetch="fetch || false"
+      :showArrow="showArrow || false"
+      @on-close="onClose"
+    />
   </div>
 </template>
 <script setup lang="ts">
-import { FileManagerDto } from '@/types/models';
+import type { FileManagerDto } from '@/types/models';
 import { useBase } from '@/composables/useBase';
 import { defineAsyncComponent, onMounted, ref } from 'vue';
-import { FileType } from '@/types/common';
+import type { FileType } from '@/types/common';
 import FileManagerService from '@/api/FileManagerService';
-import { downloadFileFromUrl, downloadFromBlob, fileToBlob, generateFileNameByExtesnsion, getFileExtension, getFileType } from '@/utils/fileUtils';
+import {
+  downloadFileFromUrl,
+  downloadFromBlob,
+  fileToBlob,
+  generateFileNameByExtesnsion,
+  getFileExtension,
+  getFileType,
+} from '@/utils/fileUtils';
 
-const PdfView = defineAsyncComponent(
-  () => import('@/components/base/PdfView.vue')
+const PdfView = defineAsyncComponent(() => import('@/components/base/PdfView.vue'));
+const PhotoView = defineAsyncComponent(() => import('@/components/base/PhotoView.vue'));
+const props = withDefaults(
+  defineProps<{
+    title?: string;
+    item: FileManagerDto;
+    imageList?: FileManagerDto[];
+    selectIndex?: number;
+    fetch?: boolean;
+    showArrow?: boolean;
+    isBlob?: boolean;
+  }>(),
+  {
+    showArrow: true,
+    fetch: false,
+    isBlob: false,
+  },
 );
-const PhotoView = defineAsyncComponent(
-  () => import('@/components/base/PhotoView.vue')
-);
-const props = withDefaults(defineProps<{
-  title?: string;
-  item: FileManagerDto;
-  imageList?: FileManagerDto[];
-  selectIndex?: number;
-  fetch?: boolean;
-  showArrow?: boolean;
-  isBlob?: boolean;
-}>(), {
-  showArrow: true,
-  fetch: false,
-  isBlob: false,
-});
 const show = defineModel('show', { type: Boolean, default: false });
 const { appLoading } = useBase();
 const { downloadCdnData } = FileManagerService();
@@ -63,7 +82,7 @@ onMounted(async () => {
     }
     showView.value = true;
   } else if (fileType.value == 'image') {
-    //show image
+    // show image
     if (props.imageList && props.imageList.length > 0) {
       imageItems.value.push(...props.imageList);
     } else {
@@ -71,7 +90,7 @@ onMounted(async () => {
     }
     showView.value = true;
   } else {
-    //download file
+    // download file
     await onDownloadFile();
     onClose();
   }
@@ -81,7 +100,7 @@ const onDownloadFile = async () => {
   const file = props.item;
   if (!file || !file.filePath) {
     onClose();
-    return new Promise(async (resolve) => resolve(false));
+    return new Promise((resolve) => resolve(false));
   }
 
   if (props.fetch) {
@@ -94,20 +113,19 @@ const onDownloadFile = async () => {
         try {
           downloadFromBlob(file.filePath, file.fileName || fileGenerateName);
         } catch (err) {
-          console.error(err)
+          console.error(err);
         }
       } else {
         try {
           downloadFileFromUrl(file.filePath, file.fileName || fileGenerateName);
         } catch (err) {
-          console.error(err)
+          console.error(err);
         }
       }
     }
   }
 
-  return new Promise(async (resolve) => resolve(true));
-
+  return new Promise((resolve) => resolve(true));
 };
 const detechFile = async () => {
   return new Promise((resolve) => {

@@ -1,10 +1,10 @@
-import { IPagination } from '@/types/common';
+import type { IPagination } from '@/types/common';
 import { DEFULT_ITEM_PER_PAGET } from '@/utils/constant';
 import { ref } from 'vue';
 export const usePaging = (perPage?: number) => {
   const pagesInitial: IPagination = {
     current: 1,
-    itemsPerPage: perPage ? perPage : DEFULT_ITEM_PER_PAGET,
+    itemsPerPage: perPage || DEFULT_ITEM_PER_PAGET,
     totalPages: 0,
     totalElements: 0,
     last: false,

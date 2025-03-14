@@ -1,85 +1,12 @@
-<template>
-    <q-page padding>
-        <q-card flat bordered class="content-limit">
-            <q-card-section>
-                <q-toolbar>
-                    <q-toolbar-title> Use axios </q-toolbar-title>
-                    <q-space />
-                </q-toolbar>
-                <q-separator />
-            </q-card-section>
-            <q-card-section>
-                <div class="row">
-                    <div class="col-12 col-md-6 q-pa-md">
-                        <q-card>
-                            <q-card-section class="q-gutter-y-md">
-                                <UiButton outline label="Fetch response API" @click="fetchResponseApi" />
-                                <SkeletonItem v-if="reaponseApiLoading" show-header :items="5" />
-                                <div v-else style="max-height: 250px; overflow: auto"
-                                    class="bg-black text-light-green-13">
-                                    <pre>
-                                {{ reponseApiItem }}
-                            </pre>
-                                </div>
-                            </q-card-section>
-                        </q-card>
-                    </div>
-                    <div class="col-12 col-md-6 q-pa-md">
-                        <q-card>
-                            <q-card-section class="q-gutter-y-md">
-                                <UiButton outline label="Fetch response LIST" @click="fetchResponseList" />
-                                <SkeletonItem v-if="reponseListLoading" show-header :items="5" />
-                                <div v-else style="max-height: 250px; overflow: auto"
-                                    class="bg-black text-light-green-13">
-                                    <pre>
-                                {{ reponseListItems }}
-                            </pre>
-                                </div>
-                            </q-card-section>
-                        </q-card>
-                    </div>
-                    <div class="col-12 col-md-6 q-pa-md">
-                        <q-card>
-                            <q-card-section class="q-gutter-y-md">
-                                <UiButton outline label="Fetch response Object" @click="fetchResponseObject" />
-                                <SkeletonItem v-if="reponseObjectLoading" show-header :items="5" />
-                                <div v-else style="max-height: 250px; overflow: auto"
-                                    class="bg-black text-light-green-13">
-                                    <pre>
-                                {{ reponseObject }}
-                            </pre>
-                                </div>
-                            </q-card-section>
-                        </q-card>
-                    </div>
-                    <div class="col-12 col-md-6 q-pa-md">
-                        <q-card>
-                            <q-card-section class="q-gutter-y-md">
-                                <UiButton color="negative" outline label="Fetch ERROR handling" @click="fetchError" />
-
-                                <SkeletonItem v-if="responseErrorLoading" show-header :items="5" />
-                                <div v-else style="overflow: auto" class="bg-black text-red">
-                                    <pre>
-                                        {{ JSON.stringify(responseError) }}
-                                    </pre>
-                                </div>
-                            </q-card-section>
-                        </q-card>
-                    </div>
-                </div>
-            </q-card-section>
-        </q-card>
-
-    </q-page>
-</template>
-
 <script setup lang="ts">
-import UiButton from '@/components/quasar/Button.vue';
+import BaseButton from '@/components/base/BaseButton.vue';
 import SkeletonItem from '@/components/skeleton/SkeletonItem.vue';
 import { useAppMeta } from '@/composables/useAppMeta';
 import { useAxios } from '@/composables/useAxios';
 import { useLang } from '@/composables/useLang';
-import { IApiListResponse, Permission } from '@/types/models';
+import type { IApiListResponse, Permission } from '@/types/models';
+import BaseCard from 'src/components/base/BaseCard.vue';
+import BasePage from 'src/components/base/BasePage.vue';
 import { ref } from 'vue';
 
 const { t } = useLang();
@@ -93,7 +20,6 @@ const reaponseApiLoading = ref<boolean>(false);
 const reponseListItems = ref<Permission[] | null>(null);
 const reponseListLoading = ref<boolean>(false);
 
-
 const reponseObject = ref<Permission | null>(null);
 const reponseObjectLoading = ref<boolean>(false);
 
@@ -101,32 +27,31 @@ const responseError = ref<any>();
 const responseErrorLoading = ref<boolean>(false);
 
 const fetchResponseApi = async () => {
-
-    reaponseApiLoading.value = true;
-    reponseApiItem.value = await callAxios<IApiListResponse<Permission>>({
-        API: '/api/permission?page=0&size=10&sort=code,asc',
-        method: 'GET',
-    });
-    reaponseApiLoading.value = false;
-}
+  reaponseApiLoading.value = true;
+  reponseApiItem.value = await callAxios<IApiListResponse<Permission>>({
+    API: '/api/permission?page=0&size=10&sort=code,asc',
+    method: 'GET',
+  });
+  reaponseApiLoading.value = false;
+};
 const fetchResponseList = async () => {
-    reponseListLoading.value = true;
-    reponseListItems.value = await callAxios<Permission[]>({
-        API: '/api/permission/findAllBackendPermission',
-        method: 'GET',
-    });
-    reponseListLoading.value = false;
-}
+  reponseListLoading.value = true;
+  reponseListItems.value = await callAxios<Permission[]>({
+    API: '/api/permission/findAllBackendPermission',
+    method: 'GET',
+  });
+  reponseListLoading.value = false;
+};
 const fetchResponseObject = async () => {
-    reponseObjectLoading.value = true;
-    reponseObject.value = await callAxios<Permission>({
-        API: '/api/permission/1',
-        method: 'GET',
-    });
-    reponseObjectLoading.value = false;
-}
+  reponseObjectLoading.value = true;
+  reponseObject.value = await callAxios<Permission>({
+    API: '/api/permission/1',
+    method: 'GET',
+  });
+  reponseObjectLoading.value = false;
+};
 const fetchError = async () => {
-    /* alternative
+  /* alternative
     try {
         await callAxios<Permission[]>({
             API: '/api/permission/notfound_url',
@@ -138,20 +63,23 @@ const fetchError = async () => {
     }
     */
 
-    responseErrorLoading.value = true;
-    callAxios<Permission[]>({
-        API: '/api/permission/notfound_url',
-        method: 'GET',
-    }).then((response) => {
-        console.log('use-axios > fetch OK', response);
-    }).catch((error) => {
-        responseError.value = JSON.stringify(error);
-        console.warn('use-axios > fetchError > catch', error)
-    }).finally(() => {
-        console.log('use-axios > fetchError > finally');
-        responseErrorLoading.value = false;
+  responseErrorLoading.value = true;
+  callAxios<Permission[]>({
+    API: '/api/permission/notfound_url',
+    method: 'GET',
+  })
+    .then((response) => {
+      console.log('use-axios > fetch OK', response);
+    })
+    .catch((error) => {
+      responseError.value = JSON.stringify(error);
+      console.warn('use-axios > fetchError > catch', error);
+    })
+    .finally(() => {
+      console.log('use-axios > fetchError > finally');
+      responseErrorLoading.value = false;
     });
-}
+};
 /* 
 // DELETE 
 csont deleteResponse:ResponseMessage = await callAxios<ResponseMessage>({
@@ -185,4 +113,87 @@ csont putResponse:Permission = await callAxios<Permission>({
 */
 </script>
 
-<style lang="scss" scoped></style>
+<template>
+  <BasePage>
+    <BaseCard title="useAxios">
+      <q-card-section>
+        <div class="row">
+          <div class="col-12 col-md-6 q-pa-md">
+            <BaseCard flat>
+              <q-card-section class="q-gutter-y-md">
+                <BaseButton outline label="Fetch response API" @click="fetchResponseApi" />
+                <SkeletonItem v-if="reaponseApiLoading" show-header :items="5" />
+                <div
+                  v-else
+                  style="max-height: 250px; overflow: auto"
+                  class="bg-black text-light-green-13"
+                >
+                  <pre>
+                                {{ reponseApiItem }}
+                            </pre
+                  >
+                </div>
+              </q-card-section>
+            </BaseCard>
+          </div>
+          <div class="col-12 col-md-6 q-pa-md">
+            <BaseCard flat>
+              <q-card-section class="q-gutter-y-md">
+                <BaseButton outline label="Fetch response LIST" @click="fetchResponseList" />
+                <SkeletonItem v-if="reponseListLoading" show-header :items="5" />
+                <div
+                  v-else
+                  style="max-height: 250px; overflow: auto"
+                  class="bg-black text-light-green-13"
+                >
+                  <pre>
+                                {{ reponseListItems }}
+                            </pre
+                  >
+                </div>
+              </q-card-section>
+            </BaseCard>
+          </div>
+          <div class="col-12 col-md-6 q-pa-md">
+            <BaseCard flat>
+              <q-card-section class="q-gutter-y-md">
+                <BaseButton outline label="Fetch response Object" @click="fetchResponseObject" />
+                <SkeletonItem v-if="reponseObjectLoading" show-header :items="5" />
+                <div
+                  v-else
+                  style="max-height: 250px; overflow: auto"
+                  class="bg-black text-light-green-13"
+                >
+                  <pre>
+                                {{ reponseObject }}
+                            </pre
+                  >
+                </div>
+              </q-card-section>
+            </BaseCard>
+          </div>
+          <div class="col-12 col-md-6 q-pa-md">
+            <BaseCard flat>
+              <q-card-section class="q-gutter-y-md">
+                <BaseButton
+                  color="negative"
+                  outline
+                  label="Fetch ERROR handling"
+                  @click="fetchError"
+                />
+
+                <SkeletonItem v-if="responseErrorLoading" show-header :items="5" />
+                <div v-else style="overflow: auto" class="bg-black text-red">
+                  <pre>
+                                        {{ JSON.stringify(responseError) }}
+                                    </pre
+                  >
+                </div>
+              </q-card-section>
+            </BaseCard>
+          </div>
+        </div>
+      </q-card-section>
+    </BaseCard>
+  </BasePage>
+</template>

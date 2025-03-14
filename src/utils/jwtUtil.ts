@@ -1,5 +1,7 @@
-import { JwtStatus } from '@/types/common';
-import { JwtPayload, jwtDecode } from 'jwt-decode';
+/* eslint-disable no-async-promise-executor */
+import type { JwtStatus } from '@/types/common';
+import type { JwtPayload } from 'jwt-decode';
+import { jwtDecode } from 'jwt-decode';
 export const decodeJWT = (token: string): Promise<JwtPayload | null> => {
     return new Promise((resolve) => {
         if (token) {
@@ -47,7 +49,7 @@ export const getTokenStatus = async (token: string): Promise<JwtStatus> => {
             if (decodeToken && decodeToken.exp) {
                 // Get the current time in seconds since the epoch
                 // const currentTime = Math.floor(Date.now() / 1000);
-                const currentTime = new Date().getTime() + 3000;//add 3 more seconds in case not expired when fetch new data from server
+                const currentTime = new Date().getTime() + 3000;// add 3 more seconds in case not expired when fetch new data from server
                 const expirationTime = decodeToken.exp * 1000; // Convert to milliseconds
                 // Check if the token is expired
                 if (decodeToken && currentTime > expirationTime) {

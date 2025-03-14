@@ -1,9 +1,20 @@
 <template>
-  <q-item  v-bind="$attrs" :to="item.to" v-ripple clickable :dense
+  <q-item
+    v-bind="$attrs"
+    :to="item.to"
+    clickable
+    :dense
     :active-class="item.noActiveLink ? 'q-item-no-link-highlighting' : 'active-menu-link'"
-    :class="item.to == getCurrentPath(false) ? 'text-primary' : $q.dark.isActive ? darkText : lightText">
+    :class="
+      item.to == getCurrentPath(false) ? 'text-primary' : $q.dark.isActive ? darkText : lightText
+    "
+  >
     <q-item-section side>
-      <q-icon :name="item.icon" :class="item.to ==getCurrentPath(false) ? 'text-primary' :'q-text-black'" :size="iconSize" />
+      <q-icon
+        :name="item.icon"
+        :class="item.to == getCurrentPath(false) ? 'text-primary' : 'q-text-black'"
+        :size="iconSize"
+      />
     </q-item-section>
     <q-item-section>
       <q-item-label>
@@ -18,13 +29,19 @@
 <script setup lang="ts">
 import { useBase } from '@/composables/useBase';
 import { useLang } from '@/composables/useLang';
-import { IMenuPageItem } from '@/types/models';
+import type { IMenuPageItem } from '@/types/models';
 import { useQuasar } from 'quasar';
 
-const { item, darkText = 'text-white', lightText = 'text-black', dense=false, iconSize='sm' } = defineProps<{
+const {
+  item,
+  darkText = 'text-white',
+  lightText = 'text-black',
+  dense = false,
+  iconSize = 'sm',
+} = defineProps<{
   item: IMenuPageItem;
-  darkText?: string;
-  lightText?: string;
+  darkText?: string | undefined;
+  lightText?: string | undefined;
   iconSize?: string;
   dense?: boolean;
 }>();

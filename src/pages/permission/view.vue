@@ -24,7 +24,7 @@
               :label="t('model_permission_name')"
               :rules="[required]"
             >
-              <template v-slot:prepend>
+              <template #prepend>
                 <q-icon :name="biShieldCheck" />
               </template>
             </q-input>
@@ -38,27 +38,19 @@
               v-model="crudEntity.remark"
               :label="t('model_permission_description')"
             >
-              <template v-slot:prepend>
+              <template #prepend>
                 <q-icon :name="biPencil" />
               </template>
             </q-input>
           </div>
           <div class="col-12 col-md-6 q-pa-md">
-            <form-togle  useLabelTitle label="Frontend" v-model="crudEntity.frontEnd" />
+            <form-togle useLabelTitle label="Frontend" v-model="crudEntity.frontEnd" />
           </div>
           <div class="col-12 col-md-6 q-pa-md">
             <div class="q-px-sm">Permission type</div>
             <q-radio v-model="crudEntity.operationType" :val="1" label="Crud" />
-            <q-radio
-              v-model="crudEntity.operationType"
-              :val="2"
-              label="Report"
-            />
-            <q-radio
-              v-model="crudEntity.operationType"
-              :val="3"
-              label="Other"
-            />
+            <q-radio v-model="crudEntity.operationType" :val="2" label="Report" />
+            <q-radio v-model="crudEntity.operationType" :val="3" label="Other" />
           </div>
         </div>
 
@@ -92,15 +84,10 @@ import { useAppMeta } from '@/composables/useAppMeta';
 import { useCrudForm } from '@/composables/useCrudForm';
 import { useLang } from '@/composables/useLang';
 import { useValidation } from '@/composables/useValidation';
-import { Permission } from '@/types/models';
-import {
-  biPencil,
-  biShieldCheck
-} from '@quasar/extras/bootstrap-icons';
+import type { Permission } from '@/types/models';
+import { biPencil, biShieldCheck } from '@quasar/extras/bootstrap-icons';
 import { defineAsyncComponent } from 'vue';
-const FormTogle = defineAsyncComponent(
-  () => import('@/components/quasar/Toggle.vue'),
-);
+const FormTogle = defineAsyncComponent(() => import('@/components/base/BaseToggle.vue'));
 const { t } = useLang();
 const { required } = useValidation();
 const entity: Permission = {
@@ -111,23 +98,16 @@ const entity: Permission = {
   operationType: 1,
   frontEnd: false,
 };
-const {
-  crudAction,
-  onBack,
-  loading,
-  onSubmit,
-  crudEntity,
-  onDelete,
-  crudName,
-} = useCrudForm<Permission>(
-  {
-    crudName: 'permission',
-    apiEndpoint: '/api',
-    fectchDataOnLoad: true,
-    backToPreviousPath: true,
-  },
-  entity,
-);
+const { crudAction, onBack, loading, onSubmit, crudEntity, onDelete, crudName } =
+  useCrudForm<Permission>(
+    {
+      crudName: 'permission',
+      apiEndpoint: '/api',
+      fectchDataOnLoad: true,
+      backToPreviousPath: true,
+    },
+    entity,
+  );
 
 useAppMeta({
   additionalTitle: t('crudAction.' + crudAction.value),

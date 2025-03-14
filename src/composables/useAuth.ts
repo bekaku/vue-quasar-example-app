@@ -6,7 +6,7 @@ import {
   AppAuthTokenExpireKey,
   ExpireCookieDays,
 } from '@/utils/constant';
-import { UserDto, RefreshTokenResponse } from '@/types/models';
+import type { UserDto, RefreshTokenResponse } from '@/types/models';
 import { useAuthenStore } from 'stores/authenStore';
 import { useSSRContext } from 'vue';
 import { useBase } from './useBase';
@@ -52,7 +52,6 @@ export const useAuth = () => {
       appLoading(false);
       destroyAuthDataAndRedirect();
     }
-    return;
   };
   const setAuthenticationCookies = (authResponse: RefreshTokenResponse) => {
     setAuthCookies(cookies, authResponse, !isDevMode());
@@ -67,7 +66,7 @@ export const useAuth = () => {
         expires: addDateByDays(ExpireCookieDays),
         path: '/',
         // domain: secure ? AppDomain : null,
-        secure: secure,
+        secure,
         sameSite: 'Lax'
       });
 
@@ -75,7 +74,7 @@ export const useAuth = () => {
         expires: addDateByDays(ExpireCookieDays),
         path: '/',
         // domain: secure ? AppDomain : null,
-        secure: secure,
+        secure,
         sameSite: 'Strict'
       });
 
@@ -83,7 +82,7 @@ export const useAuth = () => {
         expires: addDateByDays(ExpireCookieDays),
         path: '/',
         // domain: secure ? AppDomain : null,
-        secure: secure,
+        secure,
         sameSite: 'Strict'
       });
 
@@ -91,7 +90,7 @@ export const useAuth = () => {
         expires: addDateByDays(ExpireCookieDays),
         path: '/',
         // domain: secure ? AppDomain : null,
-        secure: secure,
+        secure,
         sameSite: 'Strict'
       });
     }

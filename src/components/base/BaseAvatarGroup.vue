@@ -1,15 +1,21 @@
 <template>
   <div class="avatar-group" v-bind="$attrs">
     <slot>
-      <base-image v-for="(item, index) in items.slice(0, limit)" :key="`${index}-${item}`" :square="square"
-        :rounded="rounded" class="avatar" :src="item" :fetch="fetch" :ratio="1" :style="{zIndex:limit-index}">
-        <slot name="extra" v-bind="{ index }">
-        </slot>
-        </base-image>
+      <base-image
+        v-for="(item, index) in items.slice(0, limit)"
+        :key="`${index}-${item}`"
+        :square="square"
+        :rounded="rounded"
+        class="avatar"
+        :src="item"
+        :fetch="fetch || false"
+        :ratio="1"
+        :style="{ zIndex: limit ? limit - index : '0' }"
+      >
+        <slot name="extra" v-bind="{ index }" />
+      </base-image>
       <slot name="moreNumber">
-        <div v-if="items.length > 5" class="avatar extra">
-          +{{ items.length - 5 }}
-        </div>
+        <div v-if="items.length > 5" class="avatar extra">+{{ items.length - 5 }}</div>
       </slot>
     </slot>
   </div>
@@ -26,21 +32,22 @@
  */
 import BaseImage from '@/components/base/BaseImage.vue';
 
- withDefaults(defineProps<{
-  items: string[];
-  spinnerColor?: string;
-  color?: string;
-  imgBg?: string;
-  ratio?: number;
-  height?: number;
-  size?: string;
-  square?: boolean;
-  rounded?: boolean;
-  fetch?: boolean;
-  limit?: number;
-  boderColor?: string;
-  overrapSize?: string;
-}>(),
+withDefaults(
+  defineProps<{
+    items: string[];
+    spinnerColor?: string;
+    color?: string;
+    imgBg?: string;
+    ratio?: number;
+    height?: number;
+    size?: string;
+    square?: boolean;
+    rounded?: boolean;
+    fetch?: boolean;
+    limit?: number;
+    boderColor?: string;
+    overrapSize?: string;
+  }>(),
   {
     boderColor: 'white',
     spinnerColor: 'white',
@@ -55,7 +62,7 @@ import BaseImage from '@/components/base/BaseImage.vue';
     height: 0,
     limit: 5,
     overrapSize: '-10px',
-  }
+  },
 );
 </script>
 <style lang="scss" scoped>

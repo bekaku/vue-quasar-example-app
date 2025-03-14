@@ -1,16 +1,13 @@
+import { AppAuthRefeshTokenKey, LocaleKey } from '@/utils/constant';
+import type { AxiosInstance } from 'axios';
+import axios from 'axios';
 import { boot } from 'quasar/wrappers';
-import axios, { AxiosInstance } from 'axios';
-// import { AppAuthRefeshTokenKey, AppAuthTokenKey, DefaultApiCLient, LocaleKey } from '@/utils/constant';
-//TODO cannot use external file import in boot file >  https://github.com/quasarframework/quasar/issues/17365
+// TODO cannot use external file import in boot file >  https://github.com/quasarframework/quasar/issues/17365
 import { Cookies } from 'quasar';
 // import { canRefreshToken } from '@/utils/JwtUtil';
 import { useAuthenStore } from '@/stores/authenStore';
 // import { getTokenStatus } from '@/utils/jwtUtil';
 
-// const AppAuthTokenKey ='_myappkey_01';
-const AppAuthRefeshTokenKey ='_myappkey_02';
-const DefaultApiCLient ='default';
-const LocaleKey ='_myappkey_locale';
 
 declare module '@vue/runtime-core' {
   interface ComponentCustomProperties {
@@ -27,16 +24,16 @@ declare module '@vue/runtime-core' {
 // for each client)
 const api = axios.create({
   // baseURL: process.env.NODE_ENV == 'development' ? 'http://192.168.7.249:8080' : 'https://api.example.com',
-  baseURL: process.env.API,
+  baseURL: process.env.APP_BASE_API || '',
   withCredentials: false,
-  timeout: process.env.TIME_OUT ? +process.env.TIME_OUT : 3 * 60000, // 60000 = 1 minute, 0 = no timeout
+  timeout: process.env.APP_API_TIME_OUT ? +process.env.APP_API_TIME_OUT : 3 * 60000, // 60000 = 1 minute, 0 = no timeout
   headers: {
     // Authorization: `Bearer ${token}`,
     'Content-Type': 'application/json',
-    'Accept-Apiclient': process.env.API_CLIENT || DefaultApiCLient
+    'Accept-Apiclient': process.env.APP_API_CLIENT
     // 'Accept-Language': DefaultLocale,
   },
-  validateStatus: (status) => status < 400 // Resolve only if the status code is less than 400
+  validateStatus: status => status < 400 // Resolve only if the status code is less than 400
   // validateStatus: (status) => status <= 500 // Resolve only if the status code is less than 500
 });
 
@@ -45,7 +42,7 @@ const api = axios.create({
 let isRefreshing = false;
 let failedQueue: any[] = [];
 const processQueue = (error: any, token = null) => {
-  failedQueue.forEach(prom => {
+  failedQueue.forEach((prom) => {
     if (error) {
       prom.reject(error);
     } else {
@@ -61,37 +58,34 @@ export default boot(({ app, redirect, ssrContext, store }) => {
   // Check if interceptors are already set up
   const isServer = process.env.SERVER;
   if (!isServer) {
-
     api.interceptors.request.use(async (config) => {
       // const ck = isServer ? Cookies.parseSSR(ssrContext) : Cookies;
       // const jwtKey = ck.get(AppAuthTokenKey);
       config.headers['Accept-Language'] = Cookies.get(LocaleKey);
       return config;
-    }, error => {
+    }, (error) => {
       return Promise.reject(error);
     });
-    api.interceptors.response.use(function(response) {
+    api.interceptors.response.use((response) => {
       return response;
     }, async (error) => {
-
       const originalRequest = error.config;
       // const ck = isServer ? Cookies.parseSSR(ssrContext) : Cookies;
       const refreshToken = Cookies.get(AppAuthRefeshTokenKey);
       if (refreshToken && error.response && error.response.status === 403 && !originalRequest._retry) {
-
         if (isRefreshing) {
-          return new Promise(function(resolve, reject) {
+          return new Promise((resolve, reject) => {
             console.warn('isRefreshing > failedQueue.push', originalRequest.url);
             failedQueue.push({ resolve, reject });
-          }).then(token => {
-            originalRequest.headers['Authorization'] = 'Bearer ' + token;
+          }).then((token) => {
+            originalRequest.headers.Authorization = 'Bearer ' + token;
             return api(originalRequest);
-          }).catch(err => {
+          }).catch((err) => {
             return Promise.reject(err);
           });
         }
 
-        //TODO
+        // TODO
         // const currentToken = Cookies.get(AppAuthTokenKey);
         // if (currentToken) {
         //   const currentExpireStatus = await getTokenStatus(currentToken);
@@ -105,22 +99,23 @@ export default boot(({ app, redirect, ssrContext, store }) => {
         originalRequest._retry = true;
         isRefreshing = true;
 
+        // eslint-disable-next-line no-async-promise-executor
         return new Promise(async (resolve, reject) => {
           console.warn('/api/auth/refreshToken', refreshToken);
 
-          api.defaults.baseURL = process.env.API;
+          api.defaults.baseURL = process.env.APP_BASE_API || '';
           api.defaults.responseType = 'json';
           api.defaults.headers['Content-Type'] = 'application/json';
           api.post('/api/auth/refreshToken', {
             refreshToken: {
-              refreshToken: refreshToken
+              refreshToken
             }
           })
             .then(async ({ data }) => {
               console.warn('/api/auth/refreshToken then', data);
               // if (data && data.refreshToken && data.authenticationToken) {
               await authenStore.setRefreshTokenCookie(undefined, data);
-              originalRequest.headers['Authorization'] = 'Bearer ' + data.authenticationToken;
+              originalRequest.headers.Authorization = 'Bearer ' + data.authenticationToken;
               processQueue(null, data.authenticationToken);
               console.warn('/api/auth/refreshToken end');
               resolve(api(originalRequest));

@@ -1,4 +1,4 @@
-import { IMenu, RefreshTokenResponse, UserDto } from '@/types/models';
+import type { IMenu, RefreshTokenResponse, UserDto } from '@/types/models';
 import { biFolder, biGear, biHouseDoor, biPeople, biPerson, biPersonBadge, biShieldCheck } from '@quasar/extras/bootstrap-icons';
 
 export const PermissionItems: string[] = [

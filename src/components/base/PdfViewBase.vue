@@ -1,12 +1,7 @@
 <template>
   <q-card flat>
     <div class="row justify-center">
-      <q-linear-progress
-        v-if="!firstLoaded"
-        query
-        color="primary"
-        class="q-mt-sm"
-      />
+      <q-linear-progress v-if="!firstLoaded" query color="primary" class="q-mt-sm" />
       <q-no-ssr>
         <pdf-vue
           :pdf="pdf"
@@ -57,8 +52,8 @@ const props = withDefaults(
   {
     fitParent: false,
     textLayer: false,
-    hideForms: false
-  }
+    hideForms: false,
+  },
 );
 // const scale = ref(1);
 // const page = ref(1);
@@ -68,8 +63,8 @@ const pagess = defineModel('pagess', { type: Number, default: 1 });
 const loading = defineModel('loading', { type: Boolean, default: true });
 
 const firstLoaded = ref(false);
-//const pages = defineModel('pages', { type: Number, default: 1 });
-const { pdf, pages, /*info*/ } = usePDF(props.src);
+// const pages = defineModel('pages', { type: Number, default: 1 });
+const { pdf, pages /* info */ } = usePDF(props.src);
 const emit = defineEmits(['onPageChange']);
 // watchEffect(() => {
 //   console.log('watchEffect > test', test.value);
@@ -82,6 +77,6 @@ const emit = defineEmits(['onPageChange']);
 const onLoaded = () => {
   firstLoaded.value = true;
   pagess.value = pages.value;
-  //emit('onPageChange', pages.value);
+  // emit('onPageChange', pages.value);
 };
 </script>

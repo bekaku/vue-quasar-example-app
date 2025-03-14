@@ -1,5 +1,6 @@
-import { RefeshTokenStatus } from '@/types/common';
-import { RefreshTokenResponse, UserDto } from '@/types/models';
+/* eslint-disable no-async-promise-executor */
+import type { RefeshTokenStatus } from '@/types/common';
+import type { RefreshTokenResponse, UserDto } from '@/types/models';
 import { isEmptyVal } from '@/utils/appUtil';
 import {
   AppAuthRefeshTokenKey,
@@ -15,7 +16,6 @@ import { Cookies } from 'quasar';
 import { computed, ref } from 'vue';
 
 export const useAuthenStore = defineStore('authenStore', () => {
-
   const auth = ref<UserDto>();
   const refreshTokenTimeout = ref<any>();
   const refreshTokenTimeoutNo = ref(0);
@@ -30,7 +30,7 @@ export const useAuthenStore = defineStore('authenStore', () => {
 
 
   const refreshToken = async (ssrContext: any | undefined = undefined): Promise<RefeshTokenStatus> => {
-    return new Promise(async (resolve /*reject*/) => {
+    return new Promise(async (resolve /* reject */) => {
       const isServerMode = process.env.SERVER;
       if (devMode) {
         console.log('refreshToken SERVER mode ', isServerMode);
@@ -60,7 +60,7 @@ export const useAuthenStore = defineStore('authenStore', () => {
   };
 
   const refreshTokenProcess = async (ssrContext: any): Promise<RefeshTokenStatus> => {
-    return new Promise(async (resolve /*reject*/) => {
+    return new Promise(async (resolve /* reject */) => {
       const ck: any = process.env.SERVER && ssrContext ? Cookies.parseSSR(ssrContext) : Cookies;
       const refreshTokenKey = ck.get(AppAuthRefeshTokenKey);
       // const deviceId = ck.get(SucureDeviceIdAtt);
@@ -70,7 +70,7 @@ export const useAuthenStore = defineStore('authenStore', () => {
       //   }
       // }
       api.defaults.headers.Authorization = `Bearer ${ck.get(AppAuthTokenKey)}`;
-      api.defaults.baseURL = process.env.API;
+      api.defaults.baseURL = process.env.APP_BASE_API || '';
       api.defaults.headers['Content-Type'] = 'application/json';
       api.defaults.responseType = 'json';
       api.defaults.headers['Accept-Language'] = ck.get(LocaleKey);
@@ -113,14 +113,14 @@ export const useAuthenStore = defineStore('authenStore', () => {
         }
         resolve({
           status: false,
-          fourceLogout: fourceLogout
+          fourceLogout
         });
       });
     });
   };
 
   const setRefreshTokenCookie = async (ssrContext: any, responseData: RefreshTokenResponse) => {
-    return new Promise(async (resolve /*reject*/) => {
+    return new Promise(async (resolve /* reject */) => {
       const ck: any = process.env.SERVER && ssrContext ? Cookies.parseSSR(ssrContext) : Cookies;
       const isDevMode = process.env.NODE_ENV == 'development';
       // if (isServerMode) {
@@ -158,7 +158,7 @@ export const useAuthenStore = defineStore('authenStore', () => {
   const stopAndRestartRefreshTokenTimer = async () => {
     stopRefreshTokenTimer();
     await refreshToken();
-    return new Promise(async (resolve /*reject*/) => {
+    return new Promise(async (resolve /* reject */) => {
       resolve(true);
     });
   };

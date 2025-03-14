@@ -9,7 +9,7 @@ import {
     biFileWord
 } from '@quasar/extras/bootstrap-icons';
 import JSZip from 'jszip';
-import { FileType } from 'types/common';
+import type { FileType } from '@/types/common';
 
 export const fileToBlob = (file: File): Promise<any> => {
     return new Promise((resolve) => {
@@ -20,7 +20,7 @@ export const fileToBlob = (file: File): Promise<any> => {
         resolve(fileUrlObject);
     });
 };
-export const fileUrlToBlob = async(url: string): Promise<any> => {
+export const fileUrlToBlob = async (url: string): Promise<any> => {
     const response = await fetch(url);
     const blob = await response.blob();
     const urlBlob = URL.createObjectURL(blob);
@@ -84,7 +84,7 @@ export const getBlobFromAxiosResponse = (response: any) => {
 export const getFileNameFromAxiosResponse = (response: any): Promise<string | undefined> => {
     return new Promise((resolve) => {
         const contentDisposition = response.headers['content-disposition'];
-        let fileName = undefined;
+        let fileName;
         if (contentDisposition) {
             const match = contentDisposition.match(/filename="(.+)"/);
             if (match && match[1]) {
@@ -132,7 +132,7 @@ export const getImgUrlFromFile = (f: any): Promise<string | undefined> => {
     });
 };
 export const generateimageFileName = (prefix: string | undefined = undefined) => {
-    return `${prefix ? prefix : 'gd5'}_${getCurrentTimestamp()}.jpg`;
+    return `${prefix || 'gd5'}_${getCurrentTimestamp()}.jpg`;
 };
 export const downloadURI = async (url: string, fileName: string) => {
     const image = await fetch(url);
@@ -161,12 +161,15 @@ export const getFileNameFromResponse = (axiosResponse: any) => {
     return fileName;
 };
 export const getFileExtension = (t: string): string | undefined => {
-
     if (!t) {
         return undefined;
     }
 
+
     let mimeType = t.split(';')[0];
+    if (!mimeType) {
+        return undefined;
+    }
     mimeType = mimeType.toLowerCase();
     let extension;
     switch (mimeType) {
@@ -226,13 +229,12 @@ export const getFileExtension = (t: string): string | undefined => {
     return extension;
 };
 export const getFileType = (t: string): FileType | undefined => {
-
     if (!t) {
         return undefined;
     }
 
     const mimeType = t.toLowerCase();
-    let type: FileType | undefined = undefined;
+    let type: FileType | undefined;
     switch (mimeType) {
         case 'pdf':
         case 'application/pdf':

@@ -1,11 +1,12 @@
-import {
+import type {
   AppException,
   IHrefTarget,
   ISortModeType,
+  LabelValue,
   ResponseMessage,
   ServerException,
 } from '@/types/common';
-import {
+import type {
   EmojiType,
   FeedType,
   IListResponse,
@@ -30,7 +31,7 @@ export const validateEmail = (email: string) => {
   return String(email)
     .toLowerCase()
     .match(
-      /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+      /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\])|(([a-z\-0-9]+\.)+[a-z]{2,}))$/i
     );
 };
 /**
@@ -52,7 +53,7 @@ export const validateEmail = (email: string) => {
 export const validateUsername = (name: string) => {
   return String(name)
     .toLowerCase()
-    .match(/^(?=[a-zA-Z0-9._]{4,20}$)(?!.*[_.]{2})[^_.].*[^_.]$/);
+    .match(/^(?=[\w.]{4,20}$)(?!.*[_.]{2})[^_.].*[^_.]$/);
   // .match(/^[a-zA-Z0-9]([._-](?![._-])|[a-zA-Z0-9]){3,20}[a-zA-Z0-9]$/);
 };
 export const isAppException = (obj: any): obj is AppException => {
@@ -109,7 +110,20 @@ export const checkExpansionChildActive = (
 
   return active;
 };
+export const checkExpansionChildActiveAlt = (
+  currentUrlPath: string,
+  items: LabelValue<any>[]
+) => {
+  let active = false;
+  for (const page of items) {
+    if (page.to == currentUrlPath) {
+      active = true;
+      break;
+    }
+  }
 
+  return active;
+};
 export const isEmpty = (value: any) => {
   if (typeof value === 'number') {
     return false;
@@ -135,7 +149,7 @@ export const snakeToCamel = (str: string) =>
   str
     ? str
       .toLowerCase()
-      .replace(/([-_][a-z])/g, (group) =>
+      .replace(/([-_][a-z])/g, group =>
         group.toUpperCase().replace('-', '').replace('_', '')
       )
     : '';
@@ -146,15 +160,15 @@ export const urlify = (
   inputText: string,
   linkColor: string | undefined = undefined
 ) => {
-  const urlRegex = /(https?:\/\/[^\s]+)/g;
+  const urlRegex = /(https?:\/\/\S+)/g;
   return inputText.replace(urlRegex, (url) => {
-    return `<a class="app-text-link ${linkColor ? linkColor : ''
+    return `<a class="app-text-link ${linkColor || ''
       }" href="${url}" target="_blank">${url}</a>`;
   });
 };
 
 export const roundDecimal = (value: number, precision: number) => {
-  const multiplier = Math.pow(10, precision);
+  const multiplier = 10 ** precision;
   return Math.round(value * multiplier) / multiplier;
 };
 export const blobToFile = (
@@ -169,7 +183,8 @@ export const blobToFile = (
   });
 };
 export const formatBytes = (bytes: any, decimals = 2) => {
-  if (bytes === 0) return '0 Bytes';
+  if (bytes === 0)
+    return '0 Bytes';
 
   const k = 1024;
   const dm = decimals < 0 ? 0 : decimals;
@@ -177,7 +192,7 @@ export const formatBytes = (bytes: any, decimals = 2) => {
 
   const i = Math.floor(Math.log(bytes) / Math.log(k));
 
-  return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
+  return Number.parseFloat((bytes / k ** i).toFixed(dm)) + ' ' + sizes[i];
 };
 export const readableNumber = (num: number, digits: number) => {
   if (num < 1000) {
@@ -192,11 +207,11 @@ export const readableNumber = (num: number, digits: number) => {
     { value: 1e15, symbol: 'P' },
     { value: 1e18, symbol: 'E' },
   ];
-  const rx = /\.0+$|(\.[0-9]*[1-9])0+$/;
+  const rx = /\.0+$|(\.\d*[1-9])0+$/;
   const item = lookup
     .slice()
     .reverse()
-    .find(function (item) {
+    .find((item) => {
       return num >= item.value;
     });
   return item
@@ -257,10 +272,10 @@ export const extractHashtagsFromString = (val: string): string[] => {
   }
   // return val.split(/[\s\n\r]/gim).filter((v) => v.startsWith('#'));
   // return extractHashtagsStartingWithLetter(val)
-  return val.split(/[\s\n\r]/gim).filter((v) => {
+  return val.split(/\s/g).filter((v) => {
     if (v.startsWith('#')) {
       // Check if the character following '#' is not a digit (0-9)
-      return !(/^\#\d/.test(v));
+      return !(/^#\d/.test(v));
     }
     return false;
   });
@@ -268,21 +283,22 @@ export const extractHashtagsFromString = (val: string): string[] => {
 export const extractHashtagsStartingWithLetter = (str: string): string[] => {
   // Regular expression to match hashtags starting with a letter
   // const regex = /#[a-zA-Z]\w*/g;
-  const regex = /(^|\s)(#[^0-9]\w*)/g;
+  const regex = /(^|\s)(#\D\w*)/g;
 
   // Use match() to find all matches in the string
   const hashtags = str.match(regex);
 
   return hashtags || []; // Return an empty array if no hashtags are found
 };
-export const extractHashtagsFromStringV2 = (val: string): string[] => {
+export const extractHashtagsFromStringV2 = (val: string): any => {
   if (!val) {
     return [];
   }
-  const regex = /(?:^|\s)(?:#)([a-zA-Z\d]+)/gm;
+  const regex = /(?:^|\s)#([a-z\d]+)/gim;
   const matches = [];
   let match;
 
+  // eslint-disable-next-line no-cond-assign
   while ((match = regex.exec(val))) {
     matches.push(match[1]);
   }
@@ -293,7 +309,7 @@ export const extractHashtagsFromStringV1 = (val: string): string[] => {
   if (!val) {
     return [];
   }
-  const res = val.match(/#[^\s#\.\;]*/gim);
+  const res = val.match(/#[^\s#.;]*/g);
   return !res ? [] : res;
 };
 export const mungeEmailAddress = (s: string) => {
@@ -337,12 +353,19 @@ export const getEmojiTypeText = (reactType: EmojiType | undefined) => {
   }
 };
 export const randomNumber = (min: number, max: number) => {
-  return Math.floor(Math.random() * max) + min;;
+  return Math.floor(Math.random() * max) + min;
 }
 
 
-export const numberFormat = (no: number) => {
-  return no.toLocaleString();
+export const numberFormat = (no: number | string | null | undefined) => {
+  if (no == undefined || no == null) {
+    return '';
+  }
+  let number = no;
+  if (typeof number !== 'number') {
+    number = Number.parseFloat(number);
+  }
+  return new Intl.NumberFormat().format(number);
 }
 export const isArray = (value: any): boolean => {
   return Array.isArray(value);
@@ -391,7 +414,7 @@ export const escapeHtml = (unsafe: string | undefined) => {
     '\'': '&#039;'
   };
 
-  return unsafe.replace(/[&<>"']/g, (char) => map[char]);
+  return unsafe.replace(/[&<>"']/g, char => map[char]);
 };
 export const unescapeHtml = (safe: string | undefined) => {
   if (!safe) {
@@ -404,5 +427,25 @@ export const unescapeHtml = (safe: string | undefined) => {
     '&quot;': '"',
     '&#039;': '\''
   };
-  return safe.replace(/&(amp|lt|gt|quot|#039);/g, (entity) => map[entity]);
+  return safe.replace(/&(amp|lt|gt|quot|#039);/g, entity => map[entity]);
+};
+
+export const getValFromObjectByPath = (obj: any, path: any) => {
+  // getValFromObjectByPath({item:{name:'chanavee'}}, 'item.name')
+  const parts = path.split('.');
+  if (Array.isArray(parts)) {
+    const last = parts.pop();
+    const l = parts.length;
+    let i = 1;
+    let current = parts[0];
+    // eslint-disable-next-line no-cond-assign
+    while ((obj = obj[current]) && i < l) {
+      current = parts[i];
+      i++;
+    }
+
+    if (!isEmpty(obj)) {
+      return obj[last];
+    }
+  }
 };

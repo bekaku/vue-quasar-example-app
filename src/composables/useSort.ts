@@ -1,4 +1,4 @@
-import { ISort, ISortMode, IPagination } from '@/types/common';
+import type { ISort, ISortMode, IPagination } from '@/types/common';
 import { DEFULT_ITEM_PER_PAGET } from '@/utils/constant';
 import { useBase } from './useBase';
 import { ref } from 'vue';
@@ -24,8 +24,8 @@ export const useSort = (defaultSort?: ISort, perPage?: number) => {
         const mode = sortArr[1];
         if (mode == 'asc' || mode == 'desc') {
           return {
-            column: field,
-            mode: mode,
+            column: field || 'id',
+            mode,
           };
         }
       }
@@ -42,18 +42,18 @@ export const useSort = (defaultSort?: ISort, perPage?: number) => {
         ? sortQuery.column
         : defaultSort && defaultSort.column
           ? defaultSort.column
-          : undefined,
+          : 'id',
     mode:
       sortQuery && sortQuery.mode
         ? sortQuery.mode
         : defaultSort && defaultSort.mode
           ? defaultSort.mode
-          : undefined,
+          : 'asc',
   };
   const pagesInitial: IPagination = {
     current: p != undefined ? p + 1 : 1,
     itemsPerPage:
-      s && s <= 50 && s > 0 ? s : perPage ? perPage : DEFULT_ITEM_PER_PAGET,
+      s && s <= 50 && s > 0 ? s : perPage || DEFULT_ITEM_PER_PAGET,
     totalPages: 0,
     totalElements: 0,
     last: false,

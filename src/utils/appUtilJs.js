@@ -21,6 +21,7 @@ export const getValFromObjectByPath = (obj, path) => {
     const l = parts.length;
     let i = 1;
     let current = parts[0];
+    // eslint-disable-next-line no-cond-assign
     while ((obj = obj[current]) && i < l) {
       current = parts[i];
       i++;

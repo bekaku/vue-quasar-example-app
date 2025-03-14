@@ -10,19 +10,21 @@
         spinner-color="white"
         :src="item.image"
         :ratio="16 / 9"
-        :style="{maxHeight: imageMaxHeight}"
+        :style="{ maxHeight: imageMaxHeight }"
       />
     </a>
     <q-item
       clickable
-      :class="{'bg-grey-2' : showBg && !$q.dark.isActive, 'wee-main-bg-color-theme-dark' : showBg && $q.dark.isActive , 'q-pl-none q-pt-none q-pb-none' :short}"
+      :class="{
+        'q-pl-none q-pt-none q-pb-none': short,
+      }"
+      class="bg-app-content-item"
       :href="item.url"
       target="_blank"
       :dense="short"
     >
       <q-item-section v-if="short && item.image" side>
-        <q-img :src="item.image" :style="{width: `${imageSize}`}"
-               :ratio="4/3" />
+        <q-img :src="item.image" :style="{ width: `${imageSize}` }" :ratio="4 / 3" />
       </q-item-section>
       <q-item-section>
         <q-item-label v-if="item.domain" :lines="textLines">
@@ -42,9 +44,8 @@
   </q-card>
 </template>
 <script setup lang="ts">
-import { OgMeta } from '@/types/models';
+import type { OgMeta } from '@/types/models';
 import { biBoxArrowUpRight } from '@quasar/extras/bootstrap-icons';
-import { useQuasar } from 'quasar';
 
 withDefaults(
   defineProps<{
@@ -62,8 +63,7 @@ withDefaults(
     textLines: 1,
     descriptionLines: 2,
     imageSize: '125px',
-    imageMaxHeight: '250px'
-  }
+    imageMaxHeight: '250px',
+  },
 );
-const $q=useQuasar();
 </script>

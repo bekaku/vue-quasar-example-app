@@ -4,12 +4,7 @@
       <q-list :style="`min-width: ${width}px`" :dense="listDense">
         <q-item-label header>{{ t('base.filterField') }}</q-item-label>
         <q-separator />
-        <q-item
-          tag="label"
-          clickable
-          v-for="(f, fi) in fillableHeaders"
-          :key="'fill-fields-' + fi"
-        >
+        <q-item tag="label" clickable v-for="(f, fi) in fillableHeaders" :key="'fill-fields-' + fi">
           <q-item-section side top>
             <q-checkbox v-model="f.options.fillable" />
           </q-item-section>
@@ -24,9 +19,10 @@
 </template>
 
 <script setup lang="ts">
-import { PropType, computed } from 'vue';
+import type { PropType } from 'vue';
+import { computed } from 'vue';
 import { useLang } from '@/composables/useLang';
-import { ICrudListHeader } from '@/types/common';
+import type { ICrudListHeader } from '@/types/common';
 import { biFunnel } from '@quasar/extras/bootstrap-icons';
 const props = defineProps({
   headers: {
@@ -59,9 +55,7 @@ const { t } = useLang();
 const fillableHeaders = computed(() => {
   const headers = props.headers;
   return headers.filter(
-    (c) =>
-      c.options &&
-      (c.options.fillable === true || c.options.fillable === false),
+    (c) => c.options && (c.options.fillable === true || c.options.fillable === false),
   );
 });
 </script>

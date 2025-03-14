@@ -23,6 +23,7 @@
         </div>
         <div class="col-12 col-md-12 q-pa-md">
           <form-togle
+            v-if="entity.autoFollowUser != undefined"
             :label="t('base.other')"
             v-model="entity.autoFollowUser"
           />
@@ -35,28 +36,21 @@
             :icon="biPencil"
             :label="t('base.okay')"
             type="submit"
-          >
-          </q-btn>
+          />
         </q-card-actions>
       </q-form>
     </q-card-section>
-    <q-inner-loading
-      :showing="loading"
-      :label="t('base.pleaseWait')"
-      label-class="text-primary"
-    />
+    <q-inner-loading :showing="loading" :label="t('base.pleaseWait')" label-class="text-primary" />
   </q-card>
 </template>
 <script setup lang="ts">
 import { ref, computed, defineAsyncComponent } from 'vue';
 import { useLang } from '@/composables/useLang';
-import { UserPersonalEditRequest } from '@/types/models';
+import type { UserPersonalEditRequest } from '@/types/models';
 import UserService from '@/api/UserService';
 import { useValidation } from '@/composables/useValidation';
 import { biPencil } from '@quasar/extras/bootstrap-icons';
-const FormTogle = defineAsyncComponent(
-  () => import('@/components/quasar/Toggle.vue'),
-);
+const FormTogle = defineAsyncComponent(() => import('@/components/base/BaseToggle.vue'));
 const { t } = useLang();
 const { updatePersonalData } = UserService();
 const { required } = useValidation();

@@ -9,7 +9,7 @@ import {
   CrudAction
 } from '@/utils/constant';
 import { ref, onMounted, onBeforeUnmount, computed } from 'vue';
-import {
+import type {
   ICrudAction,
   CrudFormApiOptions,
   RequestDto,
@@ -123,9 +123,10 @@ export const useCrudForm = <T>(options: CrudFormApiOptions, initialEntity: T) =>
     if (!backLink) {
       backLink = options.backLink
         ? options.backLink
-        : previousPath.value ? previousPath.value
+        : previousPath.value
+          ? previousPath.value
           : options.crudName
-            ? `${basePath ? '/'+basePath :''}/${options.crudName.replaceAll('_', '-')}`
+            ? `${basePath ? '/' + basePath : ''}/${options.crudName.replaceAll('_', '-')}`
             : '';
     }
     if (backLink) {
@@ -139,7 +140,7 @@ export const useCrudForm = <T>(options: CrudFormApiOptions, initialEntity: T) =>
     if (crudAction.value === CrudAction.VIEW) {
       return options.actionPut
         ? options.actionPut
-        : options.apiEndpoint + '/' + snakeToCamel(options.crudName) + (options.methodPutIncludeId===undefined || options.methodPutIncludeId===true ? '/' + crudEntity.value.id : '');
+        : options.apiEndpoint + '/' + snakeToCamel(options.crudName) + (options.methodPutIncludeId === undefined || options.methodPutIncludeId === true ? '/' + crudEntity.value.id : '');
     }
     return options.actionPost
       ? options.actionPost
@@ -152,7 +153,8 @@ export const useCrudForm = <T>(options: CrudFormApiOptions, initialEntity: T) =>
     // const requestItem: { [k: string]: T } = {};
     const requestItem: RequestDto = {};
     requestItem[requestEntityName.value
-      ? requestEntityName.value : `${snakeToCamel(options.crudName)}`] = crudEntity.value;
+      ? requestEntityName.value
+      : `${snakeToCamel(options.crudName)}`] = crudEntity.value;
 
     const api = apiEnpoint.value;
     if (!api) {

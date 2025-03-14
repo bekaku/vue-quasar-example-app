@@ -1,10 +1,11 @@
-import { CrudListApiOptions, ICrudListHeader, ISortModeType, ResponseMessage } from '@/types/common';
+import type { CrudListApiOptions, ICrudListHeader, ISortModeType, ResponseMessage } from '@/types/common';
 import { CrudAction, KeywordParamiter, SearchOperation, SearchParamiter } from '@/utils/constant';
 import { useSort } from './useSort';
 import { useAxios } from '@/composables/useAxios';
 import { useBase } from './useBase';
 import { useLang } from './useLang';
-import { computed, onBeforeUnmount, onMounted, Ref, ref } from 'vue';
+import type { Ref } from 'vue';
+import { computed, onBeforeUnmount, onMounted, ref } from 'vue';
 import {
   isAppException,
   isArray,
@@ -13,7 +14,7 @@ import {
   isServerResponseMessage,
   snakeToCamel
 } from '@/utils/appUtil';
-import { IApiListResponse } from '@/types/models';
+import type { IApiListResponse } from '@/types/models';
 
 export const useCrudList = <T>(
   options: CrudListApiOptions,
@@ -177,7 +178,7 @@ export const useCrudList = <T>(
           if (response.last != undefined) {
             pages.value.last = response.last;
           }
-        } else if (isArray(response) && response!=null) {
+        } else if (isArray(response) && response != null) {
           dataList.value = response;
         }
       }

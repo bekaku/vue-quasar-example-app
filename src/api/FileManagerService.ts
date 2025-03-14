@@ -1,6 +1,6 @@
 import { useAxios } from '@/composables/useAxios';
-import { FileManagerDto } from '@/types/models';
-import { ResponseDataType, ResponseMessage } from '@/types/common';
+import type { FileManagerDto } from '@/types/models';
+import type { ResponseDataType, ResponseMessage } from '@/types/common';
 import { FILES_DIRECTORY_ID_ATT, FILES_UPLOAD_ATT } from '@/utils/constant';
 import {
   downloadFromArrayBuffer,
@@ -12,6 +12,7 @@ import {
 } from '@/utils/fileUtils';
 
 export default () => {
+  const cdnBaseApi = process.env.APP_BASE_CDN_API || ''
   const { callAxios, callAxiosFile } = useAxios();
   const uploadApi = async (
     file: any,
@@ -26,7 +27,7 @@ export default () => {
       API: '/api/fileManager/uploadApi',
       method: 'POST',
       body: postData,
-      baseURL: process.env.cdnBaseUrl,
+      baseURL: cdnBaseApi || '',
       contentType: 'multipart/form-data'
     });
   };
@@ -34,7 +35,7 @@ export default () => {
     return await callAxios<ResponseMessage>({
       API: `/api/fileManager/deleteFileApi/${fileId}`,
       method: 'DELETE',
-      baseURL: process.env.cdnBaseUrl
+      baseURL: cdnBaseApi
     });
   };
   const updateUserAvatar = async (
@@ -43,7 +44,7 @@ export default () => {
     return await callAxios<ResponseMessage>({
       API: `/api/fileManager/updateUserAvatar?fileManagerId=${fileManagerId}`,
       method: 'PUT',
-      baseURL: process.env.cdnBaseUrl
+      baseURL: cdnBaseApi
     });
   };
   const updateUserCover = async (
@@ -52,17 +53,17 @@ export default () => {
     return await callAxios<ResponseMessage>({
       API: `/api/fileManager/updateUserCover?fileManagerId=${fileManagerId}`,
       method: 'PUT',
-      baseURL: process.env.cdnBaseUrl
+      baseURL: cdnBaseApi
     });
   };
   // const fethCdnData = async (
   //   path: string
   // ): Promise<any> => {
-  //   const cdnBase = process.env.cdnBaseUrl;
+  //   const cdnBase = cdnBaseApi;
   //   const src = cdnBase ? path.replace(cdnBase, '') : path;
   //   return await callAxiosFile<any>({
   //     API: src,
-  //     baseURL: process.env.cdnBaseUrl,
+  //     baseURL: cdnBaseApi,
   //     method: 'GET',
   //     responseType: 'arraybuffer'
   //   });
@@ -71,15 +72,16 @@ export default () => {
     path: string,
     responseDataType: ResponseDataType = 'blob'
   ): Promise<any> => {
-    const cdnBase = process.env.cdnBaseUrl;
+    const cdnBase = cdnBaseApi;
     const src = cdnBase ? path.replace(cdnBase, '') : path;
     const response = await callAxiosFile<any>({
       API: src,
-      baseURL: process.env.cdnBaseUrl,
+      baseURL: cdnBaseApi,
       method: 'GET',
       responseType: 'arraybuffer'
     });
-    return new Promise(async (resolve /*reject*/) => {
+    // eslint-disable-next-line no-async-promise-executor
+    return new Promise(async (resolve /* reject */) => {
       if (response.data) {
         if (responseDataType == 'blob') {
           const imageUrlObject = await getBlobFromAxiosResponse(response);
@@ -103,7 +105,8 @@ export default () => {
     downloadFileName?: string
   ): Promise<any> => {
     const response = await fethCdnData(path, 'axiosresponse');
-    return new Promise(async (resolve /*reject*/) => {
+    // eslint-disable-next-line no-async-promise-executor
+    return new Promise(async (resolve /* reject */) => {
       if (response.data) {
         const contentType = response.headers['content-type'];
         // const contentDisposition = response.headers['content-disposition'];

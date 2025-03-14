@@ -5,6 +5,7 @@
         v-for="(item, index) in items"
         :key="index"
         :label="`#${item.name}`"
+        to="#"
         color="text-primary"
       />
     </div>
@@ -12,8 +13,8 @@
 </template>
 
 <script setup lang="ts">
-import { PropType } from 'vue';
-import { Hashtag } from '@/types/models';
+import type { PropType } from 'vue';
+import type { Hashtag } from '@/types/models';
 import BaseLink from '@/components/base/BaseLink.vue';
 defineProps({
   items: {

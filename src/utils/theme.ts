@@ -1,6 +1,6 @@
 import { useBase } from '@/composables/useBase';
 import { useLangugeAndThemeStore } from '@/stores/langugeAndThemeStore';
-import { ITheme, IThemeSettingOptions } from '@/types/common';
+import type { ITheme, IThemeSettingOptions } from '@/types/common';
 import { ThemeKey } from '@/utils/constant';
 import { addDateByDays } from '@/utils/dateUtil';
 import {
@@ -44,7 +44,7 @@ export function ThemeManager() {
           ? 'dark'
           : 'light'
         : 'light';
-    } catch (error) {
+    } catch {
       return 'light';
     }
   };

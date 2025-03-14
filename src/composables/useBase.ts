@@ -1,9 +1,8 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useRoute, useRouter } from 'vue-router';
 import { computed } from 'vue';
 import { useQuasar } from 'quasar';
 import { useLang } from './useLang';
-import { ITextValue, NotifyOptions } from '@/types/common';
+import type { ITextValue, NotifyOptions } from '@/types/common';
 import { SearchOperation } from '@/utils/constant';
 import { formatDate, formatDateTime, formatDistanceFromNow } from '@/utils/dateUtil';
 import {
@@ -18,7 +17,7 @@ import { Clipboard } from '@capacitor/clipboard';
 
 export const useBase = () => {
   const { t, locale } = useLang();
-  const {dark, loading, notify, dialog} = useQuasar();
+  const { dark, loading, notify, dialog } = useQuasar();
   const route = useRoute();
   const router = useRouter();
 
@@ -74,7 +73,7 @@ export const useBase = () => {
     if (open) {
       appLoaderClose();
       loading.show({
-        delay: delay, // ms
+        delay, // ms
         message: message || t('base.pleaseWait'),
       });
     } else {
@@ -86,25 +85,39 @@ export const useBase = () => {
     appToast('Quasar Framework Template',{type:'positive', position:'right', color:''});
     appToast('Quasar Framework Template',{caption:'5 Minutes ago', avatar: 'https://cdn.quasar.dev/img/boy-avatar.png'});
      */
-  const appToast = (message: string, options: NotifyOptions | undefined=undefined) => {
+  const appToast = (message: string, options: NotifyOptions | undefined = undefined) => {
     if (!message) {
       return;
     }
 
-    let icon :string |undefined = undefined;
+
+    let color;
+    let textColor
+    if (options?.color == undefined && options?.type == undefined) {
+      color = !dark.isActive ? 'white' : 'black';
+      textColor = !dark.isActive ? 'black' : 'white';
+    }
+    let icon: string | undefined = '';
     if (options && options.type) {
       const t = options.type;
       if (t === 'positive') {
         icon = biCheckCircle;
+        textColor = 'white';
+        color = 'positive';
       } else if (t === 'negative') {
         icon = biExclamationTriangle;
+        textColor = 'white';
+        color = 'negative';
       } else if (t === 'warning') {
         icon = biExclamationCircle;
+        textColor = 'white';
+        color = 'warning';
       } else if (t === 'info') {
         icon = biInfoCircle;
+        textColor = 'white';
+        color = 'info';
       }
     }
-
     notify(
       Object.assign(
         {
@@ -112,11 +125,13 @@ export const useBase = () => {
           icon,
           timeout: 5000,
           progress: true,
-          position: 'bottom',
-          multiLine: true,
+          position: 'bottom-left',
+          multiLine: false,
+          color: color || '',
+          textColor: textColor || '',
           actions: !options?.hideClose
-            ? [{ icon: biX, color: 'white' }]
-            : undefined,
+            ? [{ icon: biX, round: true, dense: false, color: textColor || 'white' }]
+            : [],
         },
         options
       )
@@ -125,21 +140,16 @@ export const useBase = () => {
 
   /**
    * const conf = await appConfirm(t('app.monogram'), t('base.deleteConfirm'));
-   * @param title
-   * @param text
-   * @param okBtn
-   * @param cancelBtn
-   * @returns
    */
   const appConfirm = async (
     title: string,
     text: string,
-    okBtn = {}, //btn component
-    cancelBtn = {} //btn component
+    okBtn = {}, // btn component
+    cancelBtn = {} // btn component
   ) => {
     return new Promise((resolve) => {
       dialog({
-        title: title,
+        title,
         message: text,
         ok: Object.assign(
           { textColor: 'primary', flat: true, label: t('base.okay') },
@@ -244,11 +254,11 @@ export const useBase = () => {
       { value: 1, symbol: '' },
       { value: 1e3, symbol: 'k' },
     ];
-    const rx = /\.0+$|(\.[0-9]*[1-9])0+$/;
+    const rx = /\.0+$|(\.\d*[1-9])0+$/;
     const item = lookup
       .slice()
       .reverse()
-      .find(function (item) {
+      .find((item) => {
         return num >= item.value;
       });
     return item
@@ -260,7 +270,7 @@ export const useBase = () => {
     await Clipboard.write({
       string: text,
     });
-    appToast(t('success.copy'), {multiLine:false})
+    appToast(t('success.copy'), { multiLine: false })
     return new Promise((resolve) => {
       resolve(true);
     });

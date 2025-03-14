@@ -1,8 +1,6 @@
 <template>
   <div class="q-mx-md">
-    <q-scroll-area
-      :style="{ height: 90 + 'vh', width: FeedSectionWidth + 'px' }"
-    >
+    <q-scroll-area :style="{ height: 90 + 'vh', width: FeedSectionWidth + 'px' }">
       <section-recent-prized />
       <section-leaderboard />
       <section-recommend-themes class="q-mt-md" />
@@ -14,7 +12,7 @@
 </template>
 
 <script setup lang="ts">
-import SiteLink from '@/components/SiteLink.vue';
+import SiteLink from '@/components/feed/SiteLink.vue';
 import SectionLeaderboard from '@/components/feed/SectionLeaderboard.vue';
 import SectionRecommendThemes from '@/components/feed/SectionRecommendThemes.vue';
 import SectionHashTagTrends from '@/components/feed/SectionHashTagTrends.vue';

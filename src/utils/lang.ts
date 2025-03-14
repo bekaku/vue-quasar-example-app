@@ -3,7 +3,7 @@ import { watch, useSSRContext } from 'vue';
 import { useLangugeAndThemeStore } from '@/stores/langugeAndThemeStore';
 import { LocaleKey, DefaultLocale } from '@/utils/constant';
 import { addDateByDays } from '@/utils/dateUtil';
-import { ILocales } from '@/types/common';
+import type { ILocales } from '@/types/common';
 // import { preFetch } from 'quasar/wrappers';
 import { Cookies } from 'quasar';
 

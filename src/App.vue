@@ -6,11 +6,11 @@
 import { useBase } from '@/composables/useBase';
 import { usePreFetch } from '@/composables/usePreFetch';
 import { useRequiredAuth } from '@/composables/useRequiredAuth';
-import { useDrawerStore } from '@/stores/drawerStore';
+import { appNavs } from '@/libs/navs';
+import { useAppStore } from '@/stores/appStore';
 import { useExceptionStore } from '@/stores/exceptionStore';
-import { usePermissionStore } from '@/stores/permissionStore';
-import { ITheme } from '@/types/common';
-import { IAcl, UserDto } from '@/types/models';
+import type { ITheme } from '@/types/common';
+import type { UserDto } from '@/types/models';
 import { detroyAuthCookie, isAppException } from '@/utils/appUtil';
 import { AppAuthTokenKey, AUTH_NO_FILTER } from '@/utils/constant';
 import { Cookies, useQuasar } from 'quasar';
@@ -23,8 +23,7 @@ defineOptions({
   async preFetch({ currentRoute, ssrContext, redirect }) {
     const cookies = process.env.SERVER ? Cookies.parseSSR(ssrContext) : Cookies;
     const authenStore = useAuthenStore();
-    const drawerStore = useDrawerStore();
-    const permissionStore = usePermissionStore();
+    const appStore = useAppStore();
     const { callAxiosProcess } = usePreFetch(ssrContext, redirect);
     if (
       !AUTH_NO_FILTER.find((t) => t == currentRoute.path) &&
@@ -33,11 +32,7 @@ defineOptions({
       !authenStore.auth
     ) {
       const refreshTokenReponse = await authenStore.refreshToken(ssrContext);
-      if (
-        refreshTokenReponse &&
-        !refreshTokenReponse.status &&
-        refreshTokenReponse.fourceLogout
-      ) {
+      if (refreshTokenReponse && !refreshTokenReponse.status && refreshTokenReponse.fourceLogout) {
         redirect({ path: '/auth/login' });
       }
       const userDataResponse = await callAxiosProcess<UserDto>({
@@ -47,36 +42,19 @@ defineOptions({
       if (
         userDataResponse &&
         userDataResponse.status &&
-        userDataResponse.status == 200 &&
+        userDataResponse.status === 200 &&
         userDataResponse.data &&
         !isAppException(userDataResponse.data)
       ) {
         const userData = userDataResponse.data;
         authenStore.setAuthen(userData);
-        // fetch user permission for backend
-        const response = await callAxiosProcess<IAcl>({
-          API: '/api/permission/userAcl',
-          method: 'GET',
-        });
-        if (
-          response &&
-          response.status &&
-          response.status == 200 &&
-          response.data
-        ) {
-          const acl = response.data;
-          if (acl.menus && acl.menus.length > 0) {
-            drawerStore.setDrawers(acl.menus);
-          }
-          if (acl.permissions && acl.permissions.length > 0) {
-            permissionStore.setPermissions(acl.permissions);
-          }
+
+        if (userDataResponse.data?.permissions && userDataResponse.data.permissions.length > 0) {
+          appStore.setPermissions(userDataResponse.data.permissions);
         }
-      } else if (
-        userDataResponse &&
-        userDataResponse.status &&
-        userDataResponse.status == 403
-      ) {
+        const backendDrawer = await appStore.initialAppNav(appNavs);
+        appStore.setDrawers(backendDrawer);
+      } else if (userDataResponse && userDataResponse.status && userDataResponse.status == 403) {
         detroyAuthCookie(cookies);
         redirect({ path: '/auth/login' });
       } else {
@@ -92,15 +70,11 @@ const router = useRouter();
 const authenStore = useAuthenStore();
 const $q = useQuasar();
 const langugeAndThemeStore = useLangugeAndThemeStore();
-useRequiredAuth()
+useRequiredAuth();
 AppSetup();
 
 onMounted(() => {
-  if (
-    exceptionStore.error &&
-    exceptionStore.error.status &&
-    exceptionStore.error.message
-  ) {
+  if (exceptionStore.error && exceptionStore.error.status && exceptionStore.error.message) {
     appGoto('/error', true);
   }
   if (authenStore.auth) {
@@ -113,10 +87,7 @@ onMounted(() => {
     // langugeAndThemeStore.setLeftDrawer(false);
   }
   window.onpopstate = () => {
-    if (
-      router.options.history.state.forward == '/auth/login' &&
-      !authenStore.auth
-    ) {
+    if (router.options.history.state.forward == '/auth/login' && !authenStore.auth) {
       window.history.forward();
     }
     // if (
@@ -147,6 +118,5 @@ watch(authenStore, (state) => {
     appGoto('/auth/login', true);
   }
 });
-onBeforeUnmount(() => {
-});
+onBeforeUnmount(() => {});
 </script>

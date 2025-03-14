@@ -13,38 +13,25 @@
 // Tip: Use the "Theme Builder" on Quasar's documentation website.
 
 $primary: #2e86de;
-$primary-1: #deffff !default;
-$primary-2: #bcfffe !default;
-$primary-3: #9afffe !default;
-$primary-4: #67fffd !default;
-$primary-5: #45fffd !default;
-$primary-6: #12fffc !default;
-$primary-7: #00dedb !default;
-$primary-8: #009a98 !default;
-$primary-9: #007877 !default;
-$primary-10: #003433 !default;
-
 $secondary: #1dd1a1;
 $accent: #00d1b2;
-
 $positive: #23d160;
 $negative: #ff3860;
 $info: #00a0dc;
 $warning: #ff9f43;
-// used by dark mode
 
-$dark: #272a32 !default;
+// used by dark mode
+// $dark: #272a32 !default;
+$dark: var(--color-zinc-900) !default;
 $dark-page: $dark !default;
 // $dark-page: #1d1e22 !default;
 
 
-// $separator-color: #dcdcdc !default;
-// $separator-color: #f0f0f0 !default;
-// $separator-dark-color: #282829 !default;
-$separator-color: #e9e9ec !default;
-$separator-dark-color: #45464b !default; //#394552
+// $separator-color: #e9e9ec !default;
+// $separator-dark-color: #45464b !default; //#394552
+$separator-color: var(--color-zinc-200) !default;
+$separator-dark-color: var(--color-zinc-700) !default;
 
-// $shadow-color: #000 !default;
 $shadow-color: #1d1e22 !default;
 $elevation-umbra: rgba($shadow-color, 0.12) !default;
 $elevation-penumbra: rgba($shadow-color, 0.14) !default;
@@ -56,11 +43,6 @@ $elevation-dark-umbra : rgba($dark-shadow-color, 0.12) !default;
 $elevation-dark-penumbra : rgba($dark-shadow-color, 0.14) !default;
 $elevation-dark-ambient : rgba($dark-shadow-color, 0.12) !default;
 
-$generic-border-radius: 10px !default;
+$generic-border-radius: 11px !default;
 $button-font-weight: 400 !default;
-$button-border-radius : 8px !default;
-
-.q-item__label--caption,
-.q-item__label--header {
-  color: var(--wee-text-muted) !important;
-}
+$button-border-radius : 11px !default;

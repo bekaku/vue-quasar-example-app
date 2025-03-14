@@ -1,8 +1,8 @@
-import { useNotificationStore } from '@/stores/notificationStore';
-import { storeToRefs } from 'pinia';
-import { NotifyFunctionType } from '@/types/models';
-import { useCache } from '@/composables/useCache';
 import UserNotifyService from '@/api/UserNotifyService';
+import { useCache } from '@/composables/useCache';
+import { useNotificationStore } from '@/stores/notificationStore';
+import type { NotifyFunctionType } from '@/types/models';
+import { storeToRefs } from 'pinia';
 import { onMounted } from 'vue';
 export const useNotification = () => {
   const { findCountAllNotRead } = UserNotifyService();
@@ -11,7 +11,7 @@ export const useNotification = () => {
   const { notify } = storeToRefs(notificationStore);
   const { setNotify } = notificationStore;
   onMounted(() => {
-    //test
+    // test
     notify.value.totalNotify = 999;
   })
   const resetBadgeCount = () => {
@@ -39,7 +39,6 @@ export const useNotification = () => {
         return `/comment/view/${functionId}`;
       } else if (functionCode == 'COMMENT_REPLY') {
         return `/comment/view/${functionId}?isReply=1`;
-      } else if (functionCode == 'CHAT') {
       }
     }
   };

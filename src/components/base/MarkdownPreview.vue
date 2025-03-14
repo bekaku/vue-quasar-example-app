@@ -8,42 +8,41 @@
       :editor-id="editorId"
       :code-theme="codeTheme"
       :preview-theme="previewTheme"
-      style="text-align: left;"
+      style="text-align: left"
     />
   </q-no-ssr>
 </template>
 <script setup lang="ts">
 import { useBase } from '@/composables/useBase';
-import { MDCodeTheme, MDPreviewTheme } from '@/types/common';
+import type { MDCodeTheme, MDPreviewTheme } from '@/types/common';
 import { MdPreview } from 'md-editor-v3';
 import 'md-editor-v3/lib/style.css';
 import { onMounted, ref } from 'vue';
 
-const props = withDefaults(
-  defineProps<{
-    editorId?: string;
-    content?: string;
-    preview?: boolean;
-    previewTheme?: MDPreviewTheme;
-    codeTheme?: MDCodeTheme;
-  }>(),
-  {
-    editorId: 'mk-id-gd5',
-    preview: true,
-    previewTheme: 'github',
-    codeTheme: 'github',
-  },
-);
+const {
+  editorId = 'mk-id-gd5',
+  previewTheme = 'github',
+  codeTheme = 'github',
+  content,
+} = defineProps<{
+  editorId?: string;
+  content?: string;
+  preview?: boolean;
+  previewTheme?: MDPreviewTheme;
+  codeTheme?: MDCodeTheme;
+}>();
 const { isDark } = useBase();
-const contentVal = ref<string | undefined>(props.content)
+const contentVal = ref<string>(content || '');
 onMounted(() => {
   registerLinks();
 });
 const registerLinks = () => {
-  let links = document.links;
-  for (let i = 0, linksLength = links.length; i < linksLength; i++) {
-    if (links[i].hostname != window.location.hostname) {
-      links[i].target = '_blank';
+  const links = document.links;
+  if (links != undefined) {
+    for (let i = 0, linksLength = links.length; i < linksLength; i++) {
+      if (links[i] != undefined && links[i].hostname != window.location.hostname) {
+        links[i].target = '_blank';
+      }
     }
   }
 };

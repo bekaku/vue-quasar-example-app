@@ -1,6 +1,6 @@
 <template>
   <q-card flat>
-    <q-form @submit="onSubmit" ref="formPwd">
+    <q-form @submit="onSubmit">
       <!-- <div class="q-pa-md text-center">
         <div class="text-body1">
           {{ t('authen.forgotPwdTitle') }}
@@ -17,8 +17,7 @@
           :message="t('authen.helper2')"
           radius
           class="q-mb-md"
-        >
-        </base-alert>
+        />
         <div class="row">
           <div v-if="showCurrentPassword" class="col-12 col-md-12">
             <q-input
@@ -31,10 +30,10 @@
               :label="t('authen.currentPassword')"
               :rules="[(val) => requireField(val, t('authen.currentPassword'))]"
             >
-              <template v-slot:prepend>
+              <template #prepend>
                 <q-icon :name="biShieldLock" />
               </template>
-              <template v-slot:append>
+              <template #append>
                 <q-icon
                   :name="showPassword ? biEye : biEyeSlash"
                   @click="showPassword = !showPassword"
@@ -44,7 +43,6 @@
           </div>
           <div class="col-12 col-md-12 q-py-sm">
             <q-input
-              class="q-pt-md"
               :readonly="loading"
               outlined
               dense
@@ -57,17 +55,16 @@
                 (val) => validatePasswordStrongV2(val) || t('authen.helper2'),
               ]"
             >
-              <template v-slot:prepend>
+              <template #prepend>
                 <q-icon :name="biLock" color="grey-9" />
               </template>
-              <template v-slot:append>
+              <template #append>
                 <q-icon v-if="isValidPwd" :name="biCheck" color="positive" />
               </template>
             </q-input>
           </div>
           <div class="col-12 col-md-12">
             <q-input
-              class="q-pt-md"
               :readonly="loading"
               outlined
               dense
@@ -77,14 +74,13 @@
               :label="t('authen.confirmPassword')"
               :rules="[
                 (val) => requireField(val, t('authen.confirmPassword')),
-                (val) =>
-                  validateTheSamePwd(val) || t('error.passwordNotMatchNew'),
+                (val) => validateTheSamePwd(val) || t('error.passwordNotMatchNew'),
               ]"
             >
-              <template v-slot:prepend>
+              <template #prepend>
                 <q-icon :name="biLock" color="grey-9" />
               </template>
-              <template v-slot:append>
+              <template #append>
                 <q-icon v-if="isSamePwd" :name="biCheck" color="positive" />
               </template>
             </q-input>
@@ -93,15 +89,12 @@
       </q-card-section>
       <q-card-section v-if="showLogout">
         <div>
-          <q-checkbox
-            v-model="logoutAllDevice"
-            :label="t('authen.logoutAll')"
-          />
+          <q-checkbox v-model="logoutAllDevice" :label="t('authen.logoutAll')" />
         </div>
       </q-card-section>
 
       <q-card-actions :align="actionAlign">
-        <q-btn unelevated type="submit" color="primary" :label="submitLabel" />
+        <BaseButton type="submit" :label="submitLabel || t('base.okay')" />
       </q-card-actions>
     </q-form>
   </q-card>
@@ -110,17 +103,10 @@
 <script setup lang="ts">
 import { useLang } from '@/composables/useLang';
 import { useValidation } from '@/composables/useValidation';
-import {
-  biCheck,
-  biLock,
-  biShieldLock,
-  biEye,
-  biEyeSlash,
-} from '@quasar/extras/bootstrap-icons';
+import { biCheck, biLock, biShieldLock, biEye, biEyeSlash } from '@quasar/extras/bootstrap-icons';
 import { computed, defineAsyncComponent, ref } from 'vue';
-const BaseAlert = defineAsyncComponent(
-  () => import('@/components/base/BaseAlert.vue'),
-);
+import BaseButton from '../base/BaseButton.vue';
+const BaseAlert = defineAsyncComponent(() => import('@/components/base/BaseAlert.vue'));
 interface Props {
   submitLabel?: string;
   actionAlign?: 'center' | 'left' | 'right';
@@ -137,7 +123,7 @@ const { validatePasswordStrongV2, requireField } = useValidation();
 const showPassword = ref(false);
 
 const currentPassword = defineModel<string>('currentPassword');
-const newPassword = defineModel<string>('newPassword');
+const newPassword = defineModel<string | undefined>('newPassword');
 const logoutAllDevice = defineModel<boolean>('logoutAllDevice');
 const loading = defineModel<boolean>('loading');
 
@@ -150,10 +136,7 @@ const isValidPwd = computed(() =>
   newPassword.value ? validatePasswordStrongV2(newPassword.value) : false,
 );
 const isSamePwd = computed(
-  () =>
-    confirmPassword.value &&
-    newPassword.value &&
-    newPassword.value === confirmPassword.value,
+  () => confirmPassword.value && newPassword.value && newPassword.value === confirmPassword.value,
 );
 const onSubmit = () => {
   if (!newPassword.value) {

@@ -11,13 +11,9 @@
             -moz-background-size: cover;
             -o-background-size: cover;
             background-size: cover;`"
-      ></div>
+      />
       <div class="text-white absolute-center">
-        <q-avatar
-          :size="avatarSize"
-          :style="{ top: avatarTop }"
-          class="shadow-5"
-        >
+        <q-avatar :size="avatarSize" :style="{ top: avatarTop }" class="shadow-5">
           <q-img spinner-color="white" :src="avatarImage" />
         </q-avatar>
       </div>
@@ -40,7 +36,7 @@
 </template>
 
 <script setup lang="ts">
-import { PropType } from 'vue';
+import type { PropType } from 'vue';
 defineProps({
   coverImage: {
     type: String,

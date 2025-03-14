@@ -1,69 +1,37 @@
-<template>
-  <!-- class="text-capitalize app-text-link btn--no-hover" -->
-  <q-btn
-    type="a"
-    align="left"
-    :class="!dark.isActive ? color : colorDark"
-    class="text-capitalize app-text-link btn--no-hover"
-    dense
-    flat
-    :to="to"
-    :href="href ? href : undefined"
-    :target="external ? '_blank' : undefined"
-    :label="label"
-  >
-    <slot />
-  </q-btn>
-</template>
-
 <script setup lang="ts">
-import { PropType } from 'vue';
-import { IHrefTarget } from '@/types/common';
-import { useQuasar } from 'quasar';
-// import { openUrlInNewTab } from '@/utils/appUtil';
-// import {useBase} from '@/composables/useBase';
-defineProps({
-  label: {
-    type: String,
-    default: '',
-    required: true,
-  },
-  external: {
-    type: Boolean,
-    default: false,
-  },
-  href: {
-    type: String,
-    default: '',
-  },
-  to: {
-    type: String,
-    default: '',
-  },
-  color: {
-    type: String,
-    default: 'text-muted',
-  },
-  colorDark: {
-    type: String,
-    default: '',
-  },
-  target: {
-    type: String as PropType<IHrefTarget>,
-    default: '_blank',
-  },
-});
-const {dark}=useQuasar();
-// const { appGoto } = useBase();
-// const onOpen = (event: any) => {
-//   if (props.to) {
-//     appGoto(props.to);
-//   } else if (props.href) {
-//     openUrlInNewTab(props.href, props.external ? '_blank' : '_self', event);
-//   }
-//   if (event) {
-//     event.stopImmediatePropagation();
-//   }
-// };
+import type { IHrefTarget } from '@/types/common';
+const { external = false } = defineProps<{
+  label?: string;
+  external?: boolean;
+  href?: string;
+  target?: IHrefTarget;
+  to: string;
+  color?: string;
+  colorDark?: string;
+}>();
 </script>
-<style lang="scss" scoped></style>
+<template>
+  <a
+    v-if="external"
+    v-bind="$attrs"
+    :href="to"
+    target="_blank"
+    class="app-text-link"
+    :class="!color ? 'q-text-black' : 'text-' + color"
+  >
+  <slot>
+      {{ label }}
+    </slot>
+  </a>
+  <router-link
+    v-else
+    :to="to"
+    :target="external ? '_blank' : undefined"
+    class="app-text-link"
+    :class="!color ? 'q-text-black' : 'text-' + color"
+  >
+    <slot>
+      {{ label }}
+    </slot>
+  </router-link>
+</template>

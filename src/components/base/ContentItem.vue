@@ -18,6 +18,7 @@ import { useBase } from '@/composables/useBase';
 import { useLang } from '@/composables/useLang';
 import BaseLink from '@/components/base/BaseLink.vue';
 import ContentHtml from '@/components/base/ContentHtml.vue';
+import BaseButton from './BaseButton.vue';
 
 const props = withDefaults(
   defineProps<{
@@ -36,7 +37,7 @@ const props = withDefaults(
     linkStyle?: string;
     textStyle?: string;
     isEscapeHtml?: boolean;
-    highLightText?: string;
+    highLightText?: string | undefined;
   }>(),
   {
     contentId: 'content-id',
@@ -51,8 +52,8 @@ const props = withDefaults(
     linkStyle: 'app-text-link',
     textStyle: 'q-text-black',
     isEscapeHtml: false,
-    hashtagUrlify: false
-  }
+    hashtagUrlify: false,
+  },
 );
 const { appGoto } = useBase();
 const { t } = useLang();
@@ -74,7 +75,7 @@ const setLimitText = () => {
     // if (el) {
     //   el.addEventListener('click', onHtmlClick);
     // }
-    canShow.value=true;
+    canShow.value = true;
   }, 50);
 };
 const setEvenListener = () => {
@@ -88,16 +89,13 @@ const setEvenListener = () => {
       h.addEventListener('click', onHashtagClick);
     });
   }
-
 };
 const removeEvenListener = () => {
   const links = document.querySelectorAll(`.content-href-${props.contentId}`);
   links.forEach((l) => {
     l.removeEventListener('click', onHtmlClick);
   });
-  const tagsLinks = document.querySelectorAll(
-    `.hashtag-href-${props.contentId}`
-  );
+  const tagsLinks = document.querySelectorAll(`.hashtag-href-${props.contentId}`);
   tagsLinks.forEach((l) => {
     l.removeEventListener('click', onHashtagClick);
   });
@@ -111,7 +109,9 @@ onBeforeUnmount(() => {
   showMoreText.value = false;
 });
 const onHtmlClick = (event: any) => {
-  if (!event.target.classList.contains(`content-href-${props.contentId}`)) return;
+  if (!event.target.classList.contains(`content-href-${props.contentId}`)) {
+    return;
+  }
   if (event.srcElement && event.srcElement.href) {
     const link = event.srcElement.href;
     openUrlInNewTab(link, event);
@@ -120,8 +120,12 @@ const onHtmlClick = (event: any) => {
   event.preventDefault();
 };
 const onHashtagClick = (event: any) => {
-  if (!event.target.classList.contains(`hashtag-href-${props.contentId}`)) return;
+  if (!event.target.classList.contains(`hashtag-href-${props.contentId}`)) {
+    return;
+  }
+  // eslint-disable-next-line unicorn/prefer-dom-node-text-content
   if (event.srcElement && event.srcElement.innerText) {
+    // eslint-disable-next-line unicorn/prefer-dom-node-text-content
     const hashtag = event.srcElement.innerText;
     if (hashtag) {
       appGoto(`/hashtag/${hashtag.replace('#', '')}`);
@@ -144,16 +148,14 @@ const setDescHeight = () => {
     }
   }
 };
-const urlify = (
-  rawText: string,
-  linkColor: string | undefined = undefined
-) => {
+const urlify = (rawText: string, linkColor: string | undefined = undefined) => {
   const inputText = props.isEscapeHtml ? escapeHtml(rawText) : rawText;
   if (props.canUrlify) {
-    const urlRegex = /(https?:\/\/[^\s]+)/g;
+    const urlRegex = /(https?:\/\/\S+)/g;
     const textLink = inputText.replace(urlRegex, (url) => {
-      return `<a class="content-href-${props.contentId} ${props.linkStyle} ${linkColor ? linkColor : ''
-        }" href="${url}">${url}</a>`;
+      return `<a class="content-href-${props.contentId} ${props.linkStyle} ${
+        linkColor || ''
+      }" href="${url}">${url}</a>`;
     });
     /*
     en only /#(\w+)/g
@@ -164,9 +166,8 @@ const urlify = (
     }
 
     return textLink.replace(
-    /#([a-zA-Z\p{L}\p{N}_\u0E00-\u0E7F]+)/gu,
-      `<a class="hashtag-href-${props.contentId} ${props.linkStyle} ${linkColor ? linkColor : ''
-      }">#$1</a>`
+      /#([\p{L}\p{N}_\u0E00-\u0E7F]+)/gu,
+      `<a class="hashtag-href-${props.contentId} ${props.linkStyle} ${linkColor || ''}">#$1</a>`,
     );
   }
   return inputText;
@@ -187,22 +188,45 @@ const onShowMoreText = async () => {
 };
 </script>
 <template>
-  <div v-if="content" style="overflow: hidden" :class="{
-    'text-holder-fitcontent': !isEmpty(content) && fitContent,
-  }">
-    <slot name="top">
-    </slot>
-    <div v-ripple :id="contentId" :class="{
-      'word-limit': showMoreBtn && !showMoreText,
-      'cursor-pointer': to,
-    }" class="app-auto-newline dont-break-out text-holder">
-      <content-html :content="urlify(content, 'text-primary')" :high-light-text="highLightText"
-        @on-press="onOpenPage($event)"></content-html>
+  <div
+    v-if="content"
+    style="overflow: hidden"
+    :class="{
+      'text-holder-fitcontent': !isEmpty(content) && fitContent,
+    }"
+  >
+    <slot name="top" />
+    <div
+      v-ripple
+      :id="contentId || 'content-id'"
+      :class="{
+        'word-limit': showMoreBtn && !showMoreText,
+        'cursor-pointer': to,
+      }"
+      class="app-auto-newline dont-break-out text-holder"
+    >
+      <content-html
+        v-if="content != undefined"
+        :content="urlify(content, 'text-primary')"
+        :high-light-text="highLightText"
+        @on-press="onOpenPage($event)"
+      />
     </div>
-    <base-link v-if="showMoreBtn && !showMoreText" :label="t('base.seeMore')" color="text-primary"
-      @click="onShowMoreText"></base-link>
-    <slot name="bottom">
-    </slot>
+    <BaseButton
+      v-if="showMoreBtn && !showMoreText"
+      flat
+      dense
+      :label="t('base.seeMore')"
+      @click="onShowMoreText"
+    />
+    <!-- <base-link
+      v-if="showMoreBtn && !showMoreText"
+      :label="t('base.seeMore')"
+      color="text-primary"
+      @click="onShowMoreText"
+    /> -->
+
+    <slot name="bottom" />
   </div>
 </template>
 <style scoped lang="scss">

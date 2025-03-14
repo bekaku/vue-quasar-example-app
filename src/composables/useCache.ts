@@ -1,5 +1,5 @@
-import { CacheDateAndKey } from '@/types/common';
-import {
+import type { CacheDateAndKey } from '@/types/common';
+import type {
   NotificationCount,
   SearchItem,
 } from '@/types/models';

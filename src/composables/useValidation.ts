@@ -3,7 +3,7 @@ import { validateEmail, isNumber, validateUsername } from '@/utils/appUtil';
 
 export const useValidation = () => {
   const { t } = useLang();
-  const rePwdStrong = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
+  const rePwdStrong = /^(?=.*[A-Z])(?=.*\d)[A-Z\d]{8,}$/i;
 
   const required = (val: any) =>
     (val && val.length > 0) || t('error.validateRequireField');
@@ -14,19 +14,19 @@ export const useValidation = () => {
     isNumber(val) || t('error.validateNumber');
 
   const requiredPositiveNumber = (val: string) =>
-    (isNumber(val) && parseInt(val) > 0) || t('error.validatePositiveNumber');
+    (isNumber(val) && Number.parseInt(val) > 0) || t('error.validatePositiveNumber');
 
   const requiredNotMinusNumber = (val: string) =>
-    (isNumber(val) && parseInt(val) >= 0) || t('error.validateMinusNumber');
+    (isNumber(val) && Number.parseInt(val) >= 0) || t('error.validateMinusNumber');
 
   const requiredNotMinusNumberOrFloat = (val: string) =>
-    (isNumber(val) && (parseInt(val) || parseFloat(val)) >= 0) || t('error.validateMinusNumber');
+    (isNumber(val) && (Number.parseInt(val) || Number.parseFloat(val)) >= 0) || t('error.validateMinusNumber');
 
   const requiredPositiveFloatNumber = (val: string) =>
-    (isNumber(val) && parseFloat(val) > 0) || t('error.validatePositiveNumber');
+    (isNumber(val) && Number.parseFloat(val) > 0) || t('error.validatePositiveNumber');
 
   const requiredNotMinusFloatNumber = (val: string) =>
-    (isNumber(val) && parseFloat(val) >= 0) || t('error.validateMinusNumber');
+    (isNumber(val) && Number.parseFloat(val) >= 0) || t('error.validateMinusNumber');
 
   const requireField = (val: string, fieldName: string) =>
     (val && val.length > 0) || t('error.validateRequire', [fieldName]);
@@ -91,10 +91,10 @@ export const useValidation = () => {
     }
 
     // Check for special characters
-    if (password.match(/[^a-zA-Z\d]/)) {
+    if (password.match(/[^a-z\d]/i)) {
       strength += 1;
     } else {
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      // eslint-disable-next-line unused-imports/no-unused-vars
       tips += 'Include at least one special character. ';
     }
 

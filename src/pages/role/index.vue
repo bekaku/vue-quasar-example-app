@@ -29,13 +29,10 @@
 import { ref } from 'vue';
 import { useLang } from '@/composables/useLang';
 import { useCrudList } from '@/composables/useCrudList';
-import { Role } from '@/types/models';
+import type { Role } from '@/types/models';
 import { useAppMeta } from '@/composables/useAppMeta';
-import {
-  ICrudListHeader,
-  CrudListDataType,
-  ICrudListHeaderOptionSearchType,
-} from '@/types/common';
+import type { ICrudListHeader } from '@/types/common';
+import { CrudListDataType, ICrudListHeaderOptionSearchType } from '@/types/common';
 import CrudApiList from '@/components/base/CrudApiList.vue';
 import { biPeople } from '@quasar/extras/bootstrap-icons';
 useAppMeta();

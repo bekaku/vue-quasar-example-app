@@ -1,4 +1,4 @@
-import { ISearch } from '@/types/models';
+import type { ISearch } from '@/types/models';
 // import { useAxios } from '@/composables/useAxios';
 export default () => {
   // const { callAxios } = useAxios();

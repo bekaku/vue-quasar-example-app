@@ -7,13 +7,6 @@
     </q-card-section>
     <skeleton-item v-if="loading" :items="5" show></skeleton-item>
     <template v-else-if="items.length > 0">
-      <notification-item
-        v-for="(item, index) in items"
-        :key="`notification-${item.id}`"
-        :item="item"
-        :index="index"
-      >
-      </notification-item>
       <q-card-section>
         <q-btn
           unelevated
@@ -27,27 +20,17 @@
       </q-card-section>
     </template>
     <template v-else>
-      <base-result
-        status="empty"
-        :description="t('error.dataNotfound')"
-      ></base-result>
+      <base-result status="empty" :description="t('error.dataNotfound')"></base-result>
     </template>
   </q-card>
 </template>
 <script setup lang="ts">
 import { ref, onMounted, defineAsyncComponent } from 'vue';
 import { useLang } from '@/composables/useLang';
-import { NotificationDto } from '@/types/models';
+import type { NotificationDto } from '@/types/models';
 import UserNotifyService from '@/api/UserNotifyService';
-const NotificationItem = defineAsyncComponent(
-  () => import('@/components/notification/NotificationItem.vue'),
-);
-const SkeletonItem = defineAsyncComponent(
-  () => import('@/components/skeleton/SkeletonItem.vue'),
-);
-const BaseResult = defineAsyncComponent(
-  () => import('@/components/base/BaseResult.vue'),
-);
+const SkeletonItem = defineAsyncComponent(() => import('@/components/skeleton/SkeletonItem.vue'));
+const BaseResult = defineAsyncComponent(() => import('@/components/base/BaseResult.vue'));
 const { findAllByUser } = UserNotifyService();
 const { t } = useLang();
 const loading = ref(false);

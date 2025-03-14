@@ -37,17 +37,17 @@
           {{ item.fullName }}
         </q-item-label>
       </slot>
-      <slot name="position"> </slot>
-      <slot name="extra"> </slot>
+      <slot name="position" />
+      <slot name="extra" />
     </q-item-section>
     <q-item-section side top>
-      <slot name="side"></slot>
+      <slot name="side" />
     </q-item-section>
   </q-item>
 </template>
 <script setup lang="ts">
-import { PropType } from 'vue';
-import { UserProfileDto } from '@/types/models';
+import type { PropType } from 'vue';
+import type { UserProfileDto } from '@/types/models';
 // import ProfileName from '@/components/profile/ProfileName.vue';
 defineProps({
   item: {

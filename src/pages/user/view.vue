@@ -1,7 +1,15 @@
 <template>
   <q-page padding>
-    <crud-api-form :icon="biPerson" :title="t('model_user')" :crud-action="crudAction" :crud-name="crudName"
-      :loading="loading" @on-back="onBack" @on-submit="onSubmit" @on-delete="onDelete">
+    <crud-api-form
+      :icon="biPerson"
+      :title="t('model_user')"
+      :crud-action="crudAction"
+      :crud-name="crudName"
+      :loading="loading"
+      @on-back="onBack"
+      @on-submit="onSubmit"
+      @on-delete="onDelete"
+    >
       <template #crudFromContent>
         <div class="row">
           <div v-if="entity.avatar" class="col-12 q-pa-md text-center">
@@ -10,22 +18,36 @@
             </q-avatar>
           </div>
           <div class="col-12 col-md-6 q-pa-md">
-            <q-input :readonly="loading" outlined counter maxlength="100" v-model="entity.email"
-              :label="t('model_user_email')" :rules="[required, requireEmail]">
-              <template v-slot:prepend>
+            <q-input
+              :readonly="loading"
+              outlined
+              counter
+              maxlength="100"
+              v-model="entity.email"
+              :label="t('model_user_email')"
+              :rules="[required, requireEmail]"
+            >
+              <template #prepend>
                 <q-icon :name="biEnvelope" />
               </template>
             </q-input>
           </div>
           <div class="col-12 col-md-6 q-pa-md">
-            <q-input :readonly="loading" outlined counter maxlength="20" v-model="entity.username"
-              :label="t('model_user_username')" :rules="[requireUsername]">
-              <template v-slot:prepend>
+            <q-input
+              :readonly="loading"
+              outlined
+              counter
+              maxlength="20"
+              v-model="entity.username"
+              :label="t('model_user_username')"
+              :rules="[requireUsername]"
+            >
+              <template #prepend>
                 <q-icon :name="biPerson" />
               </template>
             </q-input>
             <q-banner class="q-my-sm" :class="dark.isActive ? 'bg-grey-9' : 'bg-grey-3'" dense>
-              <template v-slot:avatar>
+              <template #avatar>
                 <q-icon :name="biInfoCircle" color="primary" />
               </template>
               <p>
@@ -38,16 +60,27 @@
             </q-banner>
           </div>
           <div class="col-12 col-md-6 q-pa-md" v-if="crudAction != 'view'">
-            <q-input :readonly="loading" outlined type="password" v-model="entity.password"
-              :label="t('model_user_login_password')" :rules="[required]">
-              <template v-slot:prepend>
+            <q-input
+              :readonly="loading"
+              outlined
+              type="password"
+              v-model="entity.password"
+              :label="t('model_user_login_password')"
+              :rules="[required]"
+            >
+              <template #prepend>
                 <q-icon :name="biKey" />
               </template>
             </q-input>
           </div>
           <div class="col-12 col-md-6 q-pa-md" v-if="crudAction == 'view'">
-            <q-btn @click="showChangePasswordForm = true" flat color="primary" :icon="biKey"
-              :label="t('base.changePassword')" />
+            <q-btn
+              @click="showChangePasswordForm = true"
+              flat
+              color="primary"
+              :icon="biKey"
+              :label="t('base.changePassword')"
+            />
           </div>
 
           <div class="col-12 col-md-6 q-pa-md">
@@ -63,18 +96,14 @@
             </div>
             <q-card-section>
               <q-input rounded filled outlined v-model="filterText" :label="t('base.search')">
-                <template v-slot:prepend>
+                <template #prepend>
                   <q-checkbox v-model="selectedAll" @click="onCheckedAll">
                     <q-tooltip>
-                      {{
-                        !selectedAll
-                          ? t('base.selectAll')
-                          : t('base.deselectAll')
-                      }}
+                      {{ !selectedAll ? t('base.selectAll') : t('base.deselectAll') }}
                     </q-tooltip>
                   </q-checkbox>
                 </template>
-                <template v-slot:append>
+                <template #append>
                   <q-icon :name="biSearch" />
                 </template>
               </q-input>
@@ -85,9 +114,7 @@
                       <q-checkbox v-model="entity.selectedRoles" :val="p.id" />
                     </q-item-section>
                     <q-item-section>
-                      <q-item-label>{{
-                        p.name ? p.name : 'unknown'
-                        }}</q-item-label>
+                      <q-item-label>{{ p.name ? p.name : 'unknown' }}</q-item-label>
                     </q-item-section>
                   </q-item>
                 </q-list>
@@ -123,8 +150,11 @@
         </div>
       </template>
     </crud-api-form>
-    <change-password-form :dialog="showChangePasswordForm" :user-id="crudId"
-      @on-close="showChangePasswordForm = false" />
+    <change-password-form
+      :dialog="showChangePasswordForm"
+      :user-id="crudId"
+      @on-close="showChangePasswordForm = false"
+    />
   </q-page>
 </template>
 
@@ -132,7 +162,7 @@
 import { onMounted, defineAsyncComponent, ref, computed } from 'vue';
 import { useLang } from '@/composables/useLang';
 import { useCrudForm } from '@/composables/useCrudForm';
-import { UserDto, Role } from '@/types/models';
+import type { UserDto, Role } from '@/types/models';
 import { useAppMeta } from '@/composables/useAppMeta';
 import CrudApiForm from '@/components/base/CrudApiForm.vue';
 import { useValidation } from '@/composables/useValidation';
@@ -152,13 +182,9 @@ import { useQuasar } from 'quasar';
 const ChangePasswordForm = defineAsyncComponent(
   () => import('@/components/form/ChangePasswordForm.vue'),
 );
-const BaseResult = defineAsyncComponent(
-  () => import('@/components/base/BaseResult.vue'),
-);
-const FormTogle = defineAsyncComponent(
-  () => import('@/components/quasar/Toggle.vue'),
-);
-const { dark } = useQuasar()
+const BaseResult = defineAsyncComponent(() => import('@/components/base/BaseResult.vue'));
+const FormTogle = defineAsyncComponent(() => import('@/components/base/BaseToggle.vue'));
+const { dark } = useQuasar();
 const { t } = useLang();
 const { required, requireEmail, requireUsername } = useValidation();
 const { appLoading } = useBase();
@@ -205,7 +231,6 @@ const onLoadData = async () => {
   const res = await findAllBackendRole();
   if (res) {
     roles.value = res;
-
   }
   await preFectData();
   entity.value = crudEntity.value;
@@ -213,15 +238,11 @@ const onLoadData = async () => {
 };
 const filteredList = computed(() => {
   const list = roles.value;
-  const search = filterText.value
-    ? filterText.value.toLowerCase().trim()
-    : null;
+  const search = filterText.value ? filterText.value.toLowerCase().trim() : null;
   if (!search) {
     return list;
   }
-  return list.filter(
-    (c: Role) => c.name && c.name.toString().toLowerCase().includes(search),
-  );
+  return list.filter((c: Role) => c.name && c.name.toString().toLowerCase().includes(search));
 });
 
 const findDisplayRoleById = (id: number) => {

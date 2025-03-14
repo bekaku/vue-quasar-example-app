@@ -5,7 +5,7 @@
       <q-btn
         class="text-capitalize"
         flat
-        :icon-right="biCaretDownFill"
+        :icon-right="biChevronExpand"
         :label="t('sort.post.' + sort)"
       >
         <q-menu>
@@ -16,9 +16,7 @@
               </q-item-section>
               <q-item-section>
                 <q-item-label>{{ t('sort.post.NEW_POST') }}</q-item-label>
-                <q-item-label caption>{{
-                  t('sort.post.NEW_POST_DESC')
-                }}</q-item-label>
+                <q-item-label caption>{{ t('sort.post.NEW_POST_DESC') }}</q-item-label>
               </q-item-section>
             </q-item>
             <q-item clickable v-close-popup @click="onSort('NEW_ACTIVITY')">
@@ -27,9 +25,7 @@
               </q-item-section>
               <q-item-section>
                 <q-item-label>{{ t('sort.post.NEW_ACTIVITY') }}</q-item-label>
-                <q-item-label caption>{{
-                  t('sort.post.NEW_ACTIVITY_DESC')
-                }}</q-item-label>
+                <q-item-label caption>{{ t('sort.post.NEW_ACTIVITY_DESC') }}</q-item-label>
               </q-item-section>
             </q-item>
             <q-item clickable v-close-popup @click="onSort('TOP_POST')">
@@ -38,9 +34,7 @@
               </q-item-section>
               <q-item-section>
                 <q-item-label>{{ t('sort.post.TOP_POST') }}</q-item-label>
-                <q-item-label caption>{{
-                  t('sort.post.TOP_POST_DESC')
-                }}</q-item-label>
+                <q-item-label caption>{{ t('sort.post.TOP_POST_DESC') }}</q-item-label>
               </q-item-section>
             </q-item>
           </q-list>
@@ -51,15 +45,11 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
-import { PostSortType } from '@/types/models';
 import { useLang } from '@/composables/useLang';
-import { biCaretDownFill } from '@quasar/extras/bootstrap-icons';
-import {
-  laRocketSolid,
-  laFireSolid,
-  laMeteorSolid,
-} from '@quasar/extras/line-awesome';
+import type { PostSortType } from '@/types/models';
+import { biChevronExpand } from '@quasar/extras/bootstrap-icons';
+import { laFireSolid, laMeteorSolid, laRocketSolid } from '@quasar/extras/line-awesome';
+import { ref } from 'vue';
 const { t } = useLang();
 const sort = ref<PostSortType>('NEW_POST');
 const onSort = (s: PostSortType) => {

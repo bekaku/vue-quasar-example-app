@@ -1,63 +1,109 @@
-<template>
-  <div class="q-pa-md q-gutter-sm" v-if="items.length > 0" :class="{ 'limit-tabs': !$q.screen.gt.xs }">
-    <q-tabs :dense="dense" inline-label outside-arrows mobile-arrows active-color="primary">
-      <template v-for="(item, index) in items"
-                :key="index">
-        <q-route-tab
-          v-if="canShow(item)"
-          :icon="item.icon"
-          :label="item.translateLabel ? t(item.label) : item.label"
-          :to="getLink(item)"
-        />
-      </template>
-    </q-tabs>
-  </div>
-</template>
-
 <script setup lang="ts">
-import { useBase } from '@/composables/useBase';
-import { useLang } from '@/composables/useLang';
-import { usePermissionStore } from '@/stores/permissionStore';
-import { Breadcrumb } from '@/types/common';
 import { useQuasar } from 'quasar';
-import { PropType } from 'vue';
-defineProps({
-  items: {
-    type: Array as PropType<Breadcrumb[]>,
-    default: () => []
-  },
-  dense: {
-    type: Boolean,
-    default: true
-  }
-});
-const $q = useQuasar();
+import { useLang } from 'src/composables/useLang';
+import { computed } from 'vue';
+import type { AppColor, LabelValue } from '@/types/common';
+import { useAppStore } from '@/stores/appStore';
+const {
+  animated = true,
+  dense = true,
+  items,
+  activeColor = 'primary',
+  textColor,
+  bgColor,
+  useTabPanels = false,
+  defaultTab = false,
+  filterAcl = true,
+  rounded = true,
+  keepAlive = false,
+} = defineProps<{
+  activeColor?: AppColor;
+  align?: 'left' | 'center' | 'right' | 'justify';
+  animated?: boolean;
+  bgColor?: AppColor;
+  dense?: boolean;
+  items: LabelValue<any>[];
+  textColor?: AppColor;
+  useTabPanels?: boolean;
+  defaultTab?: boolean;
+  filterAcl?: boolean;
+  rounded?: boolean;
+  keepAlive?: boolean;
+}>();
+const { screen } = useQuasar();
 const { t } = useLang();
-const { getParam } = useBase();
-const permisisonStore = usePermissionStore();
-const getLink = (item: Breadcrumb) => {
-  let link = item.to;
-  const params = item.params;
-  if (link && params && params.length > 0) {
-    for (const p of params) {
-      const paramValue = getParam(p);
-      if (paramValue) {
-        link = link.replaceAll(`:${p}`, paramValue);
-      }
-    }
-  }
-  return link;
-};
-const canShow = (item: Breadcrumb) => {
+const appStore = useAppStore();
+const modelValue = defineModel<string | undefined>();
+const emit = defineEmits<{
+  'on-change': [any];
+}>();
+const canShow = (item: LabelValue<any>) => {
   if (item.permissions == undefined) {
     return true;
   }
-  if (item.frontend == true) {
-    return permisisonStore.isHaveFrontendMultiPermission(item.permissions);
+  return appStore.isHavePermission(item.permissions);
+};
+const getItems = computed<LabelValue<any>[]>(() => {
+  return filterAcl ? items.filter((t) => canShow(t) === true) : items;
+});
+const getCssClass = computed<string>(() => {
+  if (!textColor && !bgColor) {
+    return '';
   }
-  return permisisonStore.isHaveMultiPermission(item.permissions);
+
+  return `${textColor ? 'text-' + textColor : ''} ${bgColor ? 'bg-' + bgColor : ''}`;
+});
+const onChange = (event: any) => {
+  emit('on-change', event);
 };
 </script>
+<template>
+  <div v-if="getItems.length > 0" :class="{ 'limit-tabs': !screen.gt.xs }">
+    <q-tabs
+      v-bind="$attrs"
+      v-model="modelValue"
+      :align
+      :dense="dense"
+      no-caps
+      inline-label
+      outside-arrows
+      mobile-arrows
+      :active-color="defaultTab ? (!textColor ? activeColor : undefined) : undefined"
+      :class="getCssClass"
+      :active-class="!defaultTab ? 'btn-toggle-on-class' : undefined"
+      :indicator-color="!defaultTab ? 'transparent' : undefined"
+      :content-class="
+        !defaultTab ? `${rounded ? 'rounded' : ''} tabs-content-wrapper q-gutter-x-xs` : undefined
+      "
+      @update:model-value="onChange"
+    >
+      <slot>
+        <template v-for="(item, index) in getItems" :key="`${index}-${item.value}`">
+          <q-tab
+            :icon="item.icon"
+            :label="item.translateLabel ? (item.label ? t(item.label) : undefined) : item.label"
+            :name="item.value"
+            :disable="item.disable"
+            class="tab-content-wrapper"
+          >
+            <slot name="app-tab" v-bind="{ item }" />
+          </q-tab>
+        </template>
+      </slot>
+    </q-tabs>
+    <slot name="tabPanels">
+      <q-tab-panels v-if="useTabPanels" v-model="modelValue" :animated :keep-alive>
+        <q-tab-panel
+          v-for="(itemPanel, index) in getItems"
+          :key="`tab-panel-${index}-${itemPanel.value}`"
+          :name="itemPanel.value"
+        >
+          <slot :name="itemPanel.value" />
+        </q-tab-panel>
+      </q-tab-panels>
+    </slot>
+  </div>
+</template>
 <style scoped lang="scss">
 .limit-tabs {
   max-width: 100vw;

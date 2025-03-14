@@ -1,3 +1,12 @@
+<script setup lang="ts">
+withDefaults(defineProps<{
+  no?: number
+  flat?: boolean
+}>(), {
+  no: 5,
+  flat: true,
+})
+</script>
 <template>
   <q-markup-table :flat="flat">
     <thead>
@@ -24,7 +33,7 @@
     </thead>
 
     <tbody>
-      <tr v-for="n in rows" :key="n">
+      <tr v-for="n in no" :key="n">
         <td class="text-left">
           <q-skeleton animation="blink" type="text" width="85px" />
         </td>
@@ -47,16 +56,3 @@
     </tbody>
   </q-markup-table>
 </template>
-
-<script setup lang="ts">
-defineProps({
-  rows: {
-    type: Number,
-    default: 5,
-  },
-  flat: {
-    type: Boolean,
-    default: true,
-  },
-});
-</script>

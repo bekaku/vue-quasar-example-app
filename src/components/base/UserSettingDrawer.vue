@@ -8,10 +8,7 @@
         </q-item-label>
         <q-item v-else :to="link.link" v-ripple clickable>
           <q-item-section avatar>
-            <q-icon
-              :color="$q.dark.isActive ? 'white' : 'black'"
-              :name="link.icon"
-            />
+            <q-icon :color="dark.isActive ? 'white' : 'black'" :name="link.icon" />
           </q-item-section>
           <q-item-section>
             <q-item-label>{{ t(`${link.text}`) }}</q-item-label>
@@ -22,56 +19,39 @@
   </q-card>
 </template>
 
-<script lang="ts">
-import { ref, defineComponent } from 'vue';
+<script lang="ts" setup>
 import { useLang } from '@/composables/useLang';
-import {
-  biPerson,
-  biShieldLock,
-  biEnvelope,
-} from '@quasar/extras/bootstrap-icons';
-export default defineComponent({
-  props: {
-    overlay: {
-      type: Boolean,
-      default: false,
-    },
+import { biEnvelope, biPerson, biShieldLock } from '@quasar/extras/bootstrap-icons';
+import { useQuasar } from 'quasar';
+import { ref } from 'vue';
+const { t } = useLang();
+const { dark } = useQuasar();
+const links1 = ref([
+  {
+    icon: biPerson,
+    text: 'page.settingsPublicProfile',
+    link: '/settings/profile',
   },
-  setup() {
-    const { t } = useLang();
-    const links1 = ref([
-      {
-        icon: biPerson,
-        text: 'page.settingsPublicProfile',
-        link: '/settings/profile',
-      },
-      // {
-      //   icon: biBell,
-      //   text: 'page.settingsNotification',
-      //   link: '/settings/notifications',
-      // },
-      {
-        separator: true,
-      },
-      {
-        header: 'Access',
-      },
-      {
-        icon: biShieldLock,
-        text: 'page.settingsSecurity',
-        link: '/settings/security',
-      },
-      {
-        icon: biEnvelope,
-        text: 'contactInfo',
-        link: '/settings/emails',
-      },
-    ]);
-
-    return {
-      t,
-      links1,
-    };
+  // {
+  //   icon: biBell,
+  //   text: 'page.settingsNotification',
+  //   link: '/settings/notifications',
+  // },
+  {
+    separator: true,
   },
-});
+  {
+    header: 'Access',
+  },
+  {
+    icon: biShieldLock,
+    text: 'page.settingsSecurity',
+    link: '/settings/security',
+  },
+  {
+    icon: biEnvelope,
+    text: 'contactInfo',
+    link: '/settings/emails',
+  },
+]);
 </script>

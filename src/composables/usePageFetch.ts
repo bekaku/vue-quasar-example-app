@@ -1,10 +1,11 @@
-import { computed, ref, Ref } from 'vue';
+import type { Ref } from 'vue';
+import { computed, ref } from 'vue';
 import { usePaging } from '@/composables/usePaging';
 import { useSort } from '@/composables/useSort';
-import { ICrudListApiOptions } from '@/types/common';
+import type { ICrudListApiOptions } from '@/types/common';
 import { useAxios } from '@/composables/useAxios';
 import { isAppException, isArray, isEmpty, isListResponse, isServerResponseMessage } from '@/utils/appUtil';
-import { IApiListResponse } from '@/types/models';
+import type { IApiListResponse } from '@/types/models';
 
 export const usePagefecth = <T>(options: ICrudListApiOptions) => {
   const { callAxios } = useAxios();
@@ -71,7 +72,6 @@ export const usePagefecth = <T>(options: ICrudListApiOptions) => {
           pages.value.last = response.last;
           isInfiniteDisabled.value = response.last;
         }
-
       } else if (response && isArray(response)) {
         const responseList: T[] = response as unknown as T[];
         if (responseList.length == 0 || responseList.length < pages.value.itemsPerPage) {

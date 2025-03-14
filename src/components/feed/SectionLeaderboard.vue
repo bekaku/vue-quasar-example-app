@@ -1,5 +1,5 @@
 <template>
-  <q-card flat bordered :style="{ width: `${FeedSectionWidth}px` }">
+  <BaseCard :style="{ width: `${FeedSectionWidth}px` }">
     <q-list>
       <q-item>
         <q-item-section avatar>
@@ -7,7 +7,7 @@
             <q-icon :name="biTrophy" />
           </q-avatar>
         </q-item-section>
-        <q-item-section> SS Leaderboard </q-item-section>
+        <q-item-section> Leaderboard </q-item-section>
       </q-item>
       <q-separator />
       <div class="row justify-around text-center q-pa-xs">
@@ -70,22 +70,17 @@
         <q-item-section side>
           <q-icon color="primary" :name="biChevronDown" />
         </q-item-section>
-        <q-item-section class="text-primary">{{
-          t('base.seeMore')
-        }}</q-item-section>
+        <q-item-section class="text-primary">{{ t('base.seeMore') }}</q-item-section>
       </q-item>
     </q-list>
-  </q-card>
+  </BaseCard>
 </template>
 
 <script setup lang="ts">
-import { AvatarPlaceHolder128 } from '@/utils/constant';
+import { AvatarPlaceHolder128, FeedSectionWidth } from '@/utils/constant';
 import { useLang } from '@/composables/useLang';
-import { FeedSectionWidth } from '@/utils/constant';
-import {
-  biChevronDown,
-  biTrophy,
-  biArrowUp,
-} from '@quasar/extras/bootstrap-icons';
+
+import { biChevronDown, biTrophy, biArrowUp } from '@quasar/extras/bootstrap-icons';
+import BaseCard from '../base/BaseCard.vue';
 const { t } = useLang();
 </script>

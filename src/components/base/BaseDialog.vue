@@ -1,39 +1,3 @@
-<template>
-  <q-dialog :model-value="modelValue" :persistent="persistent" :maximized="maximizeModel"
-    :transition-show="transitionShow" :transition-hide="transitionHide" :full-width="fullWidth"
-    :full-height="fullHeight" @hide="onClose" @before-hide="$emit('on-before-hide')">
-    <!-- <div v-bind="$attrs" :style="dialogStyle">
-      <slot></slot>
-    </div> -->
-    <q-card v-bind="$attrs" flat bordered :style="dialogStyle">
-      <slot name="toolBar">
-        <q-bar class="bg-transparent q-my-xs">
-          <slot name="icon">
-            <q-icon v-if="icon" :name="icon" />
-          </slot>
-
-          <div>
-            <slot name="title">
-              {{ title }}
-            </slot>
-          </div>
-          <q-space />
-          <slot name="toolbarAction">
-            <q-btn v-if="canMaximized" round flat :icon="!maximizeModel ? biFullscreen : biFullscreenExit"
-              @click="maximizeModel = !maximizeModel">
-              <q-tooltip>{{ !maximizeModel ? t('maximize') : t('minimize') }}</q-tooltip>
-            </q-btn>
-            <q-btn round flat :icon="biX" @click="onClose">
-              <q-tooltip>{{ t('base.close') }}</q-tooltip>
-            </q-btn>
-          </slot>
-        </q-bar>
-      </slot>
-      <slot></slot>
-    </q-card>
-  </q-dialog>
-</template>
-
 <script setup lang="ts">
 /*
   <base-dialog
@@ -48,8 +12,14 @@
   >
   </base-dialog>
 */
-import { useLang } from '@/composables/useLang';
-import { biFile, biX, biFullscreen, biFullscreenExit } from '@quasar/extras/bootstrap-icons';
+import {
+  biArrowsAngleContract,
+  biArrowsAngleExpand,
+  biFile,
+  biX,
+} from '@quasar/extras/bootstrap-icons';
+import { useBase } from 'src/composables/useBase';
+import { useLang } from 'src/composables/useLang';
 import { ref } from 'vue';
 
 const {
@@ -58,35 +28,97 @@ const {
   fullHeight = false,
   maximized = false,
   icon = biFile,
-  transitionShow = 'fade',//fade, slide-down
+  transitionShow = 'fade', // fade, slide-down
   transitionHide = 'fade',
   canMaximized = false,
   autoClose = true,
-} =
-  defineProps<{
-    persistent?: boolean;
-    fullWidth?: boolean;
-    fullHeight?: boolean;
-    maximized?: boolean;
-    canMaximized?: boolean;
-    icon?: string;
-    title?: string;
-    transitionShow?: string;
-    transitionHide?: string;
-    width?: string;
-    maxWidth?: string;
-    dialogStyle?: string;
-    autoClose?: boolean;
-  }>();
+  showToolbar = true,
+  padding = true,
+} = defineProps<{
+  persistent?: boolean;
+  fullWidth?: boolean;
+  fullHeight?: boolean;
+  maximized?: boolean;
+  canMaximized?: boolean;
+  icon?: string;
+  title?: string | undefined;
+  transitionShow?: string;
+  transitionHide?: string;
+  width?: string;
+  maxWidth?: string;
+  dialogStyle?: string;
+  autoClose?: boolean;
+  showToolbar?: boolean;
+  padding?: boolean;
+}>();
 
 const modelValue = defineModel<boolean>({ default: false });
-const emit = defineEmits(['on-close', 'on-before-hide']);
+const emit = defineEmits(['on-close', 'on-hide', 'on-before-hide']);
 const { t } = useLang();
+const { isDark } = useBase();
 const maximizeModel = ref(maximized);
 const onClose = () => {
   emit('on-close');
+  onCloseModel();
+};
+const onHide = () => {
+  emit('on-hide');
+  onCloseModel();
+};
+const onCloseModel = () => {
   if (autoClose) {
     modelValue.value = false;
   }
 };
 </script>
+<template>
+  <q-dialog
+    :model-value="modelValue"
+    :persistent="persistent"
+    :maximized="maximizeModel"
+    :transition-show="transitionShow"
+    :transition-hide="transitionHide"
+    :full-width="fullWidth"
+    :full-height="fullHeight"
+    @hide="onHide"
+    @before-hide="$emit('on-before-hide')"
+  >
+    <q-card v-bind="$attrs" :style="dialogStyle">
+      <slot name="toolBar">
+        <q-bar
+          v-if="showToolbar"
+          class="q-py-md"
+          :class="{ 'bg-grey-2': !isDark, 'bg-dark-900': isDark }"
+        >
+          <slot name="icon">
+            <q-icon v-if="icon" :name="icon" />
+          </slot>
+
+          <div>
+            <slot name="title">
+              {{ title }}
+            </slot>
+          </div>
+          <q-space />
+          <slot name="toolbarAction">
+            <q-btn
+              v-if="canMaximized"
+              round
+              flat
+              :icon="!maximizeModel ? biArrowsAngleExpand : biArrowsAngleContract"
+              @click="maximizeModel = !maximizeModel"
+            >
+              <q-tooltip>{{ !maximizeModel ? t('base.maximize') : t('base.minimize') }}</q-tooltip>
+            </q-btn>
+            <q-btn round flat :icon="biX" @click="onClose">
+              <q-tooltip>{{ t('base.close') }}</q-tooltip>
+            </q-btn>
+          </slot>
+        </q-bar>
+      </slot>
+      <div :class="{ 'q-pa-md': padding }">
+        <slot />
+      </div>
+    </q-card>
+  </q-dialog>
+</template>

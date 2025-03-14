@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import { NotificationCount } from '@/types/models';
+import type { NotificationCount } from '@/types/models';
 import { useCache } from '@/composables/useCache';
 import { ref } from 'vue';
 export const useNotificationStore = defineStore('notificationStore', () => {

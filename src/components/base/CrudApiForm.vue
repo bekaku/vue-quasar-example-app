@@ -1,9 +1,74 @@
+<script setup lang="ts">
+import BaseButton from '@/components/base/BaseButton.vue';
+import { useLang } from '@/composables/useLang';
+import { useAppStore } from '@/stores/appStore';
+import type { ICrudAction } from '@/types/common';
+import { biArrowLeft, biFile, biPencil, biTrash } from '@quasar/extras/bootstrap-icons';
+import { computed } from 'vue';
+const {
+  crudName,
+  managePermission,
+  byPassPermission = false,
+  listPermission,
+  icon = biFile,
+  loading = false,
+  showBack = true,
+  showActionText = true,
+  fullWidth = true,
+  editButton = true,
+  deleteButton = true,
+  copyButton = false,
+  buttonSize = 'md',
+  crudAction,
+} = defineProps<{
+  crudName?: string | undefined;
+  listPermission?: string[];
+  managePermission?: string[];
+  byPassPermission?: boolean;
+  title?: string;
+  icon?: string;
+  loading?: boolean;
+  showBack?: boolean;
+  showDelete?: boolean;
+  showEdit?: boolean;
+  crudAction?: ICrudAction;
+  showActionText?: boolean;
+  fullWidth?: boolean;
+  editButton?: true;
+  deleteButton?: true;
+  copyButton?: boolean;
+  buttonSize?: string;
+}>();
+defineEmits(['on-back', 'on-submit', 'on-delete']);
+const { t } = useLang();
+const appStore = useAppStore();
+const isHaveManagePermission = computed(() => {
+  if (byPassPermission) {
+    return true;
+  }
+  return managePermission
+    ? appStore.isHavePermission(managePermission)
+    : crudName
+      ? appStore.isHavePermission([`${crudName}_manage`])
+      : true;
+});
+const isHaveListPermission = computed(() => {
+  if (byPassPermission) {
+    return true;
+  }
+  return listPermission
+    ? appStore.isHavePermission(listPermission)
+    : crudName
+      ? appStore.isHavePermission([`${crudName}_list`])
+      : true;
+});
+</script>
 <template>
   <q-card flat bordered class="wee-container-responsive-center">
     <q-card-section>
       <slot name="crudFromToolbar">
         <q-toolbar>
-          <UiButton
+          <BaseButton
             v-if="isHaveListPermission && showBack"
             @click="$emit('on-back')"
             flat
@@ -13,15 +78,15 @@
             <q-tooltip>
               {{ t('base.back') }}
             </q-tooltip>
-          </UiButton>
+          </BaseButton>
           <q-toolbar-title>
             <template v-if="crudAction && showActionText">
               {{
                 crudAction === 'new'
                   ? t('base.addNew')
                   : crudAction === 'view'
-                  ? t('base.edit')
-                  : t('base.copy')
+                    ? t('base.edit')
+                    : t('base.copy')
               }}
             </template>
             {{ title }}
@@ -34,26 +99,22 @@
     </q-card-section>
     <slot name="crudFrom">
       <q-form @submit="$emit('on-submit')" class="q-gutter-md">
-        <slot name="crudFromContent"> </slot>
+        <slot name="crudFromContent" />
 
         <slot name="crudAction">
           <q-separator />
           <q-card-section align="center" class="q-gutter-sm">
-            <UiButton
+            <BaseButton
               v-if="isHaveManagePermission && showEdit"
               unelevated
               :icon="biPencil"
-              :label="
-                t('base.save') + (crudAction === 'view' ? t('base.edit') : '')
-              "
+              :label="t('base.save') + (crudAction === 'view' ? t('base.edit') : '')"
               type="submit"
               :loading="loading"
               color="primary"
             />
-            <UiButton
-              v-if="
-                crudAction === 'view' && isHaveManagePermission && showDelete
-              "
+            <BaseButton
+              v-if="crudAction === 'view' && isHaveManagePermission && showDelete"
               unelevated
               :icon="biTrash"
               :label="t('base.delete')"
@@ -62,7 +123,7 @@
               @click="$emit('on-delete')"
             />
 
-            <UiButton
+            <BaseButton
               v-if="isHaveListPermission && showBack"
               :label="t('base.cancel')"
               @click="$emit('on-back')"
@@ -70,105 +131,10 @@
               class="q-ml-sm"
               :disable="loading"
             />
-            <slot name="additionalCrudAction"> </slot>
+            <slot name="additionalCrudAction" />
           </q-card-section>
         </slot>
       </q-form>
     </slot>
   </q-card>
 </template>
-
-<script setup lang="ts">
-import { PropType, computed } from 'vue';
-import { useLang } from '@/composables/useLang';
-import { ICrudAction } from '@/types/common';
-import { usePermissionStore } from '@/stores/permissionStore';
-import UiButton from '@/components/quasar/Button.vue'
-import {
-  biFile,
-  biArrowLeft,
-  biTrash,
-  biPencil,
-} from '@quasar/extras/bootstrap-icons';
-const props = defineProps({
-  crudName: {
-    type: String,
-    default: '',
-  },
-  managePermission: {
-    type: String,
-    default: '',
-  },
-  listPermission: {
-    type: String,
-    default: '',
-  },
-  title: {
-    type: String,
-    default: '',
-  },
-  icon: {
-    type: String,
-    default: biFile,
-  },
-  loading: {
-    type: Boolean,
-    default: false,
-  },
-  showBack: {
-    type: Boolean,
-    default: true,
-  },
-  showDelete: {
-    type: Boolean,
-    default: true,
-  },
-  showEdit: {
-    type: Boolean,
-    default: true,
-  },
-  crudAction: {
-    type: String as PropType<ICrudAction>,
-    default: undefined,
-  },
-  isFrontend: {
-    type: Boolean,
-    default: false,
-  },
-  showActionText: {
-    type: Boolean,
-    default: true,
-  },
-});
-defineEmits(['on-back', 'on-submit', 'on-delete']);
-const { t } = useLang();
-const permissionStore = usePermissionStore();
-const isHaveManagePermission = computed(() => {
-  if (!props.isFrontend) {
-    return props.managePermission
-      ? permissionStore.isHavePermission(props.managePermission)
-      : props.crudName
-      ? permissionStore.isHavePermission(`${props.crudName}_manage`)
-      : true;
-  }
-  return props.managePermission
-    ? permissionStore.isHaveFrontendPermission(props.managePermission)
-    : props.crudName
-    ? permissionStore.isHaveFrontendPermission(`${props.crudName}_manage`)
-    : true;
-});
-const isHaveListPermission = computed(() => {
-  if (!props.isFrontend) {
-    return props.listPermission
-      ? permissionStore.isHavePermission(props.listPermission)
-      : props.crudName
-      ? permissionStore.isHavePermission(`${props.crudName}_list`)
-      : true;
-  }
-  return props.listPermission
-    ? permissionStore.isHaveFrontendPermission(props.listPermission)
-    : props.crudName
-    ? permissionStore.isHaveFrontendPermission(`${props.crudName}_list`)
-    : true;
-});
-</script>

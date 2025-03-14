@@ -1,10 +1,5 @@
 <template>
-  <q-dialog
-    v-model="show"
-    persistent
-    transition-show="slide-up"
-    transition-hide="slide-down"
-  >
+  <q-dialog v-model="show" persistent transition-show="slide-up" transition-hide="slide-down">
     <q-card style="max-width: 480px" flat bordered>
       <q-bar class="bg-transparent q-my-sm">
         <q-icon :name="biKey" />
@@ -28,32 +23,22 @@
               :label="t('authen.newPassword')"
               :rules="[
                 required,
-                (val) =>
-                  validatePasswordStrongV2(val) ||
-                  t('error.passwordStrongError'),
+                (val) => validatePasswordStrongV2(val) || t('error.passwordStrongError'),
               ]"
             >
-              <template v-slot:prepend>
+              <template #prepend>
                 <q-icon :name="biLock" color="grey-9" />
               </template>
             </q-input>
           </q-card-section>
           <q-card-section>
             <div>
-              <q-checkbox
-                v-model="logoutAllDevice"
-                :label="t('authen.logoutAll')"
-              />
+              <q-checkbox v-model="logoutAllDevice" :label="t('authen.logoutAll')" />
             </div>
           </q-card-section>
           <q-separator />
           <q-card-actions align="center">
-            <q-btn
-              unelevated
-              color="primary"
-              :label="t('updatePassword')"
-              type="submit"
-            />
+            <q-btn unelevated color="primary" :label="t('updatePassword')" type="submit" />
           </q-card-actions>
         </q-form>
       </q-card-section>
@@ -67,7 +52,7 @@ import { useLang } from '@/composables/useLang';
 import { useValidation } from '@/composables/useValidation';
 import { biX, biKey, biLock } from '@quasar/extras/bootstrap-icons';
 import UserService from '@/api/UserService';
-import { UserChangePasswordRequest } from '@/types/models';
+import type { UserChangePasswordRequest } from '@/types/models';
 import { useBase } from '@/composables/useBase';
 const props = defineProps({
   dialog: {

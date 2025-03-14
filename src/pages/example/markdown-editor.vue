@@ -1,48 +1,11 @@
-<template>
-    <q-page padding>
-        <q-card flat bordered class="content-limit">
-            <q-card-section>
-                <q-toolbar>
-                    <q-toolbar-title> Markdown </q-toolbar-title>
-                    <q-space />
-                </q-toolbar>
-                <q-separator />
-            </q-card-section>
-            <q-card-section class="q-gutter-y-lg">
-                <q-card class="q-my-lg q-pa-md">
-                    <div class="text-h5 q-mb-md">
-                        <q-icon :name="biPencil" /> Editor
-                        <q-btn flat :icon="biQuestion" class="text-capitalize text-muted" dense
-                            :label="`(${t('base.canUseMarkdown')})`">
-                            <q-tooltip>
-                                {{ t('base.canUseMarkdownHelp') }}
-                            </q-tooltip>
-                            <q-menu style="width: 450px">
-                                <markdown-help></markdown-help>
-                            </q-menu>
-                        </q-btn>
-                    </div>
-                    <markdown-editor v-model="content" :editor-id="contentId" />
-                </q-card>
-
-                <q-card class="q-my-lg q-pa-md">
-                    <div class="text-h5 q-mb-md">
-                        <q-icon :name="biEye" /> Preview
-                    </div>
-                    <markdown-preview :content="content" :editor-id="contentPreviewId"></markdown-preview>
-                </q-card>
-            </q-card-section>
-        </q-card>
-    </q-page>
-</template>
-
 <script setup lang="ts">
 import MarkdownEditor from '@/components/base/MarkdownEditor.vue';
 import MarkdownPreview from '@/components/base/MarkdownPreview.vue';
-import MarkdownHelp from '@/components/base/MarkdownHelp.vue';
 import { useAppMeta } from '@/composables/useAppMeta';
 import { useLang } from '@/composables/useLang';
-import { biPencil, biEye, biQuestion } from '@quasar/extras/bootstrap-icons';
+import { biEye, biPencil } from '@quasar/extras/bootstrap-icons';
+import BaseCard from 'src/components/base/BaseCard.vue';
+import BasePage from 'src/components/base/BasePage.vue';
 import { ref, useId } from 'vue';
 // import md from 'src/assets/data.md';
 const { t } = useLang();
@@ -119,3 +82,16 @@ note、abstract、info、tip、success、question、warning、failure、danger�
 ## ☘️ em...
 `);
 </script>
+<template>
+  <BasePage :full="false">
+    <q-card-section class="q-gutter-y-lg">
+      <BaseCard flat class="q-pa-md" title="Editor" :icon="biPencil">
+        <markdown-editor v-model="content" :editor-id="contentId" />
+      </BaseCard>
+
+      <BaseCard flat class="q-pa-md" title="Preview" :icon="biEye">
+        <markdown-preview :content="content" :editor-id="contentPreviewId"></markdown-preview>
+      </BaseCard>
+    </q-card-section>
+  </BasePage>
+</template>

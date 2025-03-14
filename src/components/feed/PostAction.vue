@@ -18,10 +18,7 @@
         @mouseleave="reactHover = false"
       >
         <div class="row justify-between q-pa-md q-gutter-md">
-          <transition-group
-            appear
-            enter-active-class="animated lightSpeedInLeft"
-          >
+          <transition-group appear enter-active-class="animated lightSpeedInLeft">
             <q-btn
               key="btn-1"
               round
@@ -33,11 +30,7 @@
               :icon="loveHover ? biHeartFill : biHeart"
               @click="onLiked('LOVE_IT')"
             >
-              <q-tooltip
-                class="bg-pink"
-                anchor="top middle"
-                self="center middle"
-              >
+              <q-tooltip class="bg-pink" anchor="top middle" self="center middle">
                 Love it
               </q-tooltip>
             </q-btn>
@@ -52,10 +45,7 @@
               :icon="prizeHover ? biGiftFill : biGift"
               @click="onLiked('PRIZE_IT')"
             >
-              <q-tooltip
-                anchor="top middle"
-                self="center middle"
-                class="bg-amber-8"
+              <q-tooltip anchor="top middle" self="center middle" class="bg-amber-8"
                 >Prize it</q-tooltip
               ></q-btn
             >
@@ -70,10 +60,7 @@
               :icon="adoptHover ? biHandbagFill : biHandbag"
               @click="onLiked('ADOPT_IT')"
             >
-              <q-tooltip
-                anchor="top middle"
-                self="center middle"
-                class="bg-green"
+              <q-tooltip anchor="top middle" self="center middle" class="bg-green"
                 >Adopt it</q-tooltip
               ></q-btn
             >
@@ -88,10 +75,7 @@
               :icon="actionHover ? biHandIndexThumbFill : biHandIndexThumb"
               @click="onLiked('ACTION_IT')"
             >
-              <q-tooltip
-                anchor="top middle"
-                self="center middle"
-                class="bg-blue"
+              <q-tooltip anchor="top middle" self="center middle" class="bg-blue"
                 >Action it</q-tooltip
               ></q-btn
             >
@@ -107,16 +91,11 @@
         :label="actionText"
         :color="actionColor"
         @click="onUnLiked"
-      ></q-btn>
+      />
     </transition>
 
     <q-separator vertical />
-    <q-btn
-      class="text-capitalize"
-      flat
-      :icon="biChatSquareDots"
-      label="Comment it"
-    >
+    <q-btn class="text-capitalize" flat :icon="biChatSquareDots" label="Comment it">
       <q-tooltip>Comment it</q-tooltip></q-btn
     >
     <q-separator vertical />
@@ -124,42 +103,31 @@
       <q-tooltip>Save it</q-tooltip></q-btn
     >
     <q-separator vertical />
-    <q-btn
-      class="text-capitalize"
-      flat
-      :icon="biArrow90degRight"
-      label="Share it"
-    >
+    <q-btn class="text-capitalize" flat :icon="biShare" label="Share it">
       <q-tooltip>Share it</q-tooltip></q-btn
     >
   </q-card-actions>
 </template>
 
 <script setup lang="ts">
-import {
-  ref,
-  watch,
-  onBeforeUnmount,
-  onMounted,
-  computed,
-  PropType,
-} from 'vue';
-import { PostActionType } from '@/types/models';
 import { useBase } from '@/composables/useBase';
-import {
-  biHandIndexThumbFill,
-  biHandIndexThumb,
-  biHeart,
-  biChatSquareDots,
-  biGiftFill,
-  biGift,
-  biArrow90degRight,
-  biHeartFill,
-  biHandbagFill,
-  biHandbag,
-  biBookmark,
-} from '@quasar/extras/bootstrap-icons';
+import type { PostActionType } from '@/types/models';
 import { AvatarPlaceHolder128 } from '@/utils/constant';
+import {
+  biBookmark,
+  biChatSquareDots,
+  biGift,
+  biGiftFill,
+  biHandbag,
+  biHandbagFill,
+  biHandIndexThumb,
+  biHandIndexThumbFill,
+  biHeart,
+  biHeartFill,
+  biShare
+} from '@quasar/extras/bootstrap-icons';
+import type { PropType } from 'vue';
+import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue';
 const { appToast } = useBase();
 const props = defineProps({
   action: {
