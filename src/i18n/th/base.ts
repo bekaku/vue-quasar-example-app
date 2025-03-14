@@ -303,7 +303,9 @@ export default {
         'frist': 'หน้าแรก',
         'last': 'หน้าสุดท้าย',
         'backPreviousPage': 'กลับไปหน้าที่แล้ว',
-        'rowsPerPage': 'จำนวนรายการ/หน้า'
+        'rowsPerPage': 'จำนวนรายการ/หน้า',
+        'noFmt': 'หน้า {current}/{total}',
+        'totalRecord': 'รายการทั้งหมด {total}',
     },
     'readableNum': {
         'k': 'K',

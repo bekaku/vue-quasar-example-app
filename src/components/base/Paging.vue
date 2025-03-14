@@ -10,6 +10,8 @@ import { biChevronExpand } from '@quasar/extras/bootstrap-icons';
 import { useLang } from 'src/composables/useLang';
 import { useQuasar } from 'quasar';
 import { watch } from 'vue';
+import { numberFormat } from 'src/utils/appUtil';
+import SeparatorDot from './SeparatorDot.vue';
 const {
   maxPages = 7,
   boundaryNumbers = false,
@@ -53,7 +55,18 @@ watch(
     class="row justify-between items-center"
     :style="{ background: !dark.isActive ? 'var( --color-zinc-50)' : 'var( --color-zinc-800)' }"
   >
-    <div class="flex q-pa-md text-muted">{{ t('base.total') }} {{ modelValue.totalElements }}</div>
+    <div class="flex q-pa-md text-muted">
+      {{ t('paging.totalRecord', { total: numberFormat(modelValue.totalElements) }) }}
+      <SeparatorDot class="q-mx-sm" />
+      <span>
+        {{
+          t('paging.noFmt', {
+            current: numberFormat(modelValue.current),
+            total: numberFormat(modelValue.totalPages),
+          })
+        }}
+      </span>
+    </div>
     <div class="flex q-pa-md">
       <q-select
         v-if="canChangePerpage"

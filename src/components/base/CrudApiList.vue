@@ -8,7 +8,7 @@ import { useAppStore } from '@/stores/appStore';
 import type { ICrudListHeader, IPagination, ISort } from '@/types/common';
 import { CrudListDataType, ICrudListHeaderOptionSearchType } from '@/types/common';
 import { getValFromObjectByPath, isEmpty } from '@/utils/appUtil';
-import { SearchMinCharactor } from '@/utils/constant';
+import { SearchMinCharactor } from '@/libs/constant';
 import { FORMAT_DATE1, FORMAT_DATETIME, formatDate, formatDateTime } from '@/utils/dateUtil';
 import {
   biArrowClockwise,
@@ -28,6 +28,7 @@ import {
   biX,
 } from '@quasar/extras/bootstrap-icons';
 import { computed, defineAsyncComponent, ref } from 'vue';
+import BaseCard from './BaseCard.vue';
 
 const BaseResult = defineAsyncComponent(() => import('@/components/base/BaseResult.vue'));
 const BaseDatePicker = defineAsyncComponent(() => import('@/components/base/BaseDatePicker.vue'));
@@ -167,7 +168,7 @@ const sortableHeaders = computed(() => {
   for (const item of filters) {
     list.push({
       value: item.options.sortColunm ? item.options.sortColunm : item.column,
-      label: t(item.label),
+      label: item.translateLabel==undefined || item.translateLabel? t(item.label) : item.label,
     });
   }
   return list;
@@ -280,12 +281,10 @@ const onPerPageChange = async (v: number | undefined) => {
 <template>
   <div
     class="row"
-    :class="{
-      'wee-container-responsive-center': !fullWidth,
-    }"
+    :class="{ 'content-limit': !fullWidth }"
   >
     <div class="col">
-      <q-card flat bordered>
+      <BaseCard>
         <slot name="headerCard" />
         <q-card-section>
           <q-toolbar>
@@ -424,7 +423,11 @@ const onPerPageChange = async (v: number | undefined) => {
                                 ? 'text'
                                 : 'number'
                             "
-                            :label="t(searchCol.label)"
+                            :label="
+                              searchCol.translateLabel == undefined || searchCol.translateLabel
+                                ? t(searchCol.label)
+                                : searchCol.label
+                            "
                             clearable
                             style="width: 100%"
                           >
@@ -433,7 +436,11 @@ const onPerPageChange = async (v: number | undefined) => {
                                 v-if="!searchCol.options.searchOperationReadonly"
                                 dense
                                 filled
-                                :label="t(searchCol.label)"
+                                :label="
+                                  searchCol.translateLabel == undefined || searchCol.translateLabel
+                                    ? t(searchCol.label)
+                                    : searchCol.label
+                                "
                                 class="q-mx-lg"
                                 v-model="searchCol.options.searchOperation"
                                 :options="searchOperations"
@@ -456,7 +463,11 @@ const onPerPageChange = async (v: number | undefined) => {
                           <BaseToggle
                             use-checkbox
                             useLabelTitle
-                            :label="t(searchCol.label)"
+                            :label="
+                              searchCol.translateLabel == undefined || searchCol.translateLabel
+                                ? t(searchCol.label)
+                                : searchCol.label
+                            "
                             v-model="searchCol.options.searchModel"
                           />
                         </template>
@@ -469,7 +480,7 @@ const onPerPageChange = async (v: number | undefined) => {
                             <BaseDatePicker
                               dense
                               v-model="searchCol.options.searchModel"
-                              :title="t(searchCol.label)"
+                              :label="searchCol.translateLabel == undefined || searchCol.translateLabel ? t(searchCol.label): searchCol.label"
                             />
                           </template>
                         </template>
@@ -514,7 +525,7 @@ const onPerPageChange = async (v: number | undefined) => {
                     >
                       <template v-if="tblHeader.type === CrudListDataType.BASE_TOOL">
                         <th v-if="isHaveManagePermission || isHaveViewPermission">
-                          {{ t(tblHeader.label) }}
+                          {{ tblHeader.translateLabel==undefined || tblHeader.translateLabel ? t(tblHeader.label) : tblHeader.label }}
                         </th>
                       </template>
                       <th v-else>
@@ -541,11 +552,11 @@ const onPerPageChange = async (v: number | undefined) => {
                               />
                             </template>
 
-                            {{ t(tblHeader.label) }}
+                           {{ tblHeader.translateLabel==undefined || tblHeader.translateLabel ? t(tblHeader.label) : tblHeader.label }}
                           </q-btn>
                         </template>
                         <template v-else>
-                          {{ t(tblHeader.label) }}
+                         {{ tblHeader.translateLabel==undefined || tblHeader.translateLabel ? t(tblHeader.label) : tblHeader.label }}
                         </template>
                       </th>
                     </template>
@@ -772,7 +783,7 @@ const onPerPageChange = async (v: number | undefined) => {
             @update:per-page="onPerPageChange"
           />
         </slot>
-      </q-card>
+      </BaseCard>
     </div>
   </div>
 </template>

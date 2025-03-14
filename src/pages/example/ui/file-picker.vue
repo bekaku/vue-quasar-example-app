@@ -97,7 +97,7 @@ const onCustomRemove2 = (index: number) => {
         <BaseFilePicker
           v-model="files"
           v-model:file-items="filesPreview"
-          :gallery="false"
+          :gallery="true"
           @on-file-add="onFileAdd"
         >
           <BaseButton label="Click to upload" />

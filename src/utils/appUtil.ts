@@ -385,19 +385,34 @@ export const detroyAuthCookie = (cookies: any) => {
     // cookies.remove(AppAuthTokenCreatedKey, { path: '/', domain: !devMode ? AppDomain : undefined, });
   }
 }
-export const sortedArray = <T>(list: any[], filedName: string, mode: ISortModeType): Promise<T> => {
+export const sortArray = <T extends Record<string, any>>(
+  array: T[],
+  field: keyof T,
+  mode: 'asc' | 'desc' = 'asc'
+): Promise<T[]> => {
   return new Promise((resolve) => {
-    let finalList: any[] = [];
-    if (list && list.length > 0) {
-      if (mode === 'asc') {
-        finalList = list.sort((a, b) => a[filedName] - b[filedName]);
-      } else {
-        finalList = list.sort((a, b) => b[filedName] - a[filedName]);
+    const sortedArray = [...array].sort((a, b) => {
+      const valA = a[field];
+      const valB = b[field];
+
+      // Handle string comparison (case-insensitive)
+      if (typeof valA === 'string' && typeof valB === 'string') {
+        return mode === 'asc'
+          ? valA.localeCompare(valB)
+          : valB.localeCompare(valA);
       }
-    }
-    resolve(finalList as T);
+
+      // Handle number and boolean comparison
+      if (valA < valB)
+        return mode === 'asc' ? -1 : 1;
+      if (valA > valB)
+        return mode === 'asc' ? 1 : -1;
+      return 0;
+    });
+
+    resolve(sortedArray);
   });
-};
+}
 export const isEmptyVal = (val: any) => {
   return !val || val == 'null' || val == null || val == '' || val == undefined || val == 'undefined';
 };

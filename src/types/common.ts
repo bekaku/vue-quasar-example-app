@@ -356,6 +356,7 @@ export interface ICrudListHeader {
   column?: string;
   field?: any;
   label: string;
+  translateLabel?: boolean
   type: CrudListDataType;
   options: ICrudListHeaderOption;
 }
