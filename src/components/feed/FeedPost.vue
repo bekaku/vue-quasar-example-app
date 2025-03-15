@@ -7,7 +7,7 @@
             <q-avatar size="30px">
               <img
                 class="bg-gray-8"
-                src="https://loremflickr.com/320/240?random=1"
+                src="https://i.pravatar.cc/450"
                 spinner-color="white"
                 no-native-menu
               />
@@ -125,7 +125,7 @@ import ProfileName from '@/components/feed/ProfileName.vue';
 import { useBase } from '@/composables/useBase';
 import type { OgMeta, PostData } from '@/types/models';
 import { catchUrlFromText } from '@/utils/appUtil';
-import { AvatarPlaceHolder128 } from '@/utils/constant';
+import { AvatarPlaceHolder128 } from '@/libs/constant';
 import { FORMAT_DATE12 } from '@/utils/dateUtil';
 import { onMounted, ref, useId } from 'vue';
 import BaseCard from '../base/BaseCard.vue';

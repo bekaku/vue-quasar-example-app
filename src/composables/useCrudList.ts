@@ -1,5 +1,5 @@
 import type { CrudListApiOptions, ICrudListHeader, ISortModeType, ResponseMessage } from '@/types/common';
-import { CrudAction, KeywordParamiter, SearchOperation, SearchParamiter } from '@/utils/constant';
+import { CrudAction, KeywordParamiter, SearchOperation, SearchParamiter } from '@/libs/constant';
 import { useSort } from './useSort';
 import { useAxios } from '@/composables/useAxios';
 import { useBase } from './useBase';

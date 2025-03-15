@@ -1,7 +1,7 @@
 import { useAxios } from '@/composables/useAxios';
 import type { FileManagerDto } from '@/types/models';
 import type { ResponseDataType, ResponseMessage } from '@/types/common';
-import { FILES_DIRECTORY_ID_ATT, FILES_UPLOAD_ATT } from '@/utils/constant';
+import { FILES_DIRECTORY_ID_ATT, FILES_UPLOAD_ATT } from '@/libs/constant';
 import {
   downloadFromArrayBuffer,
   generateFileNameByExtesnsion,

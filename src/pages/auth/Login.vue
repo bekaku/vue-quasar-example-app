@@ -22,7 +22,7 @@ import BasePage from 'src/components/base/BasePage.vue';
 import BaseThemeSwitcher from 'src/components/base/BaseThemeSwitcher.vue';
 import { useAppConfig } from 'src/composables/useAppConfig';
 import { useBase } from 'src/composables/useBase';
-import { AppAuthTokenKey } from 'src/utils/constant';
+import { AppAuthTokenKey } from 'src/libs/constant';
 import { defineAsyncComponent, onMounted, ref } from 'vue';
 const ForgotPassword = defineAsyncComponent(() => import('@/components/app/ForgotPassword.vue'));
 const { getDeviceId } = useDevice();

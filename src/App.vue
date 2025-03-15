@@ -6,19 +6,18 @@
 import { useBase } from '@/composables/useBase';
 import { usePreFetch } from '@/composables/usePreFetch';
 import { useRequiredAuth } from '@/composables/useRequiredAuth';
+import { AppAuthTokenKey, AUTH_NO_FILTER } from '@/libs/constant';
 import { appNavs } from '@/libs/navs';
 import { useAppStore } from '@/stores/appStore';
 import { useExceptionStore } from '@/stores/exceptionStore';
-import type { ITheme } from '@/types/common';
 import type { UserDto } from '@/types/models';
 import { detroyAuthCookie, isAppException } from '@/utils/appUtil';
-import { AppAuthTokenKey, AUTH_NO_FILTER } from '@/utils/constant';
-import { Cookies, useQuasar } from 'quasar';
+import { Cookies } from 'quasar';
 import { useAuthenStore } from 'stores/authenStore';
-import { useLangugeAndThemeStore } from 'stores/langugeAndThemeStore';
 import { onBeforeUnmount, onMounted, watch } from 'vue';
 import { useRouter } from 'vue-router';
-import { AppSetup } from './utils/app';
+import { useLang } from './composables/useLang';
+import { useTheme } from './composables/useTheme';
 defineOptions({
   async preFetch({ currentRoute, ssrContext, redirect }) {
     const cookies = process.env.SERVER ? Cookies.parseSSR(ssrContext) : Cookies;
@@ -68,10 +67,11 @@ const { appGoto, isDevMode } = useBase();
 const exceptionStore = useExceptionStore();
 const router = useRouter();
 const authenStore = useAuthenStore();
-const $q = useQuasar();
-const langugeAndThemeStore = useLangugeAndThemeStore();
+const { initialQuasarDark } = useTheme();
+const { initialLocale } = useLang();
+initialQuasarDark();
+initialLocale();
 useRequiredAuth();
-AppSetup();
 
 onMounted(() => {
   if (exceptionStore.error && exceptionStore.error.status && exceptionStore.error.message) {
@@ -82,9 +82,6 @@ onMounted(() => {
       console.log('App.vue > authenStore >', authenStore.auth);
     }
     // authenStore.startRefreshTokenTimer();
-  }
-  if (!$q.screen.gt.xs) {
-    // langugeAndThemeStore.setLeftDrawer(false);
   }
   window.onpopstate = () => {
     if (router.options.history.state.forward == '/auth/login' && !authenStore.auth) {
@@ -102,17 +99,6 @@ onMounted(() => {
   };
 });
 
-const setDark = (theme: ITheme) => {
-  if (theme == 'dark') {
-    $q.dark.set(true);
-  } else {
-    $q.dark.set(false);
-  }
-};
-setDark(langugeAndThemeStore.theme as ITheme);
-watch(langugeAndThemeStore, (state) => {
-  setDark(state.theme as ITheme);
-});
 watch(authenStore, (state) => {
   if (state && state.sessionExpired) {
     appGoto('/auth/login', true);

@@ -16,7 +16,7 @@ import {
   LatestSyncActiveStatusKey,
   NotifyKey,
   SearchHistoryKey,
-} from '@/utils/constant';
+} from '@/libs/constant';
 import { getDateNow, getMonthNow, getYearNow } from '@/utils/dateUtil';
 import { useStorage } from '@vueuse/core';
 export const useCache = () => {

@@ -77,7 +77,7 @@
 </template>
 
 <script setup lang="ts">
-import { AvatarPlaceHolder128, FeedSectionWidth } from '@/utils/constant';
+import { AvatarPlaceHolder128, FeedSectionWidth } from '@/libs/constant';
 import { useLang } from '@/composables/useLang';
 
 import { biChevronDown, biTrophy, biArrowUp } from '@quasar/extras/bootstrap-icons';

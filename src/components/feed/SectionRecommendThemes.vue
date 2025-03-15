@@ -31,7 +31,7 @@
 
 <script setup lang="ts">
 import { useLang } from '@/composables/useLang';
-import { AvatarPlaceHolder128, FeedSectionWidth } from '@/utils/constant';
+import { AvatarPlaceHolder128, FeedSectionWidth } from '@/libs/constant';
 import { biChevronDown, biPencil } from '@quasar/extras/bootstrap-icons';
 import { ref } from 'vue';
 import BaseCard from '../base/BaseCard.vue';

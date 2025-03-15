@@ -1,5 +1,5 @@
 import { Cookies } from 'quasar';
-import { AppAuthTokenKey } from '@/utils/constant';
+import { AppAuthTokenKey } from '@/libs/constant';
 import { useSSRContext } from 'vue';
 export default async (to: any, from: any, next: any) => {
   if (!process.env.SERVER) {

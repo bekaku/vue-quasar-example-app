@@ -5,7 +5,7 @@ import {
   AppAuthRefeshTokenKey,
   AppAuthTokenExpireKey,
   ExpireCookieDays,
-} from '@/utils/constant';
+} from '@/libs/constant';
 import type { UserDto, RefreshTokenResponse } from '@/types/models';
 import { useAuthenStore } from 'stores/authenStore';
 import { useSSRContext } from 'vue';
@@ -18,7 +18,7 @@ export const useAuth = () => {
   const ssrContext = process.env.SERVER ? useSSRContext() : null;
   const cookies = process.env.SERVER ? Cookies.parseSSR(ssrContext) : Cookies; // otherwise we're on client
   const authenStore = useAuthenStore();
-  const { appConfirm, appLoading, isDevMode } = useBase();
+  const { appConfirm, appLoading, isDevMode, appGoto } = useBase();
   const { t } = useLang();
   const { singoutToServer } = AuthenService();
   const { logoutClear } = useCache();
@@ -134,8 +134,9 @@ export const useAuth = () => {
     await destroyAuthData();
     authenStore.logout();
     if (forceRedirectToLoginPage) {
-      window.location.replace('/auth/login');
-      // appGoto('/auth/login', true);
+      // window.location.replace('/auth/login');
+      // window.location.replace('/');
+      appGoto('/auth/login', true);
     }
   };
 

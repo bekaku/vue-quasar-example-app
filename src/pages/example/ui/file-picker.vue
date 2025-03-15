@@ -1,22 +1,20 @@
 <script setup lang="ts">
 import BaseAvatar from '@/components/base/BaseAvatar.vue';
 import BaseButton from '@/components/base/BaseButton.vue';
-import BaseScrollArea from '@/components/base/BaseScrollArea.vue';
 import FilesPreview from '@/components/base/BaseFilesPreview.vue';
+import BaseScrollArea from '@/components/base/BaseScrollArea.vue';
 import FilesPreviewItemAlt from '@/components/base/FilesPreviewItemAlt.vue';
 import { useAppMeta } from '@/composables/useAppMeta';
 import { useLang } from '@/composables/useLang';
 import { useAuthenStore } from '@/stores/authenStore';
 import type { FileManagerDto } from '@/types/models';
-import { FileExtensionAccept } from '@/utils/constant';
+import { FileExtensionAccept } from '@/libs/constant';
 import {
-  biFileArrowUp,
-  biUpload,
-  biSend,
   biEmojiSmile,
   biImage,
   biPlus,
-  biPerson,
+  biSend,
+  biUpload
 } from '@quasar/extras/bootstrap-icons';
 import BaseCard from 'src/components/base/BaseCard.vue';
 import BaseFilePicker from 'src/components/base/BaseFilePicker.vue';
@@ -92,7 +90,7 @@ const onCustomRemove2 = (index: number) => {
         <BaseButton class="q-my-md" color="positive" @click="onSubmit"> Submit </BaseButton>
       </q-card-section>
     </BaseCard>
-    <BaseCard title="Simple Picker 2">
+    <BaseCard title="Simple Picker 2" sub-title="Gallery Preview">
       <q-card-section>
         <BaseFilePicker
           v-model="files"

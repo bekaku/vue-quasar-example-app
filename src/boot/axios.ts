@@ -1,4 +1,4 @@
-import { AppAuthRefeshTokenKey, LocaleKey } from '@/utils/constant';
+import { AppAuthRefeshTokenKey, LocaleKey } from '@/libs/constant';
 import type { AxiosInstance } from 'axios';
 import axios from 'axios';
 import { boot } from 'quasar/wrappers';

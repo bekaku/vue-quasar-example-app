@@ -7,7 +7,7 @@ import {
   AppAuthTokenKey,
   ExpireCookieDays,
   LocaleKey
-} from '@/utils/constant';
+} from '@/libs/constant';
 import { addDateByDays } from '@/utils/dateUtil';
 import { canRefreshToken } from '@/utils/jwtUtil';
 import { api } from 'boot/axios';

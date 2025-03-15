@@ -3,7 +3,7 @@ import { computed } from 'vue';
 import { useQuasar } from 'quasar';
 import { useLang } from './useLang';
 import type { ITextValue, NotifyOptions } from '@/types/common';
-import { SearchOperation } from '@/utils/constant';
+import { SearchOperation } from '@/libs/constant';
 import { formatDate, formatDateTime, formatDistanceFromNow } from '@/utils/dateUtil';
 import {
   biCheckCircle,

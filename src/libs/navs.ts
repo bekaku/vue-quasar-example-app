@@ -30,6 +30,7 @@ import {
   biPieChart,
   biSegmentedNav,
   biShieldCheck,
+  biTable,
   biToggleOff,
   biUpload,
   biWindowSidebar
@@ -121,6 +122,12 @@ export const additionalMenu: LabelValue<any>[] = [
             label: 'useBase',
             translateLabel: false,
             to: '/example/composables/use-base'
+          },
+          {
+            icon: biDatabase,
+            label: 'useAxios',
+            translateLabel: false,
+            to: '/example/composables/use-axios'
           },
           {
             icon: biFileEarmark,
@@ -215,6 +222,12 @@ export const additionalMenu: LabelValue<any>[] = [
         to: '/example/chats'
       },
       {
+        icon: biTable,
+        label: 'Crud table',
+        translateLabel: false,
+        to: '/example/crud-table'
+      },
+      {
         icon: biCursorText,
         label: 'Content text',
         description: 'Display user input',
@@ -233,12 +246,6 @@ export const additionalMenu: LabelValue<any>[] = [
         description: 'Emoji and Icon',
         translateLabel: false,
         to: '/example/emoji-picker'
-      },
-      {
-        icon: biDatabase,
-        label: 'Fetch data',
-        translateLabel: false,
-        to: '/example/fetch-data'
       },
       {
         icon: biCrop,

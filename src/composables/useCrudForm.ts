@@ -7,7 +7,7 @@ import {
   PageIdParamiter,
   BackendRootPath,
   CrudAction
-} from '@/utils/constant';
+} from '@/libs/constant';
 import { ref, onMounted, onBeforeUnmount, computed } from 'vue';
 import type {
   ICrudAction,

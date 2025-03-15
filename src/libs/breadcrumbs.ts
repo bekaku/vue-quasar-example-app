@@ -1,5 +1,5 @@
 import type { LabelValue } from '@/types/common';
-import { PageIdParamiter } from '@/utils/constant';
+import { PageIdParamiter } from '@/libs/constant';
 import {
     biChevronExpand,
     biFile,

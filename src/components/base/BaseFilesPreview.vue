@@ -6,7 +6,7 @@ import FilesPreviewItem from './FilesPreviewItem.vue';
 const {
   showDelete = true,
   col = 'col-3 q-pa-md',
-  gallery = false,
+  gallery = true,
 } = defineProps<{
   showDelete?: boolean;
   col?: string;

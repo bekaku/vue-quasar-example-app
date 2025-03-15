@@ -18,5 +18,5 @@ import SectionRecommendThemes from '@/components/feed/SectionRecommendThemes.vue
 import SectionHashTagTrends from '@/components/feed/SectionHashTagTrends.vue';
 import SectionTodayMostView from '@/components/feed/SectionTodayMostView.vue';
 import SectionRecentPrized from '@/components/feed/SectionRecentPrized.vue';
-import { FeedSectionWidth } from '@/utils/constant';
+import { FeedSectionWidth } from '@/libs/constant';
 </script>

@@ -28,7 +28,7 @@
 import { ref } from 'vue';
 import { biChevronDown, biBookmark } from '@quasar/extras/bootstrap-icons';
 import { useLang } from '@/composables/useLang';
-import { FeedSectionWidth } from '@/utils/constant';
+import { FeedSectionWidth } from '@/libs/constant';
 import BaseCard from '../base/BaseCard.vue';
 const { t } = useLang();
 const savedList = ref([

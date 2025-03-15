@@ -47,6 +47,6 @@
 
 <script setup lang="ts">
 import BaseLink from '@/components/base/BaseLink.vue';
-import { AvatarPlaceHolder128 } from '@/utils/constant';
+import { AvatarPlaceHolder128 } from '@/libs/constant';
 import { biHeart, biThreeDots } from '@quasar/extras/bootstrap-icons';
 </script>

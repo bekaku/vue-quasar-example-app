@@ -18,7 +18,7 @@ import {
   AppAuthTokenExpireKey,
   AppAuthTokenKey,
   SucureDeviceIdAtt
-} from '@/utils/constant';
+} from '@/libs/constant';
 import { getCurrentTimestamp } from '@/utils/dateUtil';
 export const isNumber = (value: string | number): boolean => {
   return value != null && value !== '' && !isNaN(Number(value.toString()));

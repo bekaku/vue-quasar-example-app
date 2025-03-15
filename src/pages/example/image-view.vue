@@ -18,7 +18,7 @@ setTitle(`Image View | ${t('app.name')}`);
 const imageSelectIndex = ref<number>(0);
 const showImageView = ref(false);
 const imageItems = ref<FileManagerDto[]>([
-   {
+  {
     id: 1,
     fileMime: 'image/jpeg',
     fileName: 'Img001.jpg',

@@ -1,4 +1,4 @@
-import { FileNamePrefix } from '@/utils/constant';
+import { FileNamePrefix } from '@/libs/constant';
 import { getCurrentTimestamp } from '@/utils/dateUtil';
 import {
     biFileEarmark,

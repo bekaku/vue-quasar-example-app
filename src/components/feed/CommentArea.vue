@@ -26,7 +26,7 @@
 </template>
 
 <script setup lang="ts">
-import { AvatarPlaceHolder128 } from '@/utils/constant';
+import { AvatarPlaceHolder128 } from '@/libs/constant';
 import { biEmojiSmile, biImage } from '@quasar/extras/bootstrap-icons';
 import { ref } from 'vue';
 const comments = ref(null);

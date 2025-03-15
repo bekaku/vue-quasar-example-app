@@ -31,7 +31,7 @@
 import { ref } from 'vue';
 import { useLang } from '@/composables/useLang';
 import { biChevronDown } from '@quasar/extras/bootstrap-icons';
-import { FeedSectionWidth } from '@/utils/constant';
+import { FeedSectionWidth } from '@/libs/constant';
 import BaseCard from '../base/BaseCard.vue';
 import { useQuasar } from 'quasar';
 const { t } = useLang();

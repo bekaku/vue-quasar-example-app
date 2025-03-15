@@ -112,6 +112,6 @@ import {
   biChatSquareDots,
   biHandbag,
 } from '@quasar/extras/bootstrap-icons';
-import { AvatarPlaceHolder128 } from '@/utils/constant';
+import { AvatarPlaceHolder128 } from '@/libs/constant';
 import BaseCard from '../base/BaseCard.vue';
 </script>

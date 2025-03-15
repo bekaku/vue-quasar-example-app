@@ -112,7 +112,7 @@
 <script setup lang="ts">
 import { useBase } from '@/composables/useBase';
 import type { PostActionType } from '@/types/models';
-import { AvatarPlaceHolder128 } from '@/utils/constant';
+import { AvatarPlaceHolder128 } from '@/libs/constant';
 import {
   biBookmark,
   biChatSquareDots,

@@ -3,7 +3,7 @@ import { useDevice } from '@/composables/useDevice';
 import { useLang } from '@/composables/useLang';
 import type { AppException, RequestType, ResponseMessage } from '@/types/common';
 import { isAppException, isServerException, isServerResponseMessage } from '@/utils/appUtil';
-import { AppAuthTokenKey } from '@/utils/constant';
+import { AppAuthTokenKey } from '@/libs/constant';
 import { formatRelativeFromNow } from '@/utils/dateUtil';
 import { biX } from '@quasar/extras/bootstrap-icons';
 import type { AxiosResponse } from 'axios';

@@ -24,7 +24,7 @@
 import SectionFollowwingTag from '@/components/feed/SectionFollowwingTag.vue';
 import SectionSavedPost from '@/components/feed/SectionSavedPost.vue';
 import { useAuthenStore } from '@/stores/authenStore';
-import { FeedSectionWidth } from '@/utils/constant';
+import { FeedSectionWidth } from '@/libs/constant';
 import { useQuasar } from 'quasar';
 import BaseCard from '../base/BaseCard.vue';
 import UserCard from '../user/UserCard.vue';

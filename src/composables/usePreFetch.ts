@@ -2,7 +2,7 @@
 import { useExceptionStore } from '@/stores/exceptionStore';
 import type { RequestType } from '@/types/common';
 import { isAppException } from '@/utils/appUtil';
-import { AppAuthTokenKey, LocaleKey } from '@/utils/constant';
+import { AppAuthTokenKey, LocaleKey } from '@/libs/constant';
 import type { AxiosResponse } from 'axios';
 import { api } from 'boot/axios';
 import { Cookies } from 'quasar';

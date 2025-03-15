@@ -7,8 +7,9 @@ import { defineAsyncComponent, onMounted } from 'vue';
 import BaseScrollArea from '@/components/base/BaseScrollArea.vue';
 import BasePage from 'src/components/base/BasePage.vue';
 import BaseCard from 'src/components/base/BaseCard.vue';
-import { biArrowClockwise } from '@quasar/extras/bootstrap-icons';
+import { biArrowClockwise, biExclamationCircleFill } from '@quasar/extras/bootstrap-icons';
 import BaseButton from 'src/components/base/BaseButton.vue';
+import BaseAlert from 'src/components/base/BaseAlert.vue';
 
 const Paging = defineAsyncComponent(() => import('@/components/base/Paging.vue'));
 const BaseSpinner = defineAsyncComponent(() => import('@/components/base/BaseSpinner.vue'));
@@ -40,8 +41,8 @@ const {
   concatList: true,
 });
 onMounted(() => {
-  loadData();
-  loadData2();
+  // loadData();
+  // loadData2();
 });
 </script>
 <template>
@@ -53,6 +54,12 @@ onMounted(() => {
         </BaseButton>
       </template>
       <q-card-section>
+        <BaseAlert
+          type="is-warning"
+          :icon="biExclamationCircleFill"
+          message="You need to work with your API, you can use my Java Springboot REST API from the link https://github.com/bekaku/java-spring-boot-starter"
+          :closeable="false"
+        />
         <template v-if="!firstLoaded">
           <base-spinner></base-spinner>
         </template>

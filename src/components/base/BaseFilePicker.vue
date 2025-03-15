@@ -8,7 +8,7 @@ import {
   LimitFileSize,
   LimitFileSizeMB,
   MaxSelectFiles,
-} from '@/utils/constant';
+} from '@/libs/constant';
 import { getImgUrlFromFile, isImageFile, zipFile } from '@/utils/fileUtils';
 import { biPlus } from '@quasar/extras/bootstrap-icons';
 import { onBeforeUnmount, ref } from 'vue';
@@ -21,7 +21,7 @@ const {
   maxFiles = MaxSelectFiles,
   icon = biPlus,
   accept = FileExtensionAccept,
-  gallery = true,
+  gallery = false,
   previewHieight = '250px',
 } = defineProps<{
   multiple?: boolean;

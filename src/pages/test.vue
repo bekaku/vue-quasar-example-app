@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import UserService from '@/api/UserService';
 import { useAppMeta } from '@/composables/useAppMeta';
-import { AppAuthTokenKey } from '@/utils/constant';
+import { AppAuthTokenKey } from '@/libs/constant';
 import { getTokenStatus } from '@/utils/jwtUtil';
 import { Cookies } from 'quasar';
 import { onBeforeUnmount, onMounted, ref } from 'vue';

@@ -39,7 +39,7 @@ import { useLang } from '@/composables/useLang';
 import BaseLink from '@/components/base/BaseLink.vue';
 import { biChevronDown, biPlus } from '@quasar/extras/bootstrap-icons';
 import { laHashtagSolid } from '@quasar/extras/line-awesome';
-import { FeedSectionWidth } from '@/utils/constant';
+import { FeedSectionWidth } from '@/libs/constant';
 import BaseCard from '../base/BaseCard.vue';
 const { t } = useLang();
 const tags = ref([

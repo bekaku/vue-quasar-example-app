@@ -1,5 +1,5 @@
 import type { ISort, ISortMode, IPagination } from '@/types/common';
-import { DEFULT_ITEM_PER_PAGET } from '@/utils/constant';
+import { DEFULT_ITEM_PER_PAGET } from '@/libs/constant';
 import { useBase } from './useBase';
 import { ref } from 'vue';
 import { useLang } from '@/composables/useLang';

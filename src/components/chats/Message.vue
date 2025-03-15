@@ -136,7 +136,7 @@ const { dark } = useQuasar();
           <q-img
             style="border-radius: 10px"
             :ratio="4 / 3"
-            src="https://images.pexels.com/photos/19794931/pexels-photo-19794931/free-photo-of-woman-holding-a-flower.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+            src="https://images.unsplash.com/photo-1741540420894-46bc55554fc3?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
           >
           </q-img>
         </div>
@@ -144,7 +144,7 @@ const { dark } = useQuasar();
           <q-img
             style="border-radius: 10px"
             :ratio="4 / 3"
-            src="https://images.pexels.com/photos/19794931/pexels-photo-19794931/free-photo-of-woman-holding-a-flower.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+            src="https://images.unsplash.com/photo-1734983234384-5a3edcec48ce?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
           >
           </q-img>
         </div>

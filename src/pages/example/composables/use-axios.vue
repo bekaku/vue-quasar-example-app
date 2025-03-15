@@ -7,7 +7,9 @@ import { useLang } from '@/composables/useLang';
 import type { IApiListResponse, Permission } from '@/types/models';
 import BaseCard from 'src/components/base/BaseCard.vue';
 import BasePage from 'src/components/base/BasePage.vue';
+import BaseAlert from '@/components/base/BaseAlert.vue';
 import { ref } from 'vue';
+import { biExclamation, biExclamationCircle, biExclamationCircleFill, biInfo } from '@quasar/extras/bootstrap-icons';
 
 const { t } = useLang();
 const { setTitle } = useAppMeta();
@@ -117,6 +119,12 @@ csont putResponse:Permission = await callAxios<Permission>({
   <BasePage>
     <BaseCard title="useAxios">
       <q-card-section>
+        <BaseAlert
+          type="is-warning"
+          :icon="biExclamationCircleFill"
+          message="You need to work with your API, you can use my Java Springboot REST API from the link https://github.com/bekaku/java-spring-boot-starter"
+          :closeable="false"
+        />
         <div class="row">
           <div class="col-12 col-md-6 q-pa-md">
             <BaseCard flat>
