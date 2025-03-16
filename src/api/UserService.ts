@@ -5,55 +5,24 @@ import type {
   UserChangePasswordRequest,
   AccessTokenDto,
   UserPersonalEditRequest,
+  IApiListResponse,
 } from '@/types/models';
 import type { ResponseMessage } from '@/types/common';
 export default () => {
   const { callAxios } = useAxios();
+
+  const findAll = async (q: string): Promise<IApiListResponse<UserDto> | null> => {
+    console.log('UserService.ts > findAll > ', `/api/user${q}`);
+    return await callAxios<IApiListResponse<UserDto>>({
+      API: `/api/user${q}`,
+      method: 'GET',
+    });
+  };
   const findCurrentUserData = async (): Promise<UserDto | null> => {
     return await callAxios<UserDto>({
       API: '/api/user/currentUserData',
       method: 'GET',
     });
-    // return {
-    //   'id': 1,
-    //   'email': 'admin@mydomain.com',
-    //   'username': 'admin',
-    //   'token': null,
-    //   'fcmToken': null,
-    //   'accessTokenId': null,
-    //   'avatarFileId': 3413,
-    //   'coverFileId': 3414,
-    //   'avatar': {
-    //     'image': 'https://i.pravatar.cc/450',
-    //     'thumbnail': 'https://i.pravatar.cc/128'
-    //   },
-    //   'cover': {
-    //     'image': 'https://images.unsplash.com/photo-1741568032886-18d3f2a694c2?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-    //     'thumbnail': 'https://images.unsplash.com/photo-1741568032886-18d3f2a694c2?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
-    //   },
-    //   'active': true,
-    //   'selectedRoles': [
-    //     1
-    //   ],
-    //   'defaultLocale': 'th',
-    //   'permissions': [
-    //     'api_client_view',
-    //     'api_client_manage',
-    //     'permission_list',
-    //     'permission_view',
-    //     'permission_manage',
-    //     'role_list',
-    //     'role_view',
-    //     'role_manage',
-    //     'user_list',
-    //     'user_view',
-    //     'user_manage',
-    //     'file_manager_list',
-    //     'file_manager_view',
-    //     'file_manager_manage',
-    //     'backend_login'
-    //   ]
-    // }
   };
   const updateUserAvatar = async (
     fileManagerId: number
@@ -162,6 +131,7 @@ export default () => {
     updateDefaultLocale,
     updatePersonalData,
     updateEmail,
-    updateUserPasswordByAdmin
+    updateUserPasswordByAdmin,
+    findAll
   };
 };

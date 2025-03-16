@@ -148,6 +148,13 @@ const routes: RouteRecordRaw[] = [
             component: () => import('@/pages/example/content-text.vue'),
           },
           {
+            path: 'crud-table',
+            meta: {
+              name: 'ExampleCrudTable',
+            },
+            component: () => import('@/pages/example/crud-table.vue'),
+          },
+          {
             path: 'drag-drop',
             meta: {
               name: 'ExampleDargdrop',
